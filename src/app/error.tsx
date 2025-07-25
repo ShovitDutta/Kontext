@@ -1,39 +1,19 @@
 'use client';
 import Link from 'next/link';
 import { useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { Button } from '@/components/ui/button';
-import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
 export default function Error({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
     useEffect(() => {
         console.error(error);
     }, [error]);
     return (
-        <div className="min-h-screen bg-[#282828] flex items-center justify-center p-4">
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="bg-[#3c3836] p-6 sm:p-8 rounded-xl border border-[#bdae93] max-w-md w-full text-center"
-            >
-                <AlertTriangle className="w-16 h-16 text-red-500 mx-auto mb-4" /> <h2 className="text-2xl font-bold mb-2">Something went wrong!</h2>
-                <p className="text-[#bdae93] mb-6">We encountered an unexpected error. Please try again or return to the homepage.</p>
-                <div className="flex flex-col sm:flex-row gap-3">
-                    <Button
-                        onClick={reset}
-                        className="flex items-center space-x-2"
-                    >
-                        <RefreshCw className="w-4 h-4" /> <span>Try again</span>
-                    </Button>
-                    <Link href="/">
-                        <Button
-                            variant="outline"
-                            className="flex items-center space-x-2 w-full bg-transparent"
-                        >
-                            <Home className="w-4 h-4" /> <span>Go home</span>
-                        </Button>
-                    </Link>
-                </div>
-            </motion.div>
+        <div>
+            <h2>Something went wrong!</h2> <p>We encountered an unexpected error. Please try again or return to the homepage.</p>
+            <div>
+                <button onClick={reset}>Try again</button>
+                <Link href="/">
+                    <button>Go home</button>
+                </Link>
+            </div>
         </div>
     );
 }
