@@ -6,12 +6,12 @@ const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 const poppins = Poppins({ subsets: ['latin'], weight: ['400', '500', '600', '700'], variable: '--font-poppins' });
 export const metadata: Metadata = {
     creator: 'Kontext',
-    generator: 'v0.dev',
+    generator: 'Next.js',
     publisher: 'Kontext',
     authors: [{ name: 'Kontext Team' }],
     robots: { index: true, follow: true },
+    keywords: ['AI', 'News', 'Technology', 'Blog', 'Intelligence', 'Daily'],
     title: { default: 'Kontext - GenAI Powered News Blog', template: '%s | Kontext' },
-    keywords: ['AI', 'news', 'technology', 'blog', 'artificial intelligence', 'tech news'],
     description: 'Kontext Is An GenAI Powered News Blog, To Stay Updated With The Latest News, Transformed Into Engaging Blog Posts Using GenAI.',
     openGraph: {
         type: 'website',
