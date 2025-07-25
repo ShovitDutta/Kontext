@@ -1,6 +1,6 @@
 import { db } from '@/lib/db';
 import { articles } from '@/lib/db/schema';
-import { newsCategories } from '@/lib/news-api';
+import { newsCategories } from '@/lib/newscat';
 import { eq, gte, desc, and } from 'drizzle-orm';
 import { NextRequest, NextResponse } from 'next/server';
 interface NewsApiArticle {

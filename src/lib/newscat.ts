@@ -1,5 +1,5 @@
 export const newsCategories = [
-    { id: 'all', name: 'All', icon: '🌐' },
+    { id: 'all', name: 'Everything', icon: '🌐' },
     { id: 'health', name: 'Health', icon: '❤️' },
     { id: 'sports', name: 'Sports', icon: '🏅' },
     { id: 'science', name: 'Science', icon: '🔬' },
