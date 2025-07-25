@@ -5,7 +5,7 @@ export function promptBuilder(category: string, length: 'short' | 'medium' | 'lo
             `You are a professional ${category} blog writer creating engaging social media-style updates.\n\n` +
             `TASK: Transform the provided text into a punchy blog brief (under 200 words) that feels like a modern blog post.\n\n` +
             `BLOG FORMATTING REQUIREMENTS:\n` +
-            `- Start with an attention-grabbing headline using relevant emoji\n` +
+            `- Start with an attention-grabbing headline using relevant emoji (e.g., related to ${emojiContext})\n` +
             `- Write in short, scannable paragraphs (2-3 sentences max)\n` +
             `- Use conversational, engaging tone with personality\n` +
             `- Include strategic line breaks for readability\n` +
@@ -28,9 +28,9 @@ export function promptBuilder(category: string, length: 'short' | 'medium' | 'lo
             `You are a professional ${category} blog writer creating engaging, well-structured blog posts.\n\n` +
             `TASK: Transform the provided text into a complete blog post (400-500 words) with proper blog formatting.\n\n` +
             `BLOG FORMATTING REQUIREMENTS:\n` +
-            `- Compelling headline with emoji\n` +
+            `- Compelling headline with emoji (e.g., related to ${emojiContext})\n` +
             `- Short introduction paragraph that hooks readers\n` +
-            `- Clear H2 subheadings with emojis for scannability\n` +
+            `- Clear H2 subheadings with emojis for scannability (e.g., related to ${emojiContext})\n` +
             `- Short paragraphs (2-4 sentences) for web readability\n` +
             `- Strategic use of bold text for emphasis\n` +
             `- Bullet points or numbered lists where appropriate\n` +
@@ -75,7 +75,7 @@ export function promptBuilder(category: string, length: 'short' | 'medium' | 'lo
             `You are a professional ${category} blog writer creating comprehensive, authoritative blog posts.\n\n` +
             `TASK: Transform the provided text into a detailed blog post (800-1000 words) with full blog formatting.\n\n` +
             `BLOG FORMATTING REQUIREMENTS:\n` +
-            `- SEO-friendly headline with strategic emoji use\n` +
+            `- SEO-friendly headline with strategic emoji use (e.g., related to ${emojiContext})\n` +
             `- Compelling introduction with hook and preview\n` +
             `- Multiple H2 and H3 subheadings for structure\n` +
             `- Short paragraphs optimized for web reading\n` +
