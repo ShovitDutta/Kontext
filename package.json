@@ -1,9 +1,9 @@
 {
     "private": true,
     "type": "module",
-    "license": "MIT",
     "name": "kontext",
     "version": "1.0.0",
+    "license": "SEE LICENSE IN LICENSE",
     "author": "Shovit Dutta <shovitdutta1@gmail.com>",
     "description": "Kontext is a GenAI-powered news blog to stay updated with the latest news, transformed into engaging blog posts using GenAI.",
     "repository": {
