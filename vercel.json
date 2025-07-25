@@ -1,11 +1,22 @@
 {
+    "crons": [
+        { "path": "/api/cron", "schedule": "0 0 * * *" },
+        { "path": "/api/cron/news", "schedule": "0 8 * * *" },
+        { "path": "/api/cron/news", "schedule": "0 14 * * *" },
+        { "path": "/api/cron/news", "schedule": "0 20 * * *" }
+    ],
     "env": {
+        "CRON_SECRET": "@cron_secret",
         "DATABASE_URL": "@database_url",
+        "NEWS_API_KEY": "@news_api_key",
         "NEXTAUTH_URL": "@nextauth_url",
         "GEMINI_API_KEY": "@gemini_api_key",
         "NEXTAUTH_SECRET": "@nextauth_secret",
+        "GEMINI_API_KEY_A": "@gemini_api_key_a",
+        "GEMINI_API_KEY_B": "@gemini_api_key_b",
+        "GEMINI_API_KEY_C": "@gemini_api_key_c",
         "GOOGLE_CLIENT_ID": "@google_client_id",
         "GOOGLE_CLIENT_SECRET": "@google_client_secret"
     },
-    "functions": { "app/api/**/*.ts": { "maxDuration": 30 } }
+    "functions": { "app/api/**/*.ts": { "maxDuration": 300 } }
 }
