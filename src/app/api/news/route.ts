@@ -13,7 +13,10 @@ export async function GET(req: NextRequest) {
     if (!parsed.success) return new Response(JSON.stringify({ error: "Invalid category", issues: parsed.error.issues }), { status: 400 });
     const validatedCategory = parsed.data.category;
     try {
-        const fetchedArticles = await db.query.articles.findMany({ where: validatedCategory === "all" ? undefined : eq(articles.category, validatedCategory), orderBy: (articles, { desc }) => [desc(articles.publishedAt)] });
+        const fetchedArticles = await db.query.articles.findMany({
+            where: validatedCategory === "all" ? undefined : eq(articles.category, validatedCategory),
+            orderBy: (articles, { desc }) => [desc(articles.publishedAt)],
+        });
         return new Response(JSON.stringify(fetchedArticles), { status: 200, headers: { "Content-Type": "application/json" } });
     } catch (error) {
         console.error("Error in GET /api/news:", error);

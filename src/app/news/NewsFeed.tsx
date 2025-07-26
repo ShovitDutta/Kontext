@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import Image from "next/legacy/image";
+import Image from "next/image";
 import { Article } from "@/lib/queries";
 import { useArticles } from "@/lib/queries";
 import { newsCategories } from "@/lib/newscat";

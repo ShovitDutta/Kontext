@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import Image from "next/legacy/image";
+import Image from "next/image";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import ReactMarkdown from "react-markdown";
@@ -18,7 +18,11 @@ const ArticleSkeleton = () => (
         </div>
     </div>
 );
-const contentDisplayConfig = { SHORT: { icon: Newspaper, title: "The Gist", color: "text-blue-400" }, MEDIUM: { icon: BookOpen, title: "Full Story", color: "text-purple-400" }, EXPLAINED: { icon: BrainCircuit, title: "Deep Dive", color: "text-green-400" } };
+const contentDisplayConfig = {
+    SHORT: { icon: Newspaper, title: "The Gist", color: "text-blue-400" },
+    MEDIUM: { icon: BookOpen, title: "Full Story", color: "text-purple-400" },
+    EXPLAINED: { icon: BrainCircuit, title: "Deep Dive", color: "text-green-400" },
+};
 export default function ArticleClientView() {
     const { id } = useParams();
     const { data: article, isLoading, error } = useArticle(id as string);

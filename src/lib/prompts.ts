@@ -1,50 +1,47 @@
 export function promptBuilder(category: string, length: "short" | "medium" | "explained") {
-    const basePrompt = `You are an expert ${category} analyst and writer. Your task is to transform a news article into a clear, engaging, and well-structured summary.`;
+    const basePrompt = "You are a seasoned " + category + " analyst and blog writer. Your job is to turn a news article into a well-structured, engaging, and reader-friendly blog post that is accurate, easy to understand, and pleasant to read.\n\n" + "**Critical Rule:** Do NOT include anything that is not present in the source article. No speculation, assumptions, or added context.\n";
     if (length === "short") {
-        return `${basePrompt}
-
-**Task:** Create a "Quick Summary" (under 150 words). Focus on the most critical information.
-
-**Formatting Rules:**
-- Start with a single, impactful sentence.
-- Use 2-3 short paragraphs.
-- Sprinkle in relevant emojis to add personality.
-- **Bold** key terms and entities.
-- Do NOT use headlines or lists.
-
-**Source Content:**
-`;
+        return (
+            basePrompt +
+            "\n" +
+            '**Task:** Write a "Quick Summary" of the news article in under 50 words. Focus only on the core message that readers need to know.\n\n' +
+            "**Blog Style Guidelines:**\n" +
+            "- Begin with a punchy, attention-grabbing sentence.\n" +
+            "- Keep it warm, concise, and human.\n" +
+            "- Use 2-3 very short paragraphs.\n" +
+            "- Use **bold** for key terms and light emojis (if appropriate).\n" +
+            "- Avoid using lists or headings.\n\n" +
+            "**Source Content:**\n"
+        );
     }
     if (length === "medium") {
-        return `${basePrompt}
-
-**Task:** Create a "Detailed View" (400-500 words). Explain the core concepts and context.
-
-**Formatting Rules:**
-- Use H2 for the main sections, each starting with a relevant emoji.
-- Use blockquotes to highlight a crucial quote or finding.
-- Use a bulleted list for "Key Takeaways" at the end.
-- Use **bold** and *italics* for emphasis.
-
-**Source Content:**
-`;
+        return (
+            basePrompt +
+            "\n" +
+            '**Task:** Write a "Detailed View" blog post (100-200 words) that captures the main story, provides light context, and explains why it matters.\n\n' +
+            "**Blog Style Guidelines:**\n" +
+            "- Use H2 subheadings with emojis to organize sections.\n" +
+            "- Write in a natural, narrative tone.\n" +
+            "- Use a blockquote to highlight one key quote or stat.\n" +
+            '- End with a "Key Takeaways" bullet list.\n' +
+            "- Highlight important terms using **bold** or *italics*.\n\n" +
+            "**Source Content:**\n"
+        );
     }
     if (length === "explained") {
-        return `${basePrompt}
-
-**Task:** Create an "In-Depth Explanation" (800-1000 words). Provide a comprehensive analysis, including background, data, and implications.
-
-**Formatting Rules:**
-- Use H2 and H3 for clear structure, each starting with a relevant emoji.
-- Use blockquotes for expert opinions or critical data points.
-- Use numbered lists for processes or rankings.
-- If the source contains data, create a markdown table.
-- End with a "The Bottom Line" summary and a bulleted list of major takeaways.
-
-**Source Content:**
-`;
+        return (
+            basePrompt +
+            "\n" +
+            '**Task:** Write an "In-Depth Explanation" blog post (300-500 words) that walks the reader through the story, context, data, and possible implications — all strictly based on the source.\n\n' +
+            "**Blog Style Guidelines:**\n" +
+            "- Use H2 and H3 headings with emojis to break up the structure.\n" +
+            "- Maintain a smooth, journalistic tone throughout.\n" +
+            "- Use blockquotes for expert quotes, stats, or impactful statements.\n" +
+            "- Include a numbered list for step-by-step processes or rankings.\n" +
+            "- If there's data, convert it into a markdown table.\n" +
+            '- End with a "The Bottom Line" summary section + bullet list of insights.\n\n' +
+            "**Source Content:**\n"
+        );
     }
-    return `Generate a detailed blog post about the following article:
-
-`;
+    return "Generate a readable, informative blog post based strictly on the following news article:\n";
 }
