@@ -1,16 +1,22 @@
 "use client";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
-import { NewsAPIOriginalArticle } from "@/types/newsapi";
 export interface GeneratedContent {
     id: string;
-    type: string;
+    length: "SHORT" | "MEDIUM" | "EXPLAINED"; // Use 'length' to match DB schema and enum
     content: string;
 }
-export interface Article extends NewsAPIOriginalArticle {
+export interface Article {
     id: string;
     category: string;
     sourceName: string;
+    author: string | null;
+    title: string;
+    description: string | null;
+    url: string;
+    urlToImage: string | null;
+    publishedAt: Date; // Changed to Date as it's stored as Date in DB
+    content: string | null;
     generatedContents: GeneratedContent[];
 }
 export const fetchArticles = async (): Promise<Article[]> => {

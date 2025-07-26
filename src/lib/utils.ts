@@ -11,3 +11,10 @@ export function formatTimeAgo(date: string | Date) {
     if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)}d ago`;
     return formatDate(date);
 }
+export function calculateReadTime(text: string) {
+    if (!text) return { readTime: "0 min", wordCount: "0 words" };
+    const wordsPerMinute = 80;
+    const wordCount = text.split(/\s+/).length;
+    const readTime = Math.ceil(wordCount / wordsPerMinute);
+    return { readTime: `${readTime} min`, wordCount: `${wordCount} words` };
+}

@@ -39,7 +39,7 @@ const ArticleCard = memo(({ article }: { article: Article }) => (
                 <div className="p-4 flex flex-col flex-grow">
                     <h3 className="text-md font-bold text-neutral-100 mb-2 flex-grow group-hover:text-blue-400 transition-colors">{article.title}</h3>
                     <div className="flex items-center text-xs text-neutral-400 mt-2">
-                        <Newspaper className="w-4 h-4 mr-2" /> <span>{article.source.name}</span>
+                        <Newspaper className="w-4 h-4 mr-2" /> <span>{article.sourceName || "Unknown Source"}</span>
                     </div>
                     <div className="flex items-center text-xs text-neutral-400 mt-1">
                         <Calendar className="w-4 h-4 mr-2" /> <span>{new Date(article.publishedAt).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}</span>
