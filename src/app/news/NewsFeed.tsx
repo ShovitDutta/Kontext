@@ -3,7 +3,7 @@ import { useState, useMemo, memo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { newsCategories } from '@/lib/newscat';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useArticles } from '@/lib/queries';
 import { Newspaper, Calendar, Tag } from 'lucide-react';
 
@@ -16,15 +16,20 @@ const SkeletonCard = () => (
     </div>
 );
 
-const ArticleCard = memo(({ article, index }: { article: any; index: number }) => (
+const ArticleCard = memo(({ article }: { article: any }) => (
     <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: index * 0.05 }}
+        layout
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        exit={{ opacity: 0, scale: 0.8 }}
+        transition={{ duration: 0.3 }}
         className="w-full"
     >
         <Link href={`/news/${article.id}`}>
-            <div className="bg-neutral-800 rounded-lg shadow-lg overflow-hidden h-full flex flex-col group border border-transparent hover:border-blue-500 transition-all duration-300">
+            <motion.div
+                whileHover={{ y: -5, boxShadow: "0px 10px 20px rgba(0,0,0,0.2)" }}
+                className="bg-neutral-800 rounded-lg shadow-lg overflow-hidden h-full flex flex-col group border border-transparent hover:border-blue-500 transition-all duration-300"
+            >
                 <div className="relative w-full h-48">
                     <Image
                         src={article.urlToImage || '/placeholder.svg'}
@@ -46,7 +51,7 @@ const ArticleCard = memo(({ article, index }: { article: any; index: number }) =
                         <span>{new Date(article.publishedAt).toLocaleDateString()}</span>
                     </div>
                 </div>
-            </div>
+            </motion.div>
         </Link>
     </motion.div>
 ));
@@ -70,14 +75,19 @@ export default function NewsFeed() {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
                 <aside className="lg:col-span-3">
                     <div className="sticky top-24">
-                        <div className="bg-neutral-800 border border-neutral-700 rounded-xl p-4 shadow-inner">
+                        <motion.div
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.5 }}
+                            className="bg-neutral-800 border border-neutral-700 rounded-xl p-4 shadow-inner"
+                        >
                             <h2 className="text-lg font-bold text-white mb-4 flex items-center">
                                 <Tag className="w-5 h-5 mr-2 text-blue-400" />
                                 Categories
                             </h2>
                             <ul className="space-y-2">
                                 {newsCategories.map((category) => (
-                                    <li key={category.id}>
+                                    <motion.li key={category.id} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                                         <button
                                             onClick={() => setSelectedCategory(category.id)}
                                             className={`w-full text-left px-4 py-2 rounded-md text-sm transition-all duration-200 flex items-center ${selectedCategory === category.id ? 'bg-blue-600 text-white font-semibold shadow-md' : 'hover:bg-neutral-700 text-neutral-300'}`}
@@ -85,10 +95,10 @@ export default function NewsFeed() {
                                             <span className="w-5 h-5 mr-3">{category.icon}</span>
                                             {category.name}
                                         </button>
-                                    </li>
+                                    </motion.li>
                                 ))}
                             </ul>
-                        </div>
+                        </motion.div>
                     </div>
                 </aside>
 
@@ -102,25 +112,12 @@ export default function NewsFeed() {
                     ) : error ? (
                         <div className="text-center text-red-400">Failed to load articles.</div>
                     ) : (
-                        <motion.div
-                            className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6"
-                            initial="hidden"
-                            animate="visible"
-                            variants={{
-                                visible: {
-                                    transition: {
-                                        staggerChildren: 0.05,
-                                    },
-                                },
-                            }}
-                        >
-                            {filteredArticles.map((article, i) => (
-                                <ArticleCard
-                                    key={article.id}
-                                    article={article}
-                                    index={i}
-                                />
-                            ))}
+                        <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+                            <AnimatePresence>
+                                {filteredArticles.map((article) => (
+                                    <ArticleCard key={article.id} article={article} />
+                                ))}
+                            </AnimatePresence>
                         </motion.div>
                     )}
                 </main>
