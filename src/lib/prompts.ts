@@ -1,6 +1,5 @@
 export function promptBuilder(category: string, length: 'short' | 'medium' | 'explained') {
     const basePrompt = `You are an expert ${category} analyst and writer. Your task is to transform a news article into a clear, engaging, and well-structured summary.`;
-
     if (length === 'short') {
         return `${basePrompt}
 
@@ -16,7 +15,6 @@ export function promptBuilder(category: string, length: 'short' | 'medium' | 'ex
 **Source Content:**
 `;
     }
-
     if (length === 'medium') {
         return `${basePrompt}
 
@@ -31,7 +29,6 @@ export function promptBuilder(category: string, length: 'short' | 'medium' | 'ex
 **Source Content:**
 `;
     }
-
     if (length === 'explained') {
         return `${basePrompt}
 
