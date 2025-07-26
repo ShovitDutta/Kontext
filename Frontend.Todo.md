@@ -94,3 +94,4 @@ This document outlines the plan for overhauling the frontend of the Kontext appl
     -   [x] Enhanced the `NewsFeed` with `layout` animations for fluid filtering and more dynamic hover effects on article cards.
     -   [x] Refined the `ArticleClientView` with staggered entrance animations for a more polished and engaging reading experience.
     -   [x] Added `whileHover` and `whileTap` gesture animations to all interactive elements (buttons, links) for improved user feedback.
+    -   [x] **Bug Fix:** Resolved a React hydration error by enforcing a consistent date format between the server and client renders.

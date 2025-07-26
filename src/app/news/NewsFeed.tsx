@@ -48,7 +48,7 @@ const ArticleCard = memo(({ article }: { article: any }) => (
                     </div>
                     <div className="flex items-center text-xs text-neutral-400 mt-1">
                         <Calendar className="w-4 h-4 mr-2" />
-                        <span>{new Date(article.publishedAt).toLocaleDateString()}</span>
+                        <span>{new Date(article.publishedAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
                     </div>
                 </div>
             </motion.div>
