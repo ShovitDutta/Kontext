@@ -29,6 +29,8 @@ export default function ArticleClientView() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalTitle, setModalTitle] = useState("");
     const [modalContent, setModalContent] = useState("");
+    const [modalIcon, setModalIcon] = useState<React.ElementType>(BrainCircuit); // State for modal icon
+    const [modalColor, setModalColor] = useState("text-neutral-400"); // State for modal color
 
     const handleBookmark = () => setIsBookmarked(!isBookmarked);
     const handleCopy = () => {
@@ -43,9 +45,12 @@ export default function ArticleClientView() {
         return text.substring(0, text.lastIndexOf(" ", maxLength)) + "...";
     };
 
-    const openModal = (title: string, content: string) => {
+    const openModal = (title: string, content: string, icon: React.ElementType, color: string) => {
         setModalTitle(title);
         setModalContent(content);
+        // Set icon and color for the modal
+        setModalIcon(() => icon); // Use a function to set state for React.ElementType
+        setModalColor(color);
         setIsModalOpen(true);
     };
 
@@ -138,20 +143,20 @@ export default function ArticleClientView() {
                                 return (
                                     <section
                                         key={content.id}
-                                        className="bg-neutral-900/70 p-6 rounded-xl shadow-lg border border-neutral-700/60 cursor-pointer hover:bg-neutral-800 transition-colors flex flex-col" // Removed mb-6, added flex flex-col
-                                        onClick={() => openModal(config.title, content.content)}
+                                        className="bg-neutral-900/70 p-6 rounded-xl shadow-lg border border-neutral-700/60 cursor-pointer hover:bg-neutral-800 transition-colors flex flex-col"
+                                        onClick={() => openModal(config.title, content.content, Icon, config.color)} // Pass icon and color
                                     >
                                         <div className="flex flex-col items-center justify-center space-y-2 mb-6">
                                             <Icon className={`w-9 h-9 ${config.color}`} />
                                             <h2 className={`text-4xl font-bold ${config.color} text-center`}>{config.title}</h2>
                                         </div>
-                                        <div className="text-neutral-300 leading-relaxed flex-grow"> {/* Added flex-grow */}
-                                            <ReactMarkdown>
-                                                {truncateContent(content.content)}
-                                            </ReactMarkdown>
+                                        <div className="text-neutral-300 leading-relaxed flex-grow">
+                                            {" "}
+                                            {/* Added flex-grow */}
+                                            <ReactMarkdown>{truncateContent(content.content)}</ReactMarkdown>
                                         </div>
                                         {/* Read Time and Word Count Footer */}
-                                        <div className={`mt-4 text-right text-sm text-neutral-300 px-3 py-1 rounded-full inline-block ${config.color.replace('text-', 'bg-')}/20`}>
+                                        <div className={`mt-4 text-right text-sm text-neutral-300 px-3 py-1 rounded-full inline-block ${config.color.replace("text-", "bg-")}/20`}>
                                             {(() => {
                                                 const { readTime, wordCount } = calculateReadTime(content.content);
                                                 return `${readTime} | ${wordCount}`;
@@ -163,15 +168,13 @@ export default function ArticleClientView() {
                         ) : (
                             <section
                                 className="bg-neutral-900/70 p-6 rounded-xl shadow-lg border border-neutral-700/60 cursor-pointer hover:bg-neutral-800 transition-colors flex flex-col"
-                                onClick={() => openModal("Article Description", article.description || "")}
+                                onClick={() => openModal("Article Description", article.description || "", BrainCircuit, "text-neutral-400")} // Pass default icon and color
                             >
                                 <div className="flex flex-col items-center justify-center space-y-2 mb-6">
                                     <h2 className="text-4xl font-bold text-neutral-400 text-center">Article Description</h2>
                                 </div>
                                 <div className="text-neutral-300 leading-relaxed flex-grow">
-                                    <ReactMarkdown>
-                                        {truncateContent(article.description || "")}
-                                    </ReactMarkdown>
+                                    <ReactMarkdown>{truncateContent(article.description || "")}</ReactMarkdown>
                                 </div>
                                 {/* Read Time and Word Count Footer for fallback */}
                                 <div className="mt-4 text-right text-sm text-neutral-300 px-3 py-1 rounded-full inline-block bg-neutral-700/20">
@@ -225,6 +228,8 @@ export default function ArticleClientView() {
                 onClose={closeModal}
                 title={modalTitle}
                 content={modalContent}
+                icon={modalIcon} // Pass icon to modal
+                color={modalColor} // Pass color to modal
             />
         </motion.div>
     );

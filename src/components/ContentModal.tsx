@@ -3,15 +3,18 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, Share2, Check } from "lucide-react"; // Import Share2 and Check icons
 import ReactMarkdown from "react-markdown";
 import { useState, useEffect } from "react"; // Import useState and useEffect
+import { BrainCircuit } from "lucide-react"; // Import BrainCircuit for default icon
 
 interface ContentModalProps {
     isOpen: boolean;
     onClose: () => void;
     title: string;
     content: string;
+    icon: React.ElementType; // Add icon prop
+    color: string; // Add color prop
 }
 
-export default function ContentModal({ isOpen, onClose, title, content }: ContentModalProps) {
+export default function ContentModal({ isOpen, onClose, title, content, icon: Icon, color }: ContentModalProps) {
     const [copied, setCopied] = useState(false); // State for copy feedback
 
     useEffect(() => {
@@ -66,7 +69,10 @@ export default function ContentModal({ isOpen, onClose, title, content }: Conten
                                 <X className="w-6 h-6" />
                             </button>
                         </div>
-                        <h2 className="text-3xl font-bold text-white mb-6 text-center">{title}</h2>
+                        <div className="flex flex-col items-center justify-center space-y-2 mb-6">
+                            {Icon && <Icon className={`w-10 h-10 ${color}`} />} {/* Display icon */}
+                            <h2 className={`text-3xl font-bold ${color} text-center`}>{title}</h2> {/* Apply color to title */}
+                        </div>
                         <div className="prose prose-lg prose-invert max-w-full text-neutral-300 leading-relaxed">
                             <ReactMarkdown
                                 components={{
