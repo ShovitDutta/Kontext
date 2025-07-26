@@ -1,6 +1,6 @@
-export function promptBuilder(category: string, length: 'short' | 'medium' | 'explained') {
+export function promptBuilder(category: string, length: "short" | "medium" | "explained") {
     const basePrompt = `You are an expert ${category} analyst and writer. Your task is to transform a news article into a clear, engaging, and well-structured summary.`;
-    if (length === 'short') {
+    if (length === "short") {
         return `${basePrompt}
 
 **Task:** Create a "Quick Summary" (under 150 words). Focus on the most critical information.
@@ -15,7 +15,7 @@ export function promptBuilder(category: string, length: 'short' | 'medium' | 'ex
 **Source Content:**
 `;
     }
-    if (length === 'medium') {
+    if (length === "medium") {
         return `${basePrompt}
 
 **Task:** Create a "Detailed View" (400-500 words). Explain the core concepts and context.
@@ -29,7 +29,7 @@ export function promptBuilder(category: string, length: 'short' | 'medium' | 'ex
 **Source Content:**
 `;
     }
-    if (length === 'explained') {
+    if (length === "explained") {
         return `${basePrompt}
 
 **Task:** Create an "In-Depth Explanation" (800-1000 words). Provide a comprehensive analysis, including background, data, and implications.

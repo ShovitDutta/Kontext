@@ -1,10 +1,10 @@
-import { db } from '@/lib/db';
-import { eq, and } from 'drizzle-orm';
-import { promptBuilder } from '@/lib/prompts';
-import { GoogleGenerativeAI } from '@google/generative-ai';
-import { contentLengthEnum, generatedContents, articles } from '@/lib/db/schema';
+import { db } from "@/lib/db";
+import { eq, and } from "drizzle-orm";
+import { promptBuilder } from "@/lib/prompts";
+import { GoogleGenerativeAI } from "@google/generative-ai";
+import { contentLengthEnum, generatedContents, articles } from "@/lib/db/schema";
 const geminiApiKeys = [process.env.GEMINI_API_KEY_A, process.env.GEMINI_API_KEY_B, process.env.GEMINI_API_KEY_C].filter((key): key is string => !!key);
-if (geminiApiKeys.length === 0) throw new Error('No Gemini API keys found in environment variables (GEMINI_API_KEY_A, B, C)');
+if (geminiApiKeys.length === 0) throw new Error("No Gemini API keys found in environment variables (GEMINI_API_KEY_A, B, C)");
 let currentGeminiKeyIndex = 0;
 const getApiKey = () => {
     const apiKey = geminiApiKeys[currentGeminiKeyIndex];
@@ -28,11 +28,11 @@ async function getArticleText(url: string): Promise<string> {
                 delay *= 2;
             } else {
                 console.error(`Max retries reached for URL: ${url}. Skipping.`);
-                return '';
+                return "";
             }
         }
     }
-    return '';
+    return "";
 }
 export async function generateContent(articleId: string, length: (typeof contentLengthEnum.enumValues)[number]) {
     const existingContent = await db.query.generatedContents.findFirst({ where: and(eq(generatedContents.articleId, articleId), eq(generatedContents.length, length)) });
@@ -43,9 +43,9 @@ export async function generateContent(articleId: string, length: (typeof content
     if (!articleHtml) return;
     const apiKey = getApiKey();
     const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash-preview-05-20' });
-    const prompt = promptBuilder(article.category, length.toLowerCase() as 'short' | 'medium' | 'explained') + articleHtml;
-    let fullContent = '';
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash-preview-05-20" });
+    const prompt = promptBuilder(article.category, length.toLowerCase() as "short" | "medium" | "explained") + articleHtml;
+    let fullContent = "";
     let retries = 0;
     const maxRetries = 5;
     let delay = 2000;

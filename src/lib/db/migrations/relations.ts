@@ -1,5 +1,5 @@
-import { relations } from 'drizzle-orm/relations';
-import { articles, generatedContents, comments, users } from './schema';
+import { relations } from "drizzle-orm/relations";
+import { articles, generatedContents, comments, users } from "./schema";
 
 export const generatedContentsRelations = relations(generatedContents, ({ one }) => ({
     article: one(articles, {

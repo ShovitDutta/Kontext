@@ -1,14 +1,12 @@
-'use client';
-import Link from 'next/link';
-import { useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { AlertTriangle, ArrowRight } from 'lucide-react';
-
+"use client";
+import Link from "next/link";
+import { useEffect } from "react";
+import { motion } from "framer-motion";
+import { AlertTriangle, ArrowRight } from "lucide-react";
 export default function Error({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
     useEffect(() => {
         console.error(error);
     }, [error]);
-
     return (
         <div className="flex flex-col items-center justify-center min-h-[calc(100vh-14rem)] text-center px-4">
             <motion.div
@@ -20,8 +18,7 @@ export default function Error({ error, reset }: { error: Error & { digest?: stri
                 <div className="flex justify-center mb-4">
                     <AlertTriangle className="h-12 w-12 text-red-500" />
                 </div>
-                <h2 className="text-3xl font-bold text-white">Something went wrong!</h2>
-                <p className="mt-2 text-lg text-gray-400">We encountered an unexpected error. Please try again or return to the homepage.</p>
+                <h2 className="text-3xl font-bold text-white">Something went wrong!</h2> <p className="mt-2 text-lg text-gray-400">We encountered an unexpected error. Please try again or return to the homepage.</p>
                 <div className="mt-8 flex justify-center space-x-4">
                     <button
                         onClick={reset}
@@ -31,8 +28,7 @@ export default function Error({ error, reset }: { error: Error & { digest?: stri
                     </button>
                     <Link href="/">
                         <button className="bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-6 rounded-full text-lg transition-colors inline-flex items-center space-x-2">
-                            <span>Go Home</span>
-                            <ArrowRight className="h-5 w-5" />
+                            <span>Go Home</span> <ArrowRight className="h-5 w-5" />
                         </button>
                     </Link>
                 </div>

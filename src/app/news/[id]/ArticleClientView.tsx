@@ -1,12 +1,12 @@
-'use client';
-import Link from 'next/link';
-import Image from 'next/image';
-import { useState } from 'react';
-import { motion } from 'framer-motion';
-import ReactMarkdown from 'react-markdown';
-import { useParams } from 'next/navigation';
-import { useArticle, GeneratedContent } from '@/lib/queries';
-import { Bookmark, ExternalLink, Share2, Check, Newspaper, BookOpen, BrainCircuit, Calendar, User, ArrowLeft } from 'lucide-react';
+"use client";
+import Link from "next/link";
+import Image from "next/image";
+import { useState } from "react";
+import { motion } from "framer-motion";
+import ReactMarkdown from "react-markdown";
+import { useParams } from "next/navigation";
+import { useArticle, GeneratedContent } from "@/lib/queries";
+import { Bookmark, ExternalLink, Share2, Check, Newspaper, BookOpen, BrainCircuit, Calendar, User, ArrowLeft } from "lucide-react";
 const ArticleSkeleton = () => (
     <div className="max-w-4xl mx-auto px-4 py-8 animate-pulse">
         <div className="h-10 bg-neutral-700 rounded w-3/4 mb-4"></div> <div className="h-6 bg-neutral-700 rounded w-1/2 mb-8"></div> <div className="w-full h-96 bg-neutral-700 rounded-xl mb-8"></div>
@@ -15,7 +15,7 @@ const ArticleSkeleton = () => (
         </div>
     </div>
 );
-const contentDisplayConfig = { SHORT: { icon: Newspaper, title: 'Quick Summary', color: 'text-blue-400' }, MEDIUM: { icon: BookOpen, title: 'Detailed View', color: 'text-purple-400' }, EXPLAINED: { icon: BrainCircuit, title: 'In-Depth Explanation', color: 'text-green-400' } };
+const contentDisplayConfig = { SHORT: { icon: Newspaper, title: "Quick Summary", color: "text-blue-400" }, MEDIUM: { icon: BookOpen, title: "Detailed View", color: "text-purple-400" }, EXPLAINED: { icon: BrainCircuit, title: "In-Depth Explanation", color: "text-green-400" } };
 export default function ArticleClientView() {
     const { id } = useParams();
     const { data: article, isLoading, error } = useArticle(id as string);
@@ -31,7 +31,7 @@ export default function ArticleClientView() {
     if (error) return <div className="text-center py-20 text-red-400">Error loading article.</div>;
     if (!article) return <div className="text-center py-20 text-neutral-400">Article not found.</div>;
     const sortedContents = (article.generatedContents || []).sort((a: GeneratedContent, b: GeneratedContent) => {
-        const order = ['SHORT', 'MEDIUM', 'EXPLAINED'];
+        const order = ["SHORT", "MEDIUM", "EXPLAINED"];
         return order.indexOf(a.type) - order.indexOf(b.type);
     });
     const containerVariants = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.1 } } };
@@ -69,7 +69,7 @@ export default function ArticleClientView() {
                             src={article.urlToImage}
                             alt={article.title}
                             fill
-                            style={{ objectFit: 'cover' }}
+                            style={{ objectFit: "cover" }}
                             priority
                             unoptimized
                         />
@@ -91,7 +91,7 @@ export default function ArticleClientView() {
                                 <User className="w-4 h-4 mr-2" /> <span>{article.author || article.sourceName}</span>
                             </div>
                             <div className="flex items-center">
-                                <Calendar className="w-4 h-4 mr-2" /> <span>{new Date(article.publishedAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                                <Calendar className="w-4 h-4 mr-2" /> <span>{new Date(article.publishedAt).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}</span>
                             </div>
                         </motion.div>
                     </header>
@@ -151,9 +151,9 @@ export default function ArticleClientView() {
                                 whileHover={{ scale: 1.1 }}
                                 whileTap={{ scale: 0.9 }}
                                 onClick={handleBookmark}
-                                className={`flex items-center space-x-2 text-neutral-300 transition-colors rounded-full py-2 px-4 ${isBookmarked ? 'bg-blue-600/20 text-blue-400' : 'hover:bg-neutral-700'}`}
+                                className={`flex items-center space-x-2 text-neutral-300 transition-colors rounded-full py-2 px-4 ${isBookmarked ? "bg-blue-600/20 text-blue-400" : "hover:bg-neutral-700"}`}
                             >
-                                <Bookmark className={`h-5 w-5 transition-colors ${isBookmarked ? 'text-blue-400 fill-current' : ''}`} /> <span>{isBookmarked ? 'Bookmarked' : 'Bookmark'}</span>
+                                <Bookmark className={`h-5 w-5 transition-colors ${isBookmarked ? "text-blue-400 fill-current" : ""}`} /> <span>{isBookmarked ? "Bookmarked" : "Bookmark"}</span>
                             </motion.button>
                             <motion.a
                                 whileHover={{ scale: 1.1 }}
@@ -173,7 +173,7 @@ export default function ArticleClientView() {
                                 onClick={handleCopy}
                                 className="flex items-center space-x-2 text-neutral-300 hover:bg-neutral-700 transition-colors rounded-full py-2 px-4"
                             >
-                                {copied ? <Check className="h-5 w-5 text-green-500" /> : <Share2 className="h-5 w-5" />} <span>{copied ? 'Copied!' : 'Share'}</span>
+                                {copied ? <Check className="h-5 w-5 text-green-500" /> : <Share2 className="h-5 w-5" />} <span>{copied ? "Copied!" : "Share"}</span>
                             </motion.button>
                         </div>
                     </motion.footer>

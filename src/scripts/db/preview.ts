@@ -1,5 +1,5 @@
-import 'dotenv/config';
-import { db } from '../../lib/db';
+import "dotenv/config";
+import { db } from "../../lib/db";
 async function main() {
     try {
         const allDbArticles = await db.query.articles.findMany();
@@ -15,19 +15,19 @@ async function main() {
             console.log(`  Published At: ${article.publishedAt}`);
             const articleContents = allGeneratedContents.filter((content) => content.articleId === article.id);
             if (articleContents.length > 0) {
-                console.log('  Generated Content (Blogs):');
+                console.log("  Generated Content (Blogs):");
                 articleContents.forEach((content) => {
                     console.log(`    - Length: ${content.length}`);
                     console.log(`      Content: ${content.content}...`);
                 });
-            } else console.log('  No generated content found for this article.');
+            } else console.log("  No generated content found for this article.");
         }
     } catch (error) {
-        console.error('Error fetching data from database for preview:', error);
+        console.error("Error fetching data from database for preview:", error);
     }
-    console.log('News preview script finished.');
+    console.log("News preview script finished.");
 }
 main().catch((e) => {
-    console.error('An unexpected error occurred:', e);
+    console.error("An unexpected error occurred:", e);
     process.exit(1);
 });

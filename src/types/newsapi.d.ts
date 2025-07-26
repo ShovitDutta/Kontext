@@ -1,5 +1,5 @@
 export interface NewsAPIResponse {
-    status: 'ok' | 'error';
+    status: "ok" | "error";
     totalResults: number;
     articles: NewsAPIOriginalArticle[];
     code?: string;
