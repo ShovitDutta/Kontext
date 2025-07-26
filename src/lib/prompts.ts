@@ -98,9 +98,9 @@ export function promptBuilder(category: string, length: 'short' | 'medium' | 'lo
             `Forward-looking analysis and implications.\n\n` +
             `## 🎯 **The Bottom Line**\n\n` +
             `**Key Takeaways:**\n` +
-            `✅ Major point one\n` +
-            `✅ Major point two\n` +
-            `✅ Major point three\n\n` +
+            `- Major point one\n` +
+            `- Major point two\n` +
+            `- Major point three\n\n` +
             `---\n\n` +
             `*What's your take on this development? Share your thoughts and let's discuss in the comments below! 👇*\n\n` +
             `**Tags:** #${category} #BlogPost #Analysis\n\n` +
@@ -124,9 +124,9 @@ export function promptBuilder(category: string, length: 'short' | 'medium' | 'lo
             `Industry leaders are already forming compliance consortiums to share costs and expertise.\n\n` +
             `## 🎯 **The Bottom Line**\n\n` +
             `**Key Takeaways:**\n` +
-            `✅ Mandatory reporting starts January 2025\n` +
-            `✅ Significant penalties for non-compliance\n` +
-            `✅ Tax incentives available for green investments\n\n` +
+            `- Mandatory reporting starts January 2025\n` +
+            `- Significant penalties for non-compliance\n` +
+            `- Tax incentives available for green investments\n\n` +
             `---\n\n` +
             `*What's your take on this development? Share your thoughts and let's discuss in the comments below! 👇*\n\n` +
             `**Tags:** #Climate #Policy #Business\n`

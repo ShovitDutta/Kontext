@@ -20,13 +20,17 @@
         "format": "prettier --write .",
         "db:migrate": "drizzle-kit migrate",
         "db:reset": "node src/scripts/reset.js",
+        "db:preview": "tsx src/scripts/db/preview.ts",
+        "db:populate": "tsx src/scripts/db/populate.ts",
         "db:pull": "drizzle-kit pull --config=drizzle.config.ts",
         "db:push": "drizzle-kit push --config=drizzle.config.ts",
         "build": "npx rimraf .next .cache && yarn lint && next build",
         "db:generate": "drizzle-kit generate --config=drizzle.config.ts",
         "clean": "npx rimraf .next .cache node_modules prisma/migrations",
+        "db:load": "yarn db:pull && yarn lint && yarn format && yarn db:populate && yarn db:preview",
         "preflight:dev": "yarn clean && yarn install --silent && yarn db:pull && yarn lint && yarn format && yarn build",
         "preflight:prod": "yarn clean && yarn install --frozen-lockfile --silent && yarn db:pull && yarn lint && yarn format && yarn build",
+        "db:load:clean": "yarn db:reset && yarn db:migrate && yarn db:generate && yarn db:push && yarn db:pull && yarn lint && yarn format && yarn db:populate && yarn db:preview",
         "preflight:clean": "yarn clean && yarn install --silent && yarn db:reset && yarn db:migrate && yarn db:generate && yarn db:push && yarn db:pull && yarn lint && yarn format && yarn build"
     },
     "dependencies": {
@@ -69,6 +73,7 @@
         "eslint-config-next": "15.4.4",
         "postcss": "^8.5.6",
         "tailwindcss": "^4.1.11",
+        "tsx": "4.20.3",
         "typescript": "^5"
     }
 }

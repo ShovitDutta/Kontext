@@ -7,9 +7,7 @@ export async function GET(req: NextRequest) {
         const articles = await db.query.articles.findMany();
         for (const article of articles) {
             const lengths: ('SHORT' | 'MEDIUM' | 'EXPLAINED')[] = ['SHORT', 'MEDIUM', 'EXPLAINED'];
-            for (const length of lengths) {
-                await generateContent(article.id, length);
-            }
+            for (const length of lengths) await generateContent(article.id, length);
             await new Promise((resolve) => setTimeout(resolve, 15000));
         }
         return new Response(JSON.stringify({ success: true }), { status: 200 });
