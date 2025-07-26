@@ -3,18 +3,14 @@ import { eq, and } from 'drizzle-orm';
 import { promptBuilder } from '@/lib/prompts';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { contentLengthEnum, generatedContents, articles } from '@/lib/db/schema';
-
 const geminiApiKeys = [process.env.GEMINI_API_KEY_A, process.env.GEMINI_API_KEY_B, process.env.GEMINI_API_KEY_C].filter((key): key is string => !!key);
-if (geminiApiKeys.length === 0) {
-    throw new Error('No Gemini API keys found in environment variables (GEMINI_API_KEY_A, B, C)');
-}
+if (geminiApiKeys.length === 0) throw new Error('No Gemini API keys found in environment variables (GEMINI_API_KEY_A, B, C)');
 let currentGeminiKeyIndex = 0;
 const getApiKey = () => {
     const apiKey = geminiApiKeys[currentGeminiKeyIndex];
     currentGeminiKeyIndex = (currentGeminiKeyIndex + 1) % geminiApiKeys.length;
     return apiKey;
 };
-
 async function getArticleText(url: string): Promise<string> {
     let retries = 0;
     let delay = 1000;

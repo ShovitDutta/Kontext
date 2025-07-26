@@ -6,23 +6,14 @@ import { InferInsertModel } from 'drizzle-orm';
 import { newsCategories } from '../../lib/newscat';
 import { generateContent } from '../../lib/generate';
 type TArticle = InferInsertModel<typeof articles>;
-const apiKeys = [process.env.NEWS_API_KEY_A, process.env.NEWS_API_KEY_B, process.env.NEWS_API_KEY_C].filter((key): key is string => !!key);
-if (apiKeys.length === 0) {
-    throw new Error('Missing NEWS_API_KEY_A, NEWS_API_KEY_B, or NEWS_API_KEY_C in .env file');
-}
-let currentApiKeyIndex = 0;
-const getApiKey = () => {
-    const apiKey = apiKeys[currentApiKeyIndex];
-    currentApiKeyIndex = (currentApiKeyIndex + 1) % apiKeys.length;
-    return apiKey;
-};
+const NEWS_API_KEY = process.env.NEWS_API_KEY;
+if (!NEWS_API_KEY) throw new Error('Missing NEWS_API_KEY in .env file');
 const NEWS_API_URL = 'https://newsapi.org/v2/top-headlines';
 const newsApiArticleSchema = z.object({ source: z.object({ id: z.string().nullable(), name: z.string() }), author: z.string().nullable(), title: z.string(), description: z.string().nullable(), url: z.string().url(), urlToImage: z.string().url().nullable(), publishedAt: z.string(), content: z.string().nullable() });
 type NewsApiArticle = z.infer<typeof newsApiArticleSchema>;
 const newsApiResponseSchema = z.object({ status: z.string(), totalResults: z.number(), articles: z.array(newsApiArticleSchema) });
 async function fetchNews(category: string): Promise<NewsApiArticle[]> {
-    const apiKey = getApiKey();
-    const url = `${NEWS_API_URL}?category=${category}&language=en&apiKey=${apiKey}`;
+    const url = `${NEWS_API_URL}?category=${category}&language=en&apiKey=${NEWS_API_KEY}`;
     try {
         const response = await fetch(url);
         if (!response.ok) throw new Error(`Failed to fetch news: ${response.statusText}`);
@@ -51,7 +42,6 @@ async function storeArticles(articlesToStore: Omit<TArticle, 'id'>[]) {
 async function main() {
     console.log('Starting database population script...');
     const existingArticlesCount = await db.query.articles.findMany({ limit: 1 });
-
     if (existingArticlesCount.length > 0) console.log('Articles already exist in the database. Skipping API fetch and proceeding to content generation.');
     else {
         console.log('No articles found in the database. Fetching news articles from API...');
@@ -76,7 +66,6 @@ async function main() {
             console.error('Error fetching or storing news articles:', error);
         }
     }
-
     console.log('Generating content for articles...');
     try {
         const allDbArticles = await db.query.articles.findMany();
