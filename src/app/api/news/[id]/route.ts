@@ -2,7 +2,8 @@ import { db } from "@/lib/db";
 import { eq } from "drizzle-orm";
 import { NextRequest } from "next/server";
 import { articles } from "@/lib/db/schema";
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, props: { params: Promise<{ id: string }> }) {
+    const params = await props.params;
     const id: string = params.id;
     try {
         const article = await db.query.articles.findFirst({ where: eq(articles.id, id), with: { generatedContents: true } });

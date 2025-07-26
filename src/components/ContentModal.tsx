@@ -1,9 +1,8 @@
 "use client";
-import { motion, AnimatePresence } from "framer-motion";
-import { X, Share2, Check } from "lucide-react"; // Import Share2 and Check icons
 import ReactMarkdown from "react-markdown";
-import { useState, useEffect } from "react"; // Import useState and useEffect
-import { BrainCircuit } from "lucide-react"; // Import BrainCircuit for default icon
+import { useState, useEffect } from "react";
+import { X, Share2, Check } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface ContentModalProps {
     isOpen: boolean;
@@ -54,7 +53,9 @@ export default function ContentModal({ isOpen, onClose, title, content, icon: Ic
                         className="bg-neutral-800 rounded-2xl shadow-2xl p-6 sm:p-8 md:p-10 max-w-3xl w-full max-h-[90vh] overflow-y-auto relative border border-neutral-700"
                         onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the modal content
                     >
-                        <div className="absolute top-4 right-4 flex space-x-2"> {/* Container for buttons */}
+                        <div className="absolute top-4 right-4 flex space-x-2">
+                            {" "}
+                            {/* Container for buttons */}
                             <button
                                 onClick={handleCopy}
                                 className="flex items-center space-x-1 text-neutral-400 hover:text-white transition-colors"
