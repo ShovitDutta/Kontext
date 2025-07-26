@@ -37,7 +37,9 @@
         "**/Thumbs.db": true
     },
     "editor.formatOnSave": true,
-    "typescript.tsdk": "node_modules/typescript/lib",
+    "prettier.requireConfig": true,
+    "python.analysis.typeCheckingMode": "basic",
     "typescript.enablePromptUseWorkspaceTsdk": true,
-    "python.analysis.typeCheckingMode": "basic"
+    "typescript.tsdk": "node_modules/typescript/lib",
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
 }
