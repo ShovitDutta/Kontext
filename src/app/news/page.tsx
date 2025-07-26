@@ -1,129 +1,27 @@
-'use client';
-import { useState, useEffect, useMemo } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
-import { newsCategories } from '@/lib/newscat';
-import { motion } from 'framer-motion';
+import { HydrationBoundary, QueryClient, dehydrate } from '@tanstack/react-query';
+import getQueryClient from '@/lib/get-query-client';
+import NewsFeed from './NewsFeed';
+import { fetchArticles } from '@/lib/queries'; // Assuming you extract the fetcher
 
-type Article = {
-    id: string;
-    title: string;
-    description: string;
-    urlToImage: string | null;
-    sourceName: string;
-    author: string | null;
-    publishedAt: string;
-    category: string;
-};
+export default async function NewsPage() {
+    const queryClient = getQueryClient();
 
-const SkeletonCard = () => (
-    <div className="bg-gray-800/40 rounded-xl shadow-lg border border-gray-700/50 p-4 animate-pulse">
-        <div className="w-full h-48 bg-gray-700 rounded-lg mb-4"></div>
-        <div className="h-6 bg-gray-700 rounded w-3/4 mb-2"></div>
-        <div className="h-4 bg-gray-700 rounded w-full mb-1"></div>
-        <div className="h-4 bg-gray-700 rounded w-5/6"></div>
-    </div>
-);
-
-export default function NewsPage() {
-    const [allArticles, setAllArticles] = useState<Article[]>([]);
-    const [selectedCategory, setSelectedCategory] = useState('all');
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        const fetchArticles = async () => {
-            setLoading(true);
-            // Fetch all articles regardless of category
-            const response = await fetch(`/api/news?category=all`);
-            const data = await response.json();
-            setAllArticles(data);
-            setLoading(false);
-        };
-
-        fetchArticles();
-    }, []);
-
-    const filteredArticles = useMemo(() => {
-        if (selectedCategory === 'all') {
-            return allArticles;
-        }
-        return allArticles.filter((article) => article.category === selectedCategory);
-    }, [selectedCategory, allArticles]);
+    // Prefetch the data on the server
+    await queryClient.prefetchQuery({
+        queryKey: ['articles'],
+        queryFn: async () => {
+            const res = await fetch('http://localhost:3000/api/news?category=all', { cache: 'no-store' });
+            if (!res.ok) {
+                throw new Error('Failed to fetch articles');
+            }
+            return res.json();
+        },
+    });
 
     return (
-        <div className="container mx-auto px-4 py-8">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-                <aside className="md:col-span-1">
-                    <div className="sticky top-24">
-                        <div className="bg-gray-800/40 border border-gray-700/50 rounded-xl p-4">
-                            <h2 className="text-lg font-bold text-white mb-4">Categories</h2>
-                            <ul>
-                                {newsCategories.map((category) => (
-                                    <li
-                                        key={category.id}
-                                        className="mb-2"
-                                    >
-                                        <button
-                                            onClick={() => setSelectedCategory(category.id)}
-                                            className={`w-full text-left px-4 py-2 rounded-lg text-sm transition-colors ${selectedCategory === category.id ? 'bg-blue-600 text-white font-semibold' : 'hover:bg-gray-700/50 text-gray-300'}`}
-                                        >
-                                            {category.name}
-                                        </button>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                    </div>
-                </aside>
-
-                <main className="md:col-span-3">
-                    {loading ? (
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {Array.from({ length: 9 }).map((_, i) => (
-                                <SkeletonCard key={i} />
-                            ))}
-                        </div>
-                    ) : (
-                        <motion.div
-                            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ duration: 0.5 }}
-                        >
-                            {filteredArticles.map((article, i) => (
-                                <motion.div
-                                    key={article.id}
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ duration: 0.5, delay: i * 0.05 }}
-                                >
-                                    <Link href={`/news/${article.id}`}>
-                                        <div className="bg-gray-800/40 rounded-xl shadow-lg border border-gray-700/50 overflow-hidden h-full flex flex-col group">
-                                            <div className="relative w-full h-48">
-                                                <Image
-                                                    src={article.urlToImage || '/placeholder.svg'}
-                                                    alt={article.title}
-                                                    fill
-                                                    style={{ objectFit: 'cover' }}
-                                                    className="group-hover:scale-105 transition-transform duration-300"
-                                                    unoptimized // Add this if you are having issues with external image domains
-                                                />
-                                            </div>
-                                            <div className="p-4 flex flex-col flex-grow">
-                                                <h3 className="text-md font-bold text-white mb-2 flex-grow">{article.title}</h3>
-                                                <div className="flex justify-between items-center text-xs text-gray-400 mt-2">
-                                                    <span>{article.sourceName}</span>
-                                                    <span>{new Date(article.publishedAt).toLocaleDateString()}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </Link>
-                                </motion.div>
-                            ))}
-                        </motion.div>
-                    )}
-                </main>
-            </div>
-        </div>
+        // Pass the dehydrated state to the client
+        <HydrationBoundary state={dehydrate(queryClient)}>
+            <NewsFeed />
+        </HydrationBoundary>
     );
 }

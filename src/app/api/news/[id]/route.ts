@@ -3,7 +3,7 @@ import { eq } from 'drizzle-orm';
 import { NextRequest } from 'next/server';
 import { articles } from '@/lib/db/schema';
 
-export async function GET(request: NextRequest, context: { params: { id:string } }) {
+export async function GET(request: NextRequest, context: { params: { id: string } }) {
     const id = context.params.id;
 
     try {
