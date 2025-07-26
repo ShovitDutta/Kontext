@@ -51,3 +51,17 @@ This document outlines the plan for overhauling the frontend of the Kontext appl
 
 -   [x] **Consistent Rounded Design:**
     -   [x] Ensure all elements use rounded corners for a soft, modern aesthetic.
+
+## Phase 4: Content & UI Polish
+
+-   [x] **Refine Generation Prompts:**
+    -   [x] Removed conversational "call-to-action" phrases from AI generation prompts to ensure a more professional tone.
+    -   [x] Rewrote prompts to encourage more varied and structured markdown, including lists and blockquotes.
+
+-   [x] **Improve Article Readability:**
+    -   [x] Fixed paragraph spacing issues in generated articles by customizing `ReactMarkdown` rendering to add bottom margins.
+    -   [x] Added custom styling to `globals.css` for markdown elements to improve visual hierarchy and appeal.
+
+-   [x] **Integrate Icons:**
+    -   [x] Added `lucide-react` icons for author and date information on the article page to improve visual context.
+    -   [x] Ensured consistent use of icons for actions like bookmarking and sharing.

@@ -1,17 +1,17 @@
 CREATE TYPE "public"."content_length" AS ENUM('SHORT', 'MEDIUM', 'EXPLAINED');--> statement-breakpoint
 CREATE TABLE "articles" (
+	"author" text,
+	"url" text,
 	"id" text PRIMARY KEY NOT NULL,
 	"title" text,
-	"url" text,
-	"description" text,
 	"urlToImage" text,
-	"author" text,
-	"publishedAt" timestamp NOT NULL,
+	"description" text,
 	"category" text NOT NULL,
 	"sourceName" text NOT NULL,
+	"publishedAt" timestamp NOT NULL,
 	"createdAt" timestamp DEFAULT now() NOT NULL,
-	CONSTRAINT "articles_title_unique" UNIQUE("title"),
-	CONSTRAINT "articles_url_unique" UNIQUE("url")
+	CONSTRAINT "articles_url_unique" UNIQUE("url"),
+	CONSTRAINT "articles_title_unique" UNIQUE("title")
 );
 --> statement-breakpoint
 CREATE TABLE "comments" (

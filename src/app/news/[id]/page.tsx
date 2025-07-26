@@ -2,15 +2,17 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Image from 'next/image';
-import { FacebookShareButton, TwitterShareButton, LinkedinShareButton, FacebookIcon, TwitterIcon, LinkedinIcon } from 'react-share';
-import { Bookmark, ExternalLink } from 'lucide-react';
+import { Bookmark, ExternalLink, Share2, Check, Newspaper, BookOpen, BrainCircuit, Calendar, User } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import ReactMarkdown from 'react-markdown';
+
+type ContentLength = 'SHORT' | 'MEDIUM' | 'EXPLAINED';
 
 type GeneratedContent = {
   id: string;
   content: string;
-  length: 'SHORT' | 'MEDIUM' | 'EXPLAINED';
+  length: ContentLength;
 };
 
 type Article = {
@@ -34,17 +36,34 @@ const ArticleSkeleton = () => (
             <div className="h-4 bg-gray-700 rounded w-full"></div>
             <div className="h-4 bg-gray-700 rounded w-full"></div>
             <div className="h-4 bg-gray-700 rounded w-5/6"></div>
-            <div className="h-4 bg-gray-700 rounded w-full"></div>
-            <div className="h-4 bg-gray-700 rounded w-3/4"></div>
         </div>
     </div>
 );
+
+const contentDisplayConfig = {
+    SHORT: {
+        icon: Newspaper,
+        title: "Quick Summary",
+        color: "text-blue-400"
+    },
+    MEDIUM: {
+        icon: BookOpen,
+        title: "Detailed View",
+        color: "text-purple-400"
+    },
+    EXPLAINED: {
+        icon: BrainCircuit,
+        title: "In-Depth Explanation",
+        color: "text-green-400"
+    }
+};
 
 export default function ArticlePage() {
   const { id } = useParams();
   const [article, setArticle] = useState<Article | null>(null);
   const [loading, setLoading] = useState(true);
   const [isBookmarked, setIsBookmarked] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     if (id) {
@@ -53,6 +72,10 @@ export default function ArticlePage() {
         const response = await fetch(`/api/news/${id}`);
         if (response.ok) {
             const data = await response.json();
+            data.generatedContents.sort((a: GeneratedContent, b: GeneratedContent) => {
+                const order: ContentLength[] = ['SHORT', 'MEDIUM', 'EXPLAINED'];
+                return order.indexOf(a.length) - order.indexOf(b.length);
+            });
             setArticle(data);
         }
         setLoading(false);
@@ -61,71 +84,69 @@ export default function ArticlePage() {
     }
   }, [id]);
 
-  const handleBookmark = () => {
-    setIsBookmarked(!isBookmarked);
-    // In a real app, you'd persist this state.
+  const handleBookmark = () => setIsBookmarked(!isBookmarked);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(window.location.href);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
-  if (loading) {
-    return <ArticleSkeleton />;
-  }
-
-  if (!article) {
-    return <div className="text-center py-20 text-gray-400">Article not found.</div>;
-  }
-
-  const shareUrl = article.url;
-  const selectedContent = article.generatedContents.find(c => c.length === 'MEDIUM') || article.generatedContents[0];
+  if (loading) return <ArticleSkeleton />;
+  if (!article) return <div className="text-center py-20 text-gray-400">Article not found.</div>;
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.7 }}
-      className="max-w-4xl mx-auto px-4 py-8"
-    >
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.7 }} className="max-w-4xl mx-auto px-4 py-8">
       <article>
         <header className="mb-8">
-          <motion.h1 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-3xl md:text-4xl font-bold text-white tracking-tight mb-3"
-          >
+          <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="text-3xl md:text-4xl font-bold text-white tracking-tight mb-4">
             {article.title}
           </motion.h1>
-          <div className="flex flex-wrap items-center text-sm text-gray-400">
-            <span>By {article.author || article.sourceName}</span>
-            <span className="mx-2">&bull;</span>
-            <span>{new Date(article.publishedAt).toLocaleDateString()}</span>
+          <div className="flex flex-wrap items-center text-sm text-gray-400 space-x-4">
+            <div className="flex items-center space-x-2">
+                <User className="h-4 w-4" />
+                <span>{article.author || article.sourceName}</span>
+            </div>
+            <div className="flex items-center space-x-2">
+                <Calendar className="h-4 w-4" />
+                <span>{new Date(article.publishedAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+            </div>
           </div>
         </header>
 
         {article.urlToImage && (
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6 }}
-            className="relative w-full h-64 md:h-96 mb-8 rounded-xl overflow-hidden shadow-lg"
-          >
-            <Image src={article.urlToImage} alt={article.title} fill style={{objectFit: 'cover'}} priority />
+          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.6 }} className="relative w-full h-64 md:h-96 mb-8 rounded-xl overflow-hidden shadow-lg">
+            <Image src={article.urlToImage} alt={article.title} fill style={{objectFit: 'cover'}} priority unoptimized />
           </motion.div>
         )}
 
-        <div className="prose prose-lg prose-invert max-w-full text-gray-300 leading-relaxed">
-          {selectedContent ? (
-            <p>{selectedContent.content}</p>
-          ) : (
-            <p>{article.description}</p>
-          )}
+        <div className="space-y-12">
+            {article.generatedContents.length > 0 ? (
+                article.generatedContents.map(content => {
+                    const config = contentDisplayConfig[content.length];
+                    const Icon = config.icon;
+                    return (
+                        <section key={content.id}>
+                            <div className="flex items-center space-x-3 mb-4">
+                                <Icon className={`w-7 h-7 ${config.color}`} />
+                                <h2 className={`text-2xl font-bold ${config.color}`}>{config.title}</h2>
+                            </div>
+                            <div className="prose prose-lg prose-invert max-w-full text-gray-300 leading-relaxed">
+                                <ReactMarkdown components={{ p: ({node, ...props}) => <p className="mb-4" {...props} /> }}>{content.content}</ReactMarkdown>
+                            </div>
+                        </section>
+                    );
+                })
+            ) : (
+                <div className="prose prose-lg prose-invert max-w-full text-gray-300 leading-relaxed">
+                    <ReactMarkdown components={{ p: ({node, ...props}) => <p className="mb-4" {...props} /> }}>{article.description}</ReactMarkdown>
+                </div>
+            )}
         </div>
 
-        <footer className="mt-10 pt-6 border-t border-gray-700/50 flex flex-col sm:flex-row items-center justify-between">
-          <div className="flex items-center space-x-4 mb-4 sm:mb-0">
-            <button 
-              onClick={handleBookmark} 
-              className={`flex items-center space-x-2 text-gray-400 hover:text-white transition-colors rounded-full py-2 px-4 ${isBookmarked ? 'bg-blue-600/20 text-blue-400' : 'hover:bg-gray-700/50'}`}
-            >
+        <footer className="mt-12 pt-6 border-t border-gray-700/50 flex flex-col sm:flex-row items-center justify-between">
+          <div className="flex items-center space-x-2 mb-4 sm:mb-0">
+            <button onClick={handleBookmark} className={`flex items-center space-x-2 text-gray-400 hover:text-white transition-colors rounded-full py-2 px-4 ${isBookmarked ? 'bg-blue-600/20 text-blue-400' : 'hover:bg-gray-700/50'}`}>
               <Bookmark className={`h-5 w-5 transition-colors ${isBookmarked ? 'text-blue-400 fill-current' : ''}`} />
               <span>{isBookmarked ? 'Bookmarked' : 'Bookmark'}</span>
             </button>
@@ -135,16 +156,10 @@ export default function ArticlePage() {
             </Link>
           </div>
           <div className="flex items-center space-x-2">
-            <span className="text-sm text-gray-400 mr-2">Share:</span>
-            <TwitterShareButton url={shareUrl} title={article.title}>
-                <TwitterIcon size={32} round />
-            </TwitterShareButton>
-            <FacebookShareButton url={shareUrl} quote={article.title}>
-                <FacebookIcon size={32} round />
-            </FacebookShareButton>
-            <LinkedinShareButton url={shareUrl}>
-                <LinkedinIcon size={32} round />
-            </LinkedinShareButton>
+            <button onClick={handleCopy} className="flex items-center space-x-2 text-gray-400 hover:text-white transition-colors rounded-full py-2 px-4 hover:bg-gray-700/50">
+                {copied ? <Check className="h-5 w-5 text-green-500" /> : <Share2 className="h-5 w-5" />}
+                <span>{copied ? 'Copied!' : 'Share'}</span>
+            </button>
           </div>
         </footer>
       </article>

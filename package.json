@@ -30,7 +30,7 @@
         "db:load": "yarn db:pull && yarn lint && yarn format && yarn db:populate && yarn db:preview",
         "preflight:dev": "yarn clean && yarn install --silent && yarn db:pull && yarn lint && yarn format && yarn build",
         "preflight:prod": "yarn clean && yarn install --frozen-lockfile --silent && yarn db:pull && yarn lint && yarn format && yarn build",
-        "db:load:clean": "yarn db:reset && yarn db:migrate && yarn db:generate && yarn db:push && yarn db:pull && yarn lint && yarn format && yarn db:populate && yarn db:preview",
+        "db:load:clean": "yarn db:reset && drizzle-kit push --force && yarn db:populate && yarn db:preview",
         "preflight:clean": "yarn clean && yarn install --silent && yarn db:reset && yarn db:migrate && yarn db:generate && yarn db:push && yarn db:pull && yarn lint && yarn format && yarn build"
     },
     "dependencies": {

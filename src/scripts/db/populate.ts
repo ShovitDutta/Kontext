@@ -54,7 +54,7 @@ async function main() {
                 url: article.url,
                 title: article.title,
                 author: article.author,
-                image: article.urlToImage,
+                urlToImage: article.urlToImage,
                 content: article.content,
                 category: allCategories.find((c) => article.url.includes(c)) || 'general',
                 publishedAt: article.publishedAt ? new Date(article.publishedAt) : new Date(),
