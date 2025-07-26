@@ -7,7 +7,7 @@ export default function LandingPage() {
         <div className="flex flex-col min-h-screen">
             <main className="flex-1">
                 <section className="relative py-20 md:py-32 lg:py-40 overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-black opacity-80"></div>
+                    <div className="absolute inset-0 bg-gradient-to-br from-neutral-900 via-gray-800 to-black opacity-80"></div>
                     <div className="absolute inset-0 -z-10">
                         <div className="absolute -top-1/2 -left-1/2 w-96 h-96 bg-blue-500/20 rounded-full filter blur-3xl animate-pulse"></div> <div className="absolute -bottom-1/2 -right-1/2 w-96 h-96 bg-purple-500/20 rounded-full filter blur-3xl animate-pulse animation-delay-4000"></div>
                     </div>
@@ -29,7 +29,7 @@ export default function LandingPage() {
                         </motion.div>
                     </div>
                 </section>
-                <section className="py-20 bg-gray-900/50">
+                <section className="py-20 bg-neutral-900/50">
                     <div className="container mx-auto px-4">
                         <h2 className="text-3xl font-bold text-center text-white mb-12">Why Choose Kontext?</h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">

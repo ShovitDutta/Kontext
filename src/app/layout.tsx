@@ -6,7 +6,7 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import Providers from "@/components/Providers";
 import PageTransition from "@/components/PageTransition";
-const poppins = Poppins({ subsets: ["latin"], weight: ["400", "500", "600", "700"], variable: "--font-poppins" });
+const poppins = Poppins({ subsets: ["latin"], weight: ["300", "400", "500", "600", "700"], variable: "--font-poppins", display: "swap" });
 export const metadata: Metadata = {
     creator: "Kontext",
     generator: "Next.js",
@@ -15,17 +15,17 @@ export const metadata: Metadata = {
     robots: { index: true, follow: true },
     keywords: ["AI", "News", "Technology", "Blog", "Intelligence", "Daily"],
     title: { default: "Kontext - GenAI Powered News Blog", template: "%s | Kontext" },
-    description: "Kontext Is An GenAI Powered News Blog, To Stay Updated With The Latest News, Transformed Into Engaging Blog Posts Using GenAI.",
+    description: "Kontext Is A GenAI Powered News Blog, To Stay Updated With The Latest News, Transformed Into Engaging Blog Posts Using GenAI.",
 };
 export const viewport = { width: "device-width", initialScale: 1, maximumScale: 1 };
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
         <html
             lang="en"
-            className="dark"
             style={{ colorScheme: "dark" }}
+            className={`${poppins.variable} dark`}
         >
-            <body className={`${poppins.variable} font-sans antialiased bg-gray-900 text-gray-200`}>
+            <body className="antialiased font-sans bg-neutral-900 text-gray-200">
                 <Providers>
                     <div className="relative flex min-h-screen flex-col">
                         <Navbar />

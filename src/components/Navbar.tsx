@@ -1,10 +1,8 @@
 "use client";
-
 import Link from "next/link";
-
 export function Navbar() {
     return (
-        <nav className="sticky top-0 z-50 w-full border-b border-gray-700/50 bg-gray-900/80 backdrop-blur">
+        <nav className="sticky top-0 z-50 w-full border-b border-gray-700/50 bg-neutral-900/80 backdrop-blur">
             <div className="container mx-auto px-4 h-16 flex items-center justify-between">
                 <Link
                     href="/"
