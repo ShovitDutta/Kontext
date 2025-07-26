@@ -6,12 +6,22 @@ import { InferInsertModel } from 'drizzle-orm';
 import { newsCategories } from '../../lib/newscat';
 import { generateContent } from '../../lib/generate';
 type TArticle = InferInsertModel<typeof articles>;
-const apiKey = process.env.NEWS_API_KEY;
+const apiKeys = [process.env.NEWS_API_KEY_A, process.env.NEWS_API_KEY_B, process.env.NEWS_API_KEY_C].filter((key): key is string => !!key);
+if (apiKeys.length === 0) {
+    throw new Error('Missing NEWS_API_KEY_A, NEWS_API_KEY_B, or NEWS_API_KEY_C in .env file');
+}
+let currentApiKeyIndex = 0;
+const getApiKey = () => {
+    const apiKey = apiKeys[currentApiKeyIndex];
+    currentApiKeyIndex = (currentApiKeyIndex + 1) % apiKeys.length;
+    return apiKey;
+};
 const NEWS_API_URL = 'https://newsapi.org/v2/top-headlines';
 const newsApiArticleSchema = z.object({ source: z.object({ id: z.string().nullable(), name: z.string() }), author: z.string().nullable(), title: z.string(), description: z.string().nullable(), url: z.string().url(), urlToImage: z.string().url().nullable(), publishedAt: z.string(), content: z.string().nullable() });
 type NewsApiArticle = z.infer<typeof newsApiArticleSchema>;
 const newsApiResponseSchema = z.object({ status: z.string(), totalResults: z.number(), articles: z.array(newsApiArticleSchema) });
 async function fetchNews(category: string): Promise<NewsApiArticle[]> {
+    const apiKey = getApiKey();
     const url = `${NEWS_API_URL}?category=${category}&language=en&apiKey=${apiKey}`;
     try {
         const response = await fetch(url);

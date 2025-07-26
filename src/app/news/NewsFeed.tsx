@@ -27,7 +27,7 @@ const ArticleCard = memo(({ article }: { article: any }) => (
     >
         <Link href={`/news/${article.id}`}>
             <motion.div
-                whileHover={{ y: -5, boxShadow: "0px 10px 20px rgba(0,0,0,0.2)" }}
+                whileHover={{ y: -5, boxShadow: '0px 10px 20px rgba(0,0,0,0.2)' }}
                 className="bg-neutral-800 rounded-lg shadow-lg overflow-hidden h-full flex flex-col group border border-transparent hover:border-blue-500 transition-all duration-300"
             >
                 <div className="relative w-full h-48">
@@ -87,7 +87,11 @@ export default function NewsFeed() {
                             </h2>
                             <ul className="space-y-2">
                                 {newsCategories.map((category) => (
-                                    <motion.li key={category.id} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                                    <motion.li
+                                        key={category.id}
+                                        whileHover={{ scale: 1.05 }}
+                                        whileTap={{ scale: 0.95 }}
+                                    >
                                         <button
                                             onClick={() => setSelectedCategory(category.id)}
                                             className={`w-full text-left px-4 py-2 rounded-md text-sm transition-all duration-200 flex items-center ${selectedCategory === category.id ? 'bg-blue-600 text-white font-semibold shadow-md' : 'hover:bg-neutral-700 text-neutral-300'}`}
@@ -112,10 +116,16 @@ export default function NewsFeed() {
                     ) : error ? (
                         <div className="text-center text-red-400">Failed to load articles.</div>
                     ) : (
-                        <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+                        <motion.div
+                            layout
+                            className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6"
+                        >
                             <AnimatePresence>
                                 {filteredArticles.map((article) => (
-                                    <ArticleCard key={article.id} article={article} />
+                                    <ArticleCard
+                                        key={article.id}
+                                        article={article}
+                                    />
                                 ))}
                             </AnimatePresence>
                         </motion.div>
