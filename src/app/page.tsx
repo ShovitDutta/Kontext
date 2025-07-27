@@ -1,12 +1,11 @@
 "use client";
 import React, { useState } from "react";
-import ArticleCard from "@/components/ArticleCard";
+import { redirect } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { useArticles } from "@/hooks/useArticles";
+import ArticleCard from "@/components/ArticleCard";
 import CategoryFilter from "@/components/CategoryFilter";
 import ArticleCardSkeleton from "@/components/ArticleCardSkeleton";
-import { useSession } from "next-auth/react";
-import { redirect } from "next/navigation";
-
 const Page = () => {
     const { status } = useSession({
         required: true,
@@ -16,7 +15,6 @@ const Page = () => {
     });
     const [selectedCategory, setSelectedCategory] = useState("all");
     const { data: articles, isLoading, error } = useArticles(selectedCategory);
-
     if (status === "loading" || isLoading) {
         return (
             <div className="container mx-auto p-4">
@@ -28,11 +26,7 @@ const Page = () => {
             </div>
         );
     }
-
-    if (error) {
-        return <div>Error fetching articles: {error.message}</div>;
-    }
-
+    if (error) return <div>Error fetching articles: {error.message}</div>;
     return (
         <div className="container mx-auto p-4">
             <CategoryFilter
@@ -42,17 +36,16 @@ const Page = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {articles?.map((article) => (
                     <ArticleCard
-                        key={article.id}
                         id={article.id}
+                        key={article.id}
                         title={article.title}
-                        description={article.description}
-                        imageUrl={article.urlToImage}
                         source={article.sourceName}
+                        imageUrl={article.urlToImage}
+                        description={article.description}
                     />
                 ))}
             </div>
         </div>
     );
 };
-
 export default Page;

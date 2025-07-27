@@ -27,12 +27,12 @@ const SearchPage = () => {
                     ? Array.from({ length: 6 }).map((_, i) => <ArticleCardSkeleton key={i} />)
                     : filteredArticles?.map((article) => (
                           <ArticleCard
-                              key={article.id}
                               id={article.id}
+                              key={article.id}
                               title={article.title}
-                              description={article.description}
-                              imageUrl={article.urlToImage}
                               source={article.sourceName}
+                              imageUrl={article.urlToImage}
+                              description={article.description}
                           />
                       ))}
             </div>
