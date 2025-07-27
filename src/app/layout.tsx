@@ -18,7 +18,7 @@ export const metadata: Metadata = {
     description: "Kontext Is A GenAI Powered News Blog, To Stay Updated With The Latest News, Transformed Into Engaging Blog Posts Using GenAI.",
 };
 export const viewport = { width: "device-width", initialScale: 1, maximumScale: 1 };
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
     return (
         <html
             lang="en"
