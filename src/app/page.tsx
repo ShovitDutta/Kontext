@@ -1,17 +1,56 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect } from "react";
+import { motion } from "framer-motion";
+import { useInView } from "react-intersection-observer";
 import { useArticles } from "@/hooks/useArticles";
 import ArticleCard from "@/components/ArticleCard";
 import Sidebar from "@/components/Sidebar";
 import InitialLoader from "@/components/InitialLoader";
 import ArticleCardSkeleton from "@/components/ArticleCardSkeleton";
 
+const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: {
+            staggerChildren: 0.1,
+        },
+    },
+};
 
 const Page = () => {
-    const [selectedCategory, setSelectedCategory] = useState("all");
-    const { data: articles, isLoading, error } = useArticles(selectedCategory);
+    const {
+        articles,
+        isLoading,
+        isLoadingMore,
+        hasMore,
+        error,
+        category,
+        setCategory,
+        loadMore,
+    } = useArticles();
 
-    if (isLoading) {
+    const { ref, inView } = useInView({
+        threshold: 0,
+        triggerOnce: false,
+    });
+
+    useEffect(() => {
+        if (inView && hasMore && !isLoading && !isLoadingMore) {
+            loadMore();
+        }
+    }, [inView, hasMore, isLoading, isLoadingMore, loadMore]);
+
+    // This effect runs once on mount to fetch initial articles
+    useEffect(() => {
+        if (articles.length === 0) {
+            loadMore();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+
+    if (isLoading && articles.length === 0) {
         return <InitialLoader />;
     }
 
@@ -23,33 +62,45 @@ const Page = () => {
                 <aside className="w-64 flex-shrink-0">
                     <div className="sticky top-28">
                         <Sidebar
-                            selectedCategory={selectedCategory}
-                            onSelectCategory={setSelectedCategory}
+                            selectedCategory={category}
+                            onSelectCategory={setCategory}
                         />
                     </div>
                 </aside>
                 <main className="flex-1">
-                    
-                    {isLoading ? (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            {Array.from({ length: 6 }).map((_, i) => (
+                    <motion.div
+                        variants={containerVariants}
+                        initial="hidden"
+                        animate="visible"
+                        className="grid grid-cols-1 md:grid-cols-2 gap-8"
+                    >
+                        {articles?.map((article) => (
+                            <ArticleCard
+                                id={article.id}
+                                key={article.id}
+                                title={article.title}
+                                source={article.sourceName}
+                                imageUrl={article.urlToImage}
+                                category={article.category}
+                                author={article.author}
+                            />
+                        ))}
+                    </motion.div>
+
+                    {/* Intersection Observer Trigger */}
+                    <div ref={ref} className="h-10" />
+
+                    {/* Loading Skeletons for subsequent pages */}
+                    {isLoadingMore && (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+                            {Array.from({ length: 4 }).map((_, i) => (
                                 <ArticleCardSkeleton key={i} />
                             ))}
                         </div>
-                    ) : (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            {articles?.map((article) => (
-                                <ArticleCard
-                                    id={article.id}
-                                    key={article.id}
-                                    title={article.title}
-                                    source={article.sourceName}
-                                    imageUrl={article.urlToImage}
-                                    category={article.category}
-                                    author={article.author}
-                                />
-                            ))}
-                        </div>
+                    )}
+
+                    {!hasMore && articles.length > 0 && (
+                         <p className="text-center text-gray-500 mt-8">You&apos;ve reached the end.</p>
                     )}
                 </main>
             </div>

@@ -11,7 +11,7 @@ interface GeneratedContentViewerProps {
 const GeneratedContentViewer: React.FC<GeneratedContentViewerProps> = ({ generatedContents = [] }) => {
     const [selectedLength, setSelectedLength] = useState<"SHORT" | "MEDIUM" | "EXPLAINED">("SHORT");
 
-    const selectedContent = generatedContents.find((c) => (c.length || (c as any).content_length)?.toUpperCase() === selectedLength.toUpperCase());
+    const selectedContent = generatedContents.find((c) => c.length?.toUpperCase() === selectedLength.toUpperCase());
 
     const tabs = ["SHORT", "MEDIUM", "EXPLAINED"] as const;
 
