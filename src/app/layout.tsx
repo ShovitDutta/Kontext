@@ -4,9 +4,7 @@ import type { Metadata } from "next";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import { Poppins } from "next/font/google";
-import Container from "@/components/Container";
-import AuthProvider from "@/components/AuthProvider";
-import QueryProvider from "@/components/QueryProvider";
+import StoreInitializer from "@/components/StoreInitializer";
 const poppins = Poppins({ subsets: ["latin"], weight: ["300", "400", "500", "600", "700"], variable: "--font-poppins", display: "swap" });
 export const metadata: Metadata = {
     creator: "Kontext",
@@ -27,17 +25,12 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             className={`${poppins.variable} dark`}
         >
             <body className="antialiased font-sans bg-neutral-900 text-white flex flex-col min-h-screen">
-                <AuthProvider>
-                    <QueryProvider>
-                        <Header />
-                        <main className="flex-grow">
-                            <Container>
-                                <div className="relative flex flex-col h-full">{children}</div>
-                            </Container>
-                        </main>
-                        <Footer />
-                    </QueryProvider>
-                </AuthProvider>
+                <StoreInitializer />
+                <Header />
+                <main className="flex-grow">
+                    <div className="relative flex flex-col h-full">{children}</div>
+                </main>
+                <Footer />
             </body>
         </html>
     );

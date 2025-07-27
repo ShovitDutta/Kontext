@@ -1,23 +1,7 @@
 "use client";
-import axios from "axios";
-import { useQuery } from "@tanstack/react-query";
-
-export interface Article {
-    id: string;
-    title: string;
-    description: string;
-    urlToImage: string;
-    sourceName: string;
-    category: string;
-    author: string;
-}
-
+import { useArticleStore } from "@/store/articleStore";
 export const useArticles = (category: string = "all", searchQuery: string = "") => {
-    return useQuery<Article[], Error>({
-        queryKey: ["articles", category, searchQuery],
-        queryFn: async () => {
-            const { data } = await axios.get(`/api/news?category=${category}&q=${searchQuery}`);
-            return data;
-        },
-    });
+    const { articles, isLoading, error } = useArticleStore();
+    const filteredArticles = articles.filter((article) => (category === "all" ? true : article.category === category)).filter((article) => (searchQuery ? article.title.toLowerCase().includes(searchQuery.toLowerCase()) : true));
+    return { data: filteredArticles, isLoading, error };
 };

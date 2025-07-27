@@ -2,7 +2,6 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { newsCategories } from "@/lib/newscat";
-
 interface ArticleCardProps {
     id: string;
     title: string;
@@ -12,14 +11,12 @@ interface ArticleCardProps {
     source?: string;
     description?: string;
 }
-
 const ArticleCard: React.FC<ArticleCardProps> = ({ id, title, imageUrl, category, author, source }) => {
     const categoryName = newsCategories.find((c) => c.id === category)?.name || "General";
-
     return (
         <Link
             href={`/article/${id}`}
-            className="block group bg-neutral-900 p-4 rounded-lg border border-transparent hover:border-neutral-800 transition-colors duration-300"
+            className="relative block group bg-neutral-900 p-4 rounded-lg border border-transparent hover:border-neutral-800 transition-colors duration-300"
         >
             <div className="space-y-2">
                 {imageUrl && (
@@ -41,8 +38,8 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ id, title, imageUrl, category
                     {source && <span>{source}</span>}
                 </div>
             </div>
+            <div className="absolute bottom-4 right-4 bg-neutral-700 text-white text-xs px-2 py-1 rounded-full">by Kontext</div>
         </Link>
     );
 };
-
 export default ArticleCard;
