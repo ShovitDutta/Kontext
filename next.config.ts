@@ -1,14 +1,19 @@
 import type { NextConfig } from "next";
+/** @type {import('next').NextConfig} */
 const nextConfig: NextConfig = {
-    eslint: { ignoreDuringBuilds: true },
-    typescript: { ignoreBuildErrors: true },
-    serverExternalPackages: [],
     images: {
-        remotePatterns: [
-            { protocol: "http", hostname: "**" },
-            { protocol: "https", hostname: "**" },
-        ],
+        deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+        domains: ["via.placeholder.com", "source.unsplash.com"],
+        imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+        formats: ["image/webp"],
     },
-    env: { NEXT_PUBLIC_API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL },
-} as const;
+    experimental: {
+        optimizeCss: true,
+        workerThreads: true,
+        optimisticClientCache: true,
+    },
+    compress: true,
+    reactStrictMode: true,
+    poweredByHeader: false,
+};
 export default nextConfig;

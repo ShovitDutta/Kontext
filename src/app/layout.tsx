@@ -6,7 +6,8 @@ import { Poppins } from "next/font/google";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import Providers from "@/components/Providers";
-import PageTransition from "@/components/PageTransition";
+import MainContent from "@/components/MainContent";
+import { SkipToMain } from "@/components/Accessibility";
 const poppins = Poppins({ subsets: ["latin"], weight: ["300", "400", "500", "600", "700"], variable: "--font-poppins", display: "swap" });
 /* ================================================================================== */
 export const metadata: Metadata = {
@@ -30,11 +31,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         >
             <body className="antialiased font-sans bg-neutral-900 text-white">
                 <Providers>
+                    <SkipToMain />
                     <div className="relative flex min-h-screen flex-col">
                         <Navbar />
-                        <main className="flex-1">
-                            <PageTransition>{children}</PageTransition>
-                        </main>
+                        <MainContent>{children}</MainContent>
                         <Footer />
                     </div>
                 </Providers>
