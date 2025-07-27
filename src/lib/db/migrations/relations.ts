@@ -1,17 +1,5 @@
 import { relations } from "drizzle-orm/relations";
-import { articles, generatedContents, comments, users } from "./schema";
-
-export const generatedContentsRelations = relations(generatedContents, ({ one }) => ({
-    article: one(articles, {
-        fields: [generatedContents.articleId],
-        references: [articles.id],
-    }),
-}));
-
-export const articlesRelations = relations(articles, ({ many }) => ({
-    generatedContents: many(generatedContents),
-    comments: many(comments),
-}));
+import { articles, comments, users, generatedContents } from "./schema";
 
 export const commentsRelations = relations(comments, ({ one }) => ({
     article: one(articles, {
@@ -24,6 +12,18 @@ export const commentsRelations = relations(comments, ({ one }) => ({
     }),
 }));
 
+export const articlesRelations = relations(articles, ({ many }) => ({
+    comments: many(comments),
+    generatedContents: many(generatedContents),
+}));
+
 export const usersRelations = relations(users, ({ many }) => ({
     comments: many(comments),
+}));
+
+export const generatedContentsRelations = relations(generatedContents, ({ one }) => ({
+    article: one(articles, {
+        fields: [generatedContents.articleId],
+        references: [articles.id],
+    }),
 }));

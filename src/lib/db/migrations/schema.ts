@@ -1,25 +1,7 @@
-import { pgTable, foreignKey, text, timestamp, unique, pgEnum } from "drizzle-orm/pg-core";
+import { pgTable, unique, text, timestamp, foreignKey, pgEnum } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 
 export const contentLength = pgEnum("content_length", ["SHORT", "MEDIUM", "EXPLAINED"]);
-
-export const generatedContents = pgTable(
-    "generated_contents",
-    {
-        id: text().primaryKey().notNull(),
-        content: text().notNull(),
-        length: contentLength().notNull(),
-        createdAt: timestamp({ mode: "string" }).defaultNow().notNull(),
-        articleId: text().notNull(),
-    },
-    (table) => [
-        foreignKey({
-            columns: [table.articleId],
-            foreignColumns: [articles.id],
-            name: "generated_contents_articleId_articles_id_fk",
-        }).onDelete("cascade"),
-    ],
-);
 
 export const articles = pgTable(
     "articles",
@@ -71,4 +53,22 @@ export const users = pgTable(
         createdAt: timestamp({ mode: "string" }).defaultNow().notNull(),
     },
     (table) => [unique("users_email_unique").on(table.email)],
+);
+
+export const generatedContents = pgTable(
+    "generated_contents",
+    {
+        id: text().primaryKey().notNull(),
+        content: text().notNull(),
+        length: contentLength().notNull(),
+        createdAt: timestamp({ mode: "string" }).defaultNow().notNull(),
+        articleId: text().notNull(),
+    },
+    (table) => [
+        foreignKey({
+            columns: [table.articleId],
+            foreignColumns: [articles.id],
+            name: "generated_contents_articleId_articles_id_fk",
+        }).onDelete("cascade"),
+    ],
 );
