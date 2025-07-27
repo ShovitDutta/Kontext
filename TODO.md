@@ -1,83 +1,81 @@
 # Todo - Frontend Implementation
 
-This Document Outlines The Plan For Implementing The Frontend For The Kontext Application. I Will Continously Update This File After Each Changes Made By Me In The Current Project.
+This Document Outlines The Plan For Implementing The Frontend For The Kontext Application.
 
 ## 1. Project Setup & Tooling
 
 - [x] **Framework:** Next.Js Is Already Set Up.
-- [x] **Linting & Formatting:** Configure Eslint And Prettier To Enforce Consistent Code Style.
-- [x] **Icon Library:** `React-Icons` Is Already Installed. We Should Use It For All Icons.
-- [x] **Environment Variables:** Create A `.Env.Local` File For Frontend-Specific Environment Variables.
+- [x] **Linting & Formatting:** Eslint And Prettier Are Already Configured.
+- [x] **Icon Library:** `react-icons` is installed.
+- [x] **State Management:** `@tanstack/react-query` is installed.
+- [x] **Animation:** `framer-motion` is installed.
+- [x] **Environment Variables:** Create A `.env.local` File For Frontend-Specific Environment Variables.
 
 ## 2. Authentication
 
-- [ ] **Login Page:** Create A Login Page At `/Auth/Signin` With Options For Different Providers (E.G., Google).
-- [ ] **Sign-Up Flow:** Implement The Sign-Up Flow.
-- [ ] **Logout Functionality:** Add A Logout Button To The User Profile Menu.
-- [ ] **Protected Routes:** Create A Middleware To Protect Routes That Require Authentication.
-- [ ] **User Profile Page:** Create A Page Where Users Can View And Manage Their Profile Information.
+- [x] **Login Page:** Create a login page at `/auth/signin` with a Google login button.
+- [x] **Logout Functionality:** Add a logout button to the user profile menu.
+- [x] **Protected Routes:** Use NextAuth.js middleware to protect routes that require authentication.
+- [x] **User Profile Page:** Create a page where users can view their profile information.
 
-## 3. Ui Components
+## 3. UI Components
 
-- [ ] **Navbar:**
-    - [ ] Logo
-    - [ ] Search Bar
-    - [ ] Navigation Links (Home, Categories, Etc.)
-    - [ ] User Profile Dropdown (If Logged In) Or Login Button (If Not).
-- [ ] **Footer:**
-    - [ ] Links To Social Media
-    - [ ] Copyright Information
-    - [ ] Links To Terms Of Service And Privacy Policy.
-- [ ] **Article Card:** A Reusable Component To Display An Article Preview With An Image, Title, Description, And Source.
-- [ ] **Article View:** A Component To Display The Full Article With The Generated Content.
-- [ ] **Generated Content Viewer:** A Component To Display The Ai-Generated Content With Options To Switch Between "Short", "Medium", And "Explained" Lengths.
-- [ ] **Category Filter:** A Component To Filter Articles By Category.
-- [ ] **Search Bar:** A Component For Searching Articles.
-- [ ] **Pagination:** A Component For Paginating Through Long Lists Of Articles.
-- [ ] **Loading Skeletons:** Create Loading Skeletons For The Article Cards And Article View To Improve User Experience.
-- [ ] **Modals:** A Reusable Modal Component For Various Purposes (E.G., Confirmation Dialogs).
-- [ ] **Buttons:** A Set Of Reusable Button Components With Different Styles (Primary, Secondary, Etc.).
+- [x] **Navbar:**
+    - [x] Logo
+    - [x] Search Bar
+    - [x] Navigation Links (Home, Categories)
+    - [x] User Profile Dropdown (if logged in) or Login Button (if not).
+- [x] **Footer:**
+    - [x] Links to Social Media
+    - [x] Copyright Information
+    - [x] Links to Terms of Service and Privacy Policy.
+- [x] **Article Card:** A reusable component to display an article preview with an image, title, description, and source.
+- [x] **Article View:** A component to display the full article with the generated content.
+- [x] **Generated Content Viewer:** A component to display the AI-generated content with options to switch between "SHORT", "MEDIUM", and "EXPLAINED" lengths.
+- [x] **Category Filter:** A component to filter articles by category.
+- [x] **Search Bar:** A component for searching articles.
+- [ ] **Pagination:** A component for paginating through long lists of articles.
+- [ ] **Loading Skeletons:** Create loading skeletons for the article cards and article view.
+- [ ] **Modals:** A reusable modal component.
+- [ ] **Buttons:** A set of reusable button components.
 
 ## 4. Pages & Routing
 
-- [ ] **Home Page (`/`):**
-    - [ ] Display A List Of The Latest Articles.
-    - [ ] Include A Search Bar And Category Filters.
-    - [ ] Implement Infinite Scrolling Or Pagination.
-- [ ] **Article Page (`/Article/[Id]`):**
-    - [ ] Display The Full Article Content.
-    - [ ] Display The Ai-Generated Content With Length Options.
-    - [ ] Show Related Articles.
-    - [ ] Allow Users To Share The Article.
-- [ ] **Category Page (`/Category/[Name]`):**
-    - [ ] Display All Articles Belonging To A Specific Category.
-- [ ] **Search Results Page (`/Search?Q=[Query]`):**
-    - [ ] Display Search Results For The Given Query.
-- [ ] **User Profile Page (`/Profile`):**
-    - [ ] Display User Information.
-    - [ ] Allow Users To Update Their Profile.
-    - [ ] Show A List Of Saved/Bookmarked Articles (If We Add This Feature).
-- [ ] **Not Found Page (404):** A Custom 404 Page.
+- [x] **Home Page (`/`):**
+    - [x] Display a list of the latest articles.
+    - [x] Include a search bar and category filters.
+    - [ ] Implement infinite scrolling or pagination.
+- [x] **Article Page (`/article/[id]`):**
+    - [x] Display the full article content.
+    - [x] Display the AI-generated content with length options.
+    - [ ] Show related articles.
+- [x] **Category Page (`/category/[name]`):**
+    - [x] Display all articles belonging to a specific category.
+- [x] **Search Results Page (`/search?q=[query]`):**
+    - [x] Display search results for the given query.
+- [x] **User Profile Page (`/profile`):**
+    - [x] Display user information.
+- [x] **Not Found Page (404):** A custom 404 page.
 
-## 5. Api Integration
+## 5. API Integration
 
-- [ ] **Article Api:**
-    - [ ] Fetch A List Of Articles (`/Api/News`).
-    - [ ] Fetch A Single Article By Id (`/Api/News/[Id]`).
-- [ ] **Generated Content Api:**
-    - [ ] Fetch Generated Content For An Article (`/Api/Gen`).
-- [ ] **Authentication Api:**
-    - [ ] Integrate With `Next-Auth` For Login, Logout, And Session Management (`/Api/Auth/...`).
-- [ ] **Error Handling:** Implement Global Error Handling For Api Requests.
+- [x] **Article API:**
+    - [x] Fetch a list of articles (`/api/news`).
+    - [x] Fetch a single article by id (`/api/news/[id]`).
+- [x] **Generated Content API:**
+    - [x] Fetch generated content for an article (`/api/gen`).
+- [x] **Authentication API:**
+    - [x] Integrate with `next-auth` for login, logout, and session management.
+- [ ] **Error Handling:** Implement global error handling for API requests.
 
 ## 6. State Management
 
-- [ ] **React Query:** Use `@Tanstack/React-Query` (Already Installed) For Server-Side State Management (Fetching, Caching, And Updating Data From The Api).
-- [ ] **Client-Side State:** For Client-Side State (E.G., Ui State, Form State), Use React's Built-In State Management (`Usestate`, `Usereducer`, `Usecontext`).
+- [x] **React Query:** Use `@tanstack/react-query` for server-side state management.
+- [x] **Client-Side State:** Use React's built-in state management (`useState`, `useReducer`, `useContext`).
 
 ## 7. Styling & Theming
 
-- [ ] **Theming:** Implement A Dark-Only Mode Theme.
-- [ ] **Tailwind Css:** Use Tailwind Css (Already Installed) For Styling.
-- [ ] **Framer-Motion:** Use Framer Motion (Already Installed) For Animations.
-- [ ] **Responsive Design:** Ensure The Application Is Fully Responsive And Works Well On All Screen Sizes.
+- [x] **Theming:** Implement a dark-only mode theme.
+- [x] **Tailwind CSS:** Use Tailwind CSS for styling.
+- [x] **Framer-Motion:** Use Framer Motion for animations.
+- [x] **Responsive Design:** Ensure the application is fully responsive.

@@ -1,10 +1,8 @@
-/* ================================================================================== */
 "use client";
 import Link from "next/link";
 import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { FaExclamationTriangle, FaArrowRight } from "react-icons/fa";
-/* ================================================================================== */
 export default function Error({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
     useEffect(() => {
         console.error(error);
@@ -38,4 +36,3 @@ export default function Error({ error, reset }: { error: Error & { digest?: stri
         </div>
     );
 }
-/* ================================================================================== */

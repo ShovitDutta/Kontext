@@ -1,9 +1,7 @@
-/* ================================================================================== */
 "use client";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { FaArrowRight } from "react-icons/fa";
-/* ================================================================================== */
 export default function NotFound() {
     return (
         <div className="flex flex-col items-center justify-center min-h-[calc(100vh-14rem)] text-center px-4">
@@ -24,4 +22,3 @@ export default function NotFound() {
         </div>
     );
 }
-/* ================================================================================== */
