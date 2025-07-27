@@ -1,11 +1,14 @@
 import { z } from "zod";
 import { db } from "@/lib/db";
+import { auth } from "@/../auth";
 import { eq, and } from "drizzle-orm";
-import { NextRequest } from "next/server";
 import { generateContent } from "@/lib/generate";
+import { NextRequest, NextResponse } from "next/server";
 import { contentLengthEnum, generatedContents } from "@/lib/db/schema";
 const generateRequestSchema = z.object({ articleId: z.string(), length: z.enum(contentLengthEnum.enumValues) });
 export async function POST(req: NextRequest) {
+    const session = await auth();
+    if (!session) return new NextResponse(JSON.stringify({ error: "Unauthorized" }), { status: 401 });
     try {
         const body = await req.json();
         const parsed = generateRequestSchema.safeParse(body);

@@ -1,8 +1,11 @@
 import { db } from "@/lib/db";
 import { eq } from "drizzle-orm";
-import { NextRequest } from "next/server";
+import { auth } from "@/../auth";
 import { articles } from "@/lib/db/schema";
+import { NextRequest, NextResponse } from "next/server";
 export async function GET(request: NextRequest, props: { params: Promise<{ id: string }> }) {
+    const session = await auth();
+    if (!session) return new NextResponse(JSON.stringify({ error: "Unauthorized" }), { status: 401 });
     const params = await props.params;
     const id: string = params.id;
     try {

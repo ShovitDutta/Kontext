@@ -1,7 +1,11 @@
 "use client";
 import { motion } from "framer-motion";
-import { signIn } from "next-auth/react";
+import { redirect } from "next/navigation";
+import { signIn, useSession } from "next-auth/react";
 export default function LoginPage() {
+    const { data: session, status } = useSession();
+    if (status === "loading") return <div>Loading...</div>;
+    if (session) redirect("/home");
     return (
         <div className="flex items-center justify-center min-h-[calc(100vh-14rem)]">
             <motion.div
