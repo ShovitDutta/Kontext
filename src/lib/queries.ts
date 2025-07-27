@@ -3,20 +3,20 @@ import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 export interface GeneratedContent {
     id: string;
-    length: "SHORT" | "MEDIUM" | "EXPLAINED"; // Use 'length' to match DB schema and enum
     content: string;
+    length: "SHORT" | "MEDIUM" | "EXPLAINED";
 }
 export interface Article {
     id: string;
+    url: string;
+    title: string;
     category: string;
+    publishedAt: Date;
     sourceName: string;
     author: string | null;
-    title: string;
-    description: string | null;
-    url: string;
-    urlToImage: string | null;
-    publishedAt: Date; // Changed to Date as it's stored as Date in DB
     content: string | null;
+    urlToImage: string | null;
+    description: string | null;
     generatedContents: GeneratedContent[];
 }
 export const fetchArticles = async (): Promise<Article[]> => {

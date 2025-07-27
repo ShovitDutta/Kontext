@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { Twitter, Github, Linkedin } from "lucide-react";
-
 export function Footer() {
     return (
         <footer className="bg-gray-800/20 border-t border-border/40">

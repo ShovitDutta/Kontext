@@ -1,9 +1,7 @@
 "use client";
-
+import Link from "next/link";
 import { Session } from "next-auth";
 import { signIn, signOut } from "next-auth/react";
-import Link from "next/link";
-
 export default function Auth({ session }: { session: Session | null }) {
     return (
         <div className="flex items-center space-x-4">

@@ -1,7 +1,6 @@
+import Auth from "./Auth";
 import Link from "next/link";
 import { auth } from "../../auth";
-import Auth from "./Auth";
-
 export async function Navbar() {
     const session = await auth();
     return (
