@@ -3,11 +3,6 @@ import "./globals.css";
 import type React from "react";
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
-import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
-import Providers from "@/components/Providers";
-import MainContent from "@/components/MainContent";
-import { SkipToMain } from "@/components/Accessibility";
 const poppins = Poppins({ subsets: ["latin"], weight: ["300", "400", "500", "600", "700"], variable: "--font-poppins", display: "swap" });
 /* ================================================================================== */
 export const metadata: Metadata = {
@@ -30,14 +25,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             className={`${poppins.variable} dark`}
         >
             <body className="antialiased font-sans bg-neutral-900 text-white">
-                <Providers>
-                    <SkipToMain />
-                    <div className="relative flex min-h-screen flex-col">
-                        <Navbar />
-                        <MainContent>{children}</MainContent>
-                        <Footer />
-                    </div>
-                </Providers>
+                <div className="relative flex min-h-screen flex-col">{children}</div>
             </body>
         </html>
     );

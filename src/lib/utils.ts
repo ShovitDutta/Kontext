@@ -13,7 +13,7 @@ export function formatTimeAgo(date: string | Date) {
 }
 export function calculateReadTime(text: string) {
     if (!text) return { readTime: "0 min", wordCount: "0 words" };
-    const wordsPerMinute = 80;
+    const wordsPerMinute = 100;
     const wordCount = text.split(/\s+/).length;
     const readTime = Math.ceil(wordCount / wordsPerMinute);
     return { readTime: `${readTime} min`, wordCount: `${wordCount} words` };

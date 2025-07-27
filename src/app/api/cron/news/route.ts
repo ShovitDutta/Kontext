@@ -8,14 +8,14 @@ type TArticle = InferInsertModel<typeof articles>;
 const apiKey = process.env.NEWS_API_KEY;
 const NEWS_API_URL = "https://newsapi.org/v2/top-headlines";
 const newsApiArticleSchema = z.object({
-    source: z.object({ id: z.string().nullable(), name: z.string() }),
-    author: z.string().nullable(),
+    url: z.url(),
     title: z.string(),
-    description: z.string().nullable(),
-    url: z.string().url(),
-    urlToImage: z.string().url().nullable(),
     publishedAt: z.string(),
     content: z.string().nullable(),
+    urlToImage: z.url().nullable(),
+    author: z.string({}).nullable(),
+    description: z.string().nullable(),
+    source: z.object({ id: z.string().nullable(), name: z.string() }),
 });
 type NewsApiArticle = z.infer<typeof newsApiArticleSchema>;
 const newsApiResponseSchema = z.object({ status: z.string(), totalResults: z.number(), articles: z.array(newsApiArticleSchema) });
