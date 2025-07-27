@@ -1,39 +1,32 @@
 "use client";
-import axios from "axios";
 import React, { useState } from "react";
 import { GeneratedContent } from "@/hooks/useArticle";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+
 interface GeneratedContentViewerProps {
-    articleId: string;
     generatedContents: GeneratedContent[];
 }
-const GeneratedContentViewer: React.FC<GeneratedContentViewerProps> = ({ articleId, generatedContents }) => {
+
+const GeneratedContentViewer: React.FC<GeneratedContentViewerProps> = ({ generatedContents }) => {
     const [selectedLength, setSelectedLength] = useState<"SHORT" | "MEDIUM" | "EXPLAINED">("SHORT");
-    const queryClient = useQueryClient();
-    const mutation = useMutation({
-        mutationFn: (length: "SHORT" | "MEDIUM" | "EXPLAINED") => {
-            return axios.post("/api/gen", { articleId, length });
-        },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["article", articleId] });
-        },
-    });
+
     const selectedContent = generatedContents.find((c) => c.length === selectedLength);
-    const handleGenerate = (length: "SHORT" | "MEDIUM" | "EXPLAINED") => {
-        setSelectedLength(length);
-        if (!generatedContents.some((c) => c.length === length)) {
-            mutation.mutate(length);
-        }
-    };
+
     return (
-        <div>
-            <div className="flex space-x-4 mb-4">
-                <button onClick={() => handleGenerate("SHORT")}>Short</button> <button onClick={() => handleGenerate("MEDIUM")}>Medium</button> <button onClick={() => handleGenerate("EXPLAINED")}>Explained</button>
+        <div className="mt-8">
+            <div className="flex border-b border-neutral-800">
+                {(["SHORT", "MEDIUM", "EXPLAINED"] as const).map((length) => (
+                    <button
+                        key={length}
+                        onClick={() => setSelectedLength(length)}
+                        className={`px-4 py-2 text-sm font-medium transition-colors duration-300 ${selectedLength === length ? "border-b-2 border-blue-500 text-white" : "text-neutral-400 hover:text-white"}`}
+                    >
+                        {length.charAt(0) + length.slice(1).toLowerCase()}
+                    </button>
+                ))}
             </div>
-            <div>
-                {mutation.isPending && <p>Generating...</p>} {mutation.isError && <p>Error generating content</p>} {selectedContent && <p>{selectedContent.content}</p>}
-            </div>
+            <div className="mt-4 p-6 bg-neutral-900 rounded-lg">{selectedContent ? <p className="text-neutral-300 whitespace-pre-line">{selectedContent.content}</p> : <p className="text-neutral-500">No content available for this length.</p>}</div>
         </div>
     );
 };
+
 export default GeneratedContentViewer;

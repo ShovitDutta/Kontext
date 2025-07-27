@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { FaArrowRight } from "react-icons/fa";
 export default function NotFound() {
     return (
-        <div className="flex flex-col items-center justify-center min-h-[calc(100vh-14rem)] text-center px-4">
+        <div className="flex flex-col items-center justify-center flex-grow text-center px-4">
             <motion.div
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}

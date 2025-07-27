@@ -15,8 +15,7 @@ const SearchPage = () => {
     });
     const searchParams = useSearchParams();
     const query = searchParams.get("q") || "";
-    const { data: articles, isLoading, error } = useArticles();
-    const filteredArticles = articles?.filter((article) => article.title.toLowerCase().includes(query.toLowerCase()));
+    const { data: articles, isLoading, error } = useArticles("all", query);
     if (error) return <div>Error: {error.message}</div>;
 
     return (
@@ -25,7 +24,7 @@ const SearchPage = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {isLoading || status === "loading"
                     ? Array.from({ length: 6 }).map((_, i) => <ArticleCardSkeleton key={i} />)
-                    : filteredArticles?.map((article) => (
+                    : articles?.map((article) => (
                           <ArticleCard
                               id={article.id}
                               key={article.id}

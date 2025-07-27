@@ -3,7 +3,7 @@ import Skeleton from "./Skeleton";
 
 const ArticleCardSkeleton = () => {
     return (
-        <div className="bg-gray-800 rounded-lg overflow-hidden shadow-lg">
+        <div className="bg-neutral-900 rounded-lg overflow-hidden shadow-lg p-4 border border-transparent">
             <Skeleton className="w-full h-48" />
             <div className="p-4">
                 <Skeleton className="h-6 w-3/4 mb-2" />

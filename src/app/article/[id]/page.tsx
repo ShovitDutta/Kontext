@@ -7,6 +7,7 @@ import GeneratedContentViewer from "@/components/GeneratedContentViewer";
 import ArticlePageSkeleton from "@/components/ArticlePageSkeleton";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
+import SearchBar from "@/components/SearchBar";
 
 const ArticlePage = () => {
     const { status } = useSession({
@@ -33,6 +34,9 @@ const ArticlePage = () => {
 
     return (
         <div className="container mx-auto p-4">
+            <div className="mb-8">
+                <SearchBar />
+            </div>
             <h1 className="text-4xl font-bold mb-4">{article.title}</h1>
             <p className="text-gray-400 mb-4">{article.description}</p>
             <Image
@@ -42,10 +46,7 @@ const ArticlePage = () => {
                 height={400}
                 className="w-full h-96 object-cover rounded-lg mb-4"
             />
-            <GeneratedContentViewer
-                articleId={article.id}
-                generatedContents={article.generatedContents}
-            />
+            <GeneratedContentViewer generatedContents={article.generatedContents} />
         </div>
     );
 };

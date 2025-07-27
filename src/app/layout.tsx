@@ -26,13 +26,15 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             style={{ colorScheme: "dark" }}
             className={`${poppins.variable} dark`}
         >
-            <body className="antialiased font-sans bg-neutral-900 text-white">
+            <body className="antialiased font-sans bg-neutral-900 text-white flex flex-col min-h-screen">
                 <AuthProvider>
                     <QueryProvider>
                         <Header />
-                        <Container>
-                            <div className="relative flex min-h-screen flex-col">{children}</div>
-                        </Container>
+                        <main className="flex-grow">
+                            <Container>
+                                <div className="relative flex flex-col h-full">{children}</div>
+                            </Container>
+                        </main>
                         <Footer />
                     </QueryProvider>
                 </AuthProvider>

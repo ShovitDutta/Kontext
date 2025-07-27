@@ -3,6 +3,8 @@ import React from "react";
 import Image from "next/image";
 import { redirect } from "next/navigation";
 import { useSession } from "next-auth/react";
+import ProfilePageSkeleton from "@/components/ProfilePageSkeleton";
+
 const ProfilePage = () => {
     const { data: session, status } = useSession({
         required: true,
@@ -10,7 +12,9 @@ const ProfilePage = () => {
             redirect("/auth/signin");
         },
     });
-    if (status === "loading") return <div>Loading...</div>;
+
+    if (status === "loading") return <ProfilePageSkeleton />;
+
     return (
         <div className="container mx-auto p-4">
             <div className="bg-gray-800 rounded-lg shadow-lg p-8 text-center">
@@ -21,9 +25,11 @@ const ProfilePage = () => {
                     height={100}
                     className="rounded-full mx-auto mb-4"
                 />
-                <h1 className="text-2xl font-bold mb-2">{session?.user?.name}</h1> <p className="text-gray-400">{session?.user?.email}</p>
+                <h1 className="text-2xl font-bold mb-2">{session?.user?.name}</h1>
+                <p className="text-gray-400">{session?.user?.email}</p>
             </div>
         </div>
     );
 };
+
 export default ProfilePage;
