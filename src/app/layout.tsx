@@ -1,3 +1,4 @@
+/* ================================================================================== */
 import "./globals.css";
 import type React from "react";
 import type { Metadata } from "next";
@@ -7,6 +8,7 @@ import { Footer } from "@/components/Footer";
 import Providers from "@/components/Providers";
 import PageTransition from "@/components/PageTransition";
 const poppins = Poppins({ subsets: ["latin"], weight: ["300", "400", "500", "600", "700"], variable: "--font-poppins", display: "swap" });
+/* ================================================================================== */
 export const metadata: Metadata = {
     creator: "Kontext",
     generator: "Next.js",
@@ -17,6 +19,7 @@ export const metadata: Metadata = {
     title: { default: "Kontext - GenAI Powered News Blog", template: "%s | Kontext" },
     description: "Kontext Is A GenAI Powered News Blog, To Stay Updated With The Latest News, Transformed Into Engaging Blog Posts Using GenAI.",
 };
+/* ================================================================================== */
 export const viewport = { width: "device-width", initialScale: 1, maximumScale: 1 };
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
     return (
@@ -25,7 +28,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             style={{ colorScheme: "dark" }}
             className={`${poppins.variable} dark`}
         >
-            <body className="antialiased font-sans bg-neutral-900 text-gray-200">
+            <body className="antialiased font-sans bg-neutral-900 text-white">
                 <Providers>
                     <div className="relative flex min-h-screen flex-col">
                         <Navbar />
@@ -39,3 +42,4 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         </html>
     );
 }
+/* ================================================================================== */

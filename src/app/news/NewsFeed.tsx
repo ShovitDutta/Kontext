@@ -1,3 +1,4 @@
+/* ================================================================================== */
 "use client";
 import Link from "next/link";
 import Image from "next/legacy/image";
@@ -5,8 +6,9 @@ import { Article } from "@/lib/queries";
 import { useArticles } from "@/lib/queries";
 import { newsCategories } from "@/lib/newscat";
 import { useState, useMemo, memo } from "react";
-import { Newspaper, Calendar, Tag } from "lucide-react";
+import { FaNewspaper, FaCalendarAlt, FaTag } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
+/* ================================================================================== */
 const SkeletonCard = () => (
     <div className="bg-neutral-800 rounded-lg shadow-md p-4 animate-pulse">
         <div className="w-full h-40 bg-neutral-700 rounded-md mb-4"></div> <div className="h-5 bg-neutral-700 rounded w-3/4 mb-2"></div> <div className="h-4 bg-neutral-700 rounded w-full mb-1"></div> <div className="h-4 bg-neutral-700 rounded w-5/6"></div>
@@ -28,21 +30,20 @@ const ArticleCard = memo(({ article }: { article: Article }) => (
             >
                 <div className="relative w-full h-48">
                     <Image
-                        src={article.urlToImage || "/placeholder.svg"}
+                        layout="fill"
                         alt={article.title}
-                        fill
                         style={{ objectFit: "cover" }}
+                        src={article.urlToImage || "/placeholder.svg"}
                         className="group-hover:scale-105 transition-transform duration-300"
-                        unoptimized
                     />
                 </div>
                 <div className="p-4 flex flex-col flex-grow">
                     <h3 className="text-md font-bold text-neutral-100 mb-2 flex-grow group-hover:text-blue-400 transition-colors">{article.title}</h3>
                     <div className="flex items-center text-xs text-neutral-400 mt-2">
-                        <Newspaper className="w-4 h-4 mr-2" /> <span>{article.sourceName || "Unknown Source"}</span>
+                        <FaNewspaper className="w-4 h-4 mr-2" /> <span>{article.sourceName || "Unknown Source"}</span>
                     </div>
                     <div className="flex items-center text-xs text-neutral-400 mt-1">
-                        <Calendar className="w-4 h-4 mr-2" /> <span>{new Date(article.publishedAt).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}</span>
+                        <FaCalendarAlt className="w-4 h-4 mr-2" /> <span>{new Date(article.publishedAt).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}</span>
                     </div>
                 </div>
             </motion.div>
@@ -50,6 +51,7 @@ const ArticleCard = memo(({ article }: { article: Article }) => (
     </motion.div>
 ));
 ArticleCard.displayName = "ArticleCard";
+/* ================================================================================== */
 export default function NewsFeed() {
     const { data: allArticles, isLoading, error } = useArticles();
     const [selectedCategory, setSelectedCategory] = useState("all");
@@ -70,7 +72,7 @@ export default function NewsFeed() {
                             className="bg-neutral-800 border border-neutral-700 rounded-xl p-4 shadow-inner"
                         >
                             <h2 className="text-lg font-bold text-white mb-4 flex items-center">
-                                <Tag className="w-5 h-5 mr-2 text-blue-400" /> Categories
+                                <FaTag className="w-5 h-5 mr-2 text-blue-400" /> Categories
                             </h2>
                             <ul className="space-y-2">
                                 {newsCategories.map((category) => (
@@ -120,3 +122,4 @@ export default function NewsFeed() {
         </div>
     );
 }
+/* ================================================================================== */

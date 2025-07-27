@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Twitter, Github, Linkedin } from "lucide-react";
+import { FaTwitter, FaGithub, FaLinkedin } from "react-icons/fa";
 export function Footer() {
     return (
         <footer className="bg-gray-800/20 border-t border-border/40">
@@ -15,7 +15,7 @@ export function Footer() {
                             rel="noopener noreferrer"
                             className="text-gray-400 hover:text-white transition-colors"
                         >
-                            <Twitter className="h-5 w-5" />
+                            <FaTwitter className="h-5 w-5" />
                         </Link>
                         <Link
                             href="https://github.com/ShovitDutta/kontext"
@@ -23,7 +23,7 @@ export function Footer() {
                             rel="noopener noreferrer"
                             className="text-gray-400 hover:text-white transition-colors"
                         >
-                            <Github className="h-5 w-5" />
+                            <FaGithub className="h-5 w-5" />
                         </Link>
                         <Link
                             href="https://linkedin.com"
@@ -31,7 +31,7 @@ export function Footer() {
                             rel="noopener noreferrer"
                             className="text-gray-400 hover:text-white transition-colors"
                         >
-                            <Linkedin className="h-5 w-5" />
+                            <FaLinkedin className="h-5 w-5" />
                         </Link>
                     </div>
                 </div>

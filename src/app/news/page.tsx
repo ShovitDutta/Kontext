@@ -1,6 +1,8 @@
-import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
-import getQueryClient from "@/lib/get-query-client";
+/* ================================================================================== */
 import NewsFeed from "./NewsFeed";
+import getQueryClient from "@/lib/get-query-client";
+import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
+/* ================================================================================== */
 export default async function NewsPage() {
     const queryClient = getQueryClient();
     await queryClient.prefetchQuery({
@@ -17,3 +19,4 @@ export default async function NewsPage() {
         </HydrationBoundary>
     );
 }
+/* ================================================================================== */

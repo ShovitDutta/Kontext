@@ -1,8 +1,10 @@
+/* ================================================================================== */
 "use client";
 import ReactMarkdown from "react-markdown";
 import { useState, useEffect } from "react";
-import { X, Share2, Check } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { AiOutlineClose, AiOutlineShareAlt, AiOutlineCheck } from "react-icons/ai";
+/* ================================================================================== */
 interface ContentModalProps {
     title: string;
     color: string;
@@ -11,6 +13,7 @@ interface ContentModalProps {
     onClose: () => void;
     icon: React.ElementType;
 }
+/* ================================================================================== */
 export default function ContentModal({ isOpen, onClose, title, content, icon: Icon, color }: ContentModalProps) {
     const [copied, setCopied] = useState(false);
     useEffect(() => {
@@ -48,13 +51,13 @@ export default function ContentModal({ isOpen, onClose, title, content, icon: Ic
                                 onClick={handleCopy}
                                 className="flex items-center space-x-1 text-neutral-400 hover:text-white transition-colors"
                             >
-                                {copied ? <Check className="h-5 w-5 text-green-500" /> : <Share2 className="h-5 w-5" />} <span>{copied ? "Copied!" : "Share"}</span>
+                                {copied ? <AiOutlineCheck className="h-5 w-5 text-green-500" /> : <AiOutlineShareAlt className="h-5 w-5" />} <span>{copied ? "Copied!" : "Share"}</span>
                             </button>
                             <button
                                 onClick={onClose}
                                 className="text-neutral-400 hover:text-white transition-colors"
                             >
-                                <X className="w-6 h-6" />
+                                <AiOutlineClose className="w-6 h-6" />
                             </button>
                         </div>
                         <div className="flex flex-col items-center justify-center space-y-2 mb-6">
@@ -80,3 +83,4 @@ export default function ContentModal({ isOpen, onClose, title, content, icon: Ic
         </AnimatePresence>
     );
 }
+/* ================================================================================== */

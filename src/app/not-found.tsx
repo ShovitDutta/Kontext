@@ -1,7 +1,9 @@
+/* ================================================================================== */
 "use client";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { FaArrowRight } from "react-icons/fa";
+/* ================================================================================== */
 export default function NotFound() {
     return (
         <div className="flex flex-col items-center justify-center min-h-[calc(100vh-14rem)] text-center px-4">
@@ -14,7 +16,7 @@ export default function NotFound() {
                 <div className="mt-8">
                     <Link href="/">
                         <button className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full text-lg transition-transform transform hover:scale-105 inline-flex items-center space-x-2">
-                            <span>Go Home</span> <ArrowRight className="h-5 w-5" />
+                            <span>Go Home</span> <FaArrowRight className="h-5 w-5" />
                         </button>
                     </Link>
                 </div>
@@ -22,3 +24,4 @@ export default function NotFound() {
         </div>
     );
 }
+/* ================================================================================== */
