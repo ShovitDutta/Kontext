@@ -1,0 +1,10 @@
+tool:
+  nodejs:
+    installations:
+      - name: "node"
+        properties:
+          - installSource:
+              installers:
+                - nodeJS:
+                    id: "20.x" # This version satisfies the ">=20.19.4" requirement in your package.json
+                    npmPackages: ""
