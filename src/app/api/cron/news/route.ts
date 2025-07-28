@@ -50,10 +50,13 @@ export async function GET(req: NextRequest) {
 		return new Response('Unauthorized', { status: 401 });
 	}
 	try {
+		console.log('Starting news cron job...');
 		const allCategories = newsCategories.filter((c) => c.id !== 'all').map((c) => c.id);
+		console.log(`Fetching news for categories: ${allCategories.join(', ')}`);
 		const promises = allCategories.map(fetchNews);
 		const results = await Promise.all(promises);
 		const allArticles = results.flat();
+		console.log(`Fetched a total of ${allArticles.length} articles.`);
 		const articlesToStore = allArticles.map((article: NewsApiArticle) => ({
 			url: article.url,
 			title: article.title,
@@ -66,6 +69,7 @@ export async function GET(req: NextRequest) {
 			description: article.description,
 		}));
 		await storeArticles(articlesToStore);
+		console.log('News cron job finished successfully.');
 		return new Response(JSON.stringify({ success: true }), { status: 200 });
 	} catch (error) {
 		console.error('Error in news cron job:', error);
