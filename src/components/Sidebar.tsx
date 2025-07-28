@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { newsCategories } from '@/lib/newscat';
 import { FiChevronDown } from 'react-icons/fi';
-import SortDropdown from './SortDropdown';
+import DatePicker from './DatePicker';
 
 interface SidebarProps {
 	selectedCategory: string;
@@ -60,10 +60,10 @@ const Sidebar: React.FC<SidebarProps> = ({ selectedCategory, onSelectCategory })
 						)}
 					</AnimatePresence>
 				</div>
-				<SortDropdown />
+				<DatePicker />
 			</div>
 
-			{/* Desktop View: Nav and Sort Dropdown */}
+			{/* Desktop View: Nav and Date Picker */}
 			<div className="hidden lg:block">
 				<nav className="space-y-2">
 					{newsCategories.map((category) => (
@@ -78,7 +78,7 @@ const Sidebar: React.FC<SidebarProps> = ({ selectedCategory, onSelectCategory })
 					))}
 				</nav>
 				<div className="mt-4">
-					<SortDropdown />
+					<DatePicker />
 				</div>
 			</div>
 		</motion.div>
