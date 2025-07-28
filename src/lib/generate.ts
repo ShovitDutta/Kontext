@@ -41,32 +41,24 @@ export async function generateContent(articleId: string) {
 	if (!article || !article.url) return;
 	const articleHtml = await getArticleText(article.url);
 	if (!articleHtml) return;
-	const apiKey = getApiKey();
-	const genAI = new GoogleGenerativeAI(apiKey);
-	const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash-preview-05-20' });
-	const prompt = promptBuilder(article.category) + articleHtml;
 	let fullContent = '';
-	let retries = 0;
-	const maxRetries = 5;
-	let delay = 2000;
-	while (retries < maxRetries) {
+	const maxKeyAttempts = geminiApiKeys.length;
+	let keyAttempt = 0;
+	while (keyAttempt < maxKeyAttempts) {
+		const apiKey = getApiKey();
+		console.log(`Using Gemini API key #${currentGeminiKeyIndex === 0 ? geminiApiKeys.length : currentGeminiKeyIndex}`);
+		const genAI = new GoogleGenerativeAI(apiKey);
+		const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash-preview-05-20' });
+		const prompt = promptBuilder(article.category) + articleHtml;
 		try {
 			const result = await model.generateContent(prompt);
 			fullContent = result.response.text();
+			console.log(`Successfully generated content for article ${articleId} with key #${currentGeminiKeyIndex === 0 ? geminiApiKeys.length : currentGeminiKeyIndex}.`);
 			break;
 		} catch (error) {
-			console.error(`Error generating content for article ${articleId}. Retrying in ${delay / 1000}s...`, error);
-			retries++;
-			if (retries < maxRetries) {
-				await new Promise((resolve) => setTimeout(resolve, delay));
-				delay *= 2;
-			} else {
-				console.error(`Max retries reached for article ${articleId}. Skipping.`);
-				return;
-			}
+			console.error(`Error generating content for article ${articleId} with key #${currentGeminiKeyIndex === 0 ? geminiApiKeys.length : currentGeminiKeyIndex}:`, error);
 		}
+		keyAttempt++;
 	}
-	if (fullContent) {
-		await db.insert(generatedContents).values({ id: crypto.randomUUID(), content: fullContent, articleId: articleId });
-	}
+	if (fullContent) await db.insert(generatedContents).values({ id: crypto.randomUUID(), content: fullContent, articleId: articleId });
 }

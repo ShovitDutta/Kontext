@@ -83,7 +83,7 @@ async function main() {
 			console.log(`Processing article: ${article.title}`);
 			await generateContent(article.id);
 			console.log(`  - Generated content for medium length`);
-			await new Promise((resolve) => setTimeout(resolve, 5000));
+			await new Promise((resolve) => setTimeout(resolve, 10000));
 		}
 	} catch (error) {
 		console.error('Error generating content for articles:', error);
