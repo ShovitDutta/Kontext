@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { newsCategories } from '@/lib/newscat';
 import { FiChevronDown } from 'react-icons/fi';
-import DatePicker from './DatePicker';
 
 interface SidebarProps {
 	selectedCategory: string;
@@ -23,8 +22,8 @@ const Sidebar: React.FC<SidebarProps> = ({ selectedCategory, onSelectCategory })
 			<h1 className="text-2xl font-bold">Tools & Craft</h1>
 			<p className="text-neutral-400">News, interviews, and thoughts from the people and teams who work at Notion.</p>
 
-			{/* Mobile View: Dropdowns side-by-side */}
-			<div className="lg:hidden flex space-x-4">
+			{/* Mobile View: Dropdown */}
+			<div className="lg:hidden">
 				<div className="relative w-full">
 					<button
 						onClick={() => setIsCategoryOpen(!isCategoryOpen)}
@@ -60,10 +59,9 @@ const Sidebar: React.FC<SidebarProps> = ({ selectedCategory, onSelectCategory })
 						)}
 					</AnimatePresence>
 				</div>
-				<DatePicker />
 			</div>
 
-			{/* Desktop View: Nav and Date Picker */}
+			{/* Desktop View: Nav */}
 			<div className="hidden lg:block">
 				<nav className="space-y-2">
 					{newsCategories.map((category) => (
@@ -77,9 +75,6 @@ const Sidebar: React.FC<SidebarProps> = ({ selectedCategory, onSelectCategory })
 						</motion.button>
 					))}
 				</nav>
-				<div className="mt-4">
-					<DatePicker />
-				</div>
 			</div>
 		</motion.div>
 	);

@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { create } from 'zustand';
-import { format } from 'date-fns';
 
 export interface Article {
 	id: string;
@@ -20,8 +19,6 @@ export interface GeneratedContent {
 	articleId: string;
 }
 
-type SortOrder = 'desc' | 'asc';
-
 interface ArticleState {
 	articles: Article[];
 	currentArticle: Article | null;
@@ -32,14 +29,10 @@ interface ArticleState {
 	hasMore: boolean;
 	category: string;
 	searchQuery: string;
-	sortOrder: SortOrder;
-	selectedDate: Date | undefined;
 	fetchArticles: () => Promise<void>;
 	fetchArticleById: (id: string) => Promise<void>;
 	setCategory: (category: string) => void;
 	setSearchQuery: (query: string) => void;
-	setSortOrder: (sortOrder: SortOrder) => void;
-	setSelectedDate: (date: Date | undefined) => void;
 	clearArticles: () => void;
 }
 
@@ -55,8 +48,6 @@ export const useArticleStore = create<ArticleState>((set, get) => ({
 	hasMore: true,
 	category: 'all',
 	searchQuery: '',
-	sortOrder: 'desc',
-	selectedDate: undefined,
 
 	setCategory: (category: string) => {
 		set({ category, articles: [], page: 1, hasMore: true });
@@ -68,22 +59,12 @@ export const useArticleStore = create<ArticleState>((set, get) => ({
 		get().fetchArticles();
 	},
 
-	setSortOrder: (sortOrder: SortOrder) => {
-		set({ sortOrder, articles: [], page: 1, hasMore: true });
-		get().fetchArticles();
-	},
-
-	setSelectedDate: (date: Date | undefined) => {
-		set({ selectedDate: date, articles: [], page: 1, hasMore: true });
-		get().fetchArticles();
-	},
-
 	clearArticles: () => {
 		set({ articles: [], page: 1, hasMore: true });
 	},
 
 	fetchArticles: async () => {
-		const { page, category, searchQuery, sortOrder, selectedDate, hasMore, isLoadingMore } = get();
+		const { page, category, searchQuery, hasMore, isLoadingMore } = get();
 		if (!hasMore || isLoadingMore) return;
 
 		if (page === 1) set({ isLoading: true });
@@ -98,8 +79,6 @@ export const useArticleStore = create<ArticleState>((set, get) => ({
 					q: searchQuery,
 					page,
 					limit: ARTICLE_LIMIT,
-					sort: sortOrder,
-					date: selectedDate ? format(selectedDate, 'yyyy-MM-dd') : undefined,
 				},
 			});
 			set((state) => ({

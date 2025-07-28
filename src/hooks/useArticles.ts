@@ -3,7 +3,7 @@ import { useArticleStore } from '@/store/articleStore';
 import { useShallow } from 'zustand/react/shallow';
 
 export const useArticles = () => {
-	const { articles, isLoading, isLoadingMore, error, hasMore, category, searchQuery, sortOrder, selectedDate } = useArticleStore(
+	const { articles, isLoading, isLoadingMore, error, hasMore, category, searchQuery } = useArticleStore(
 		useShallow((state) => ({
 			articles: state.articles,
 			isLoading: state.isLoading,
@@ -12,11 +12,9 @@ export const useArticles = () => {
 			hasMore: state.hasMore,
 			category: state.category,
 			searchQuery: state.searchQuery,
-			sortOrder: state.sortOrder,
-			selectedDate: state.selectedDate,
 		})),
 	);
-	const { fetchArticles, setCategory, setSearchQuery, setSortOrder, setSelectedDate } = useArticleStore.getState();
+	const { fetchArticles, setCategory, setSearchQuery } = useArticleStore.getState();
 
 	return {
 		articles,
@@ -26,12 +24,8 @@ export const useArticles = () => {
 		hasMore,
 		category,
 		searchQuery,
-		sortOrder,
-		selectedDate,
 		loadMore: fetchArticles,
 		setCategory,
 		setSearchQuery,
-		setSortOrder,
-		setSelectedDate,
 	};
 };
