@@ -17,7 +17,7 @@ async function main() {
 			if (articleContents.length > 0) {
 				console.log('  Generated Content (Blogs):');
 				articleContents.forEach((content) => {
-					console.log(`    - Length: ${content.length}`);
+					console.log(`    - Length: ${content.content.length}`);
 					console.log(`      Content: ${content.content}...`);
 				});
 			} else console.log('  No generated content found for this article.');

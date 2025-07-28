@@ -38,6 +38,7 @@ const CategoryPageClient = () => {
 								imageUrl={article.urlToImage}
 								description={article.description}
 								category={article.category}
+								publishedAt={article.publishedAt}
 							/>
 						))}
 			</div>

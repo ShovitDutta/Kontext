@@ -1,9 +1,9 @@
 import { db } from '@/lib/db';
-import { NextRequest } from 'next/server';
+
 import { articles } from '@/lib/db/schema';
 import { desc } from 'drizzle-orm';
 
-export async function GET(req: NextRequest) {
+export async function GET() {
 	try {
 		const fetchedArticles = await db.query.articles.findMany({
 			orderBy: [desc(articles.publishedAt)],

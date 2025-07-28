@@ -1,12 +1,19 @@
-'use client';
 import './globals.css';
 import type React from 'react';
-import { motion } from 'framer-motion';
-import type {} from 'next';
+import type { Metadata, Viewport } from 'next';
 import Footer from '@/components/Footer';
 import Header from '@/components/Header';
+import MainContent from '@/components/MainContent';
 import { Poppins } from 'next/font/google';
 const poppins = Poppins({ subsets: ['latin'], weight: ['300', '400', '500', '600', '700'], variable: '--font-poppins', display: 'swap' });
+
+export const metadata: Metadata = {
+	manifest: '/manifest.ts',
+};
+
+export const viewport: Viewport = {
+	themeColor: '#111827',
+};
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
 	return (
@@ -16,13 +23,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 			className={`${poppins.variable} dark`}>
 			<body className="antialiased font-sans bg-neutral-900 text-white flex flex-col min-h-screen">
 				<Header />
-				<motion.main
-					initial={{ opacity: 0, y: 20 }}
-					animate={{ opacity: 1, y: 0 }}
-					transition={{ duration: 0.5 }}
-					className="flex-grow flex flex-col">
-					{children}
-				</motion.main>
+				<MainContent>{children}</MainContent>
 				<Footer />
 			</body>
 		</html>
