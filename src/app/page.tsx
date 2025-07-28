@@ -6,7 +6,7 @@ import ArticleCard from '@/components/ArticleCard';
 import Sidebar from '@/components/Sidebar';
 import InitialLoader from '@/components/InitialLoader';
 import EmptyState from '@/components/EmptyState';
-import { TbTriangleFilled } from "react-icons/tb";
+import { TbTriangleFilled } from 'react-icons/tb';
 
 const containerVariants = {
 	hidden: { opacity: 0 },
@@ -59,7 +59,6 @@ const Page = () => {
 					<div className="lg:sticky top-28">
 						<Sidebar
 							selectedCategory={category}
-
 							onSelectCategory={setCategory}
 						/>
 					</div>
@@ -97,7 +96,11 @@ const Page = () => {
 					exit={{ opacity: 0, y: 50, scaleX: 0.5 }}
 					transition={{ type: 'spring', damping: 20, stiffness: 100 }}
 					className="fixed bottom-8 left-1/2 -translate-x-1/2 bg-neutral-950/70 text-white px-4 py-2 rounded-full shadow-lg hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-neutral-500 focus:ring-offset-2 focus:ring-offset-neutral-900 z-50 border-2 border-white flex items-center space-x-2 backdrop-blur-md">
-					<TbTriangleFilled size={24} className="animate-pulse" /><span>Go to Top</span>
+					<TbTriangleFilled
+						size={24}
+						className="animate-pulse"
+					/>
+					<span>Go to Top</span>
 				</motion.button>
 			)}
 		</div>

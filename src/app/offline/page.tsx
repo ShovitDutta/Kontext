@@ -10,9 +10,7 @@ const OfflinePage = () => {
 				className="text-neutral-500 mb-4"
 			/>
 			<h1 className="text-3xl font-bold text-white">You are offline</h1>
-			<p className="text-neutral-400 mt-2">
-				Please check your internet connection. The content will be available once you are back online.
-			</p>
+			<p className="text-neutral-400 mt-2">Please check your internet connection. The content will be available once you are back online.</p>
 		</div>
 	);
 };
