@@ -1,12 +1,11 @@
 'use client';
 import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { useInView } from 'react-intersection-observer';
 import { useArticles } from '@/hooks/useArticles';
 import ArticleCard from '@/components/ArticleCard';
 import Sidebar from '@/components/Sidebar';
 import InitialLoader from '@/components/InitialLoader';
-import ArticleCardSkeleton from '@/components/ArticleCardSkeleton';
+import EmptyState from '@/components/EmptyState';
 
 const containerVariants = {
 	hidden: { opacity: 0 },
@@ -19,28 +18,14 @@ const containerVariants = {
 };
 
 const Page = () => {
-	const { articles, isLoading, isLoadingMore, hasMore, error, category, setCategory, loadMore } = useArticles();
-
-	const { ref, inView } = useInView({
-		threshold: 0,
-		triggerOnce: false,
-	});
+	const { articles, isLoading, error, category, setCategory, loadArticles } = useArticles();
 
 	useEffect(() => {
-		if (inView && hasMore && !isLoading && !isLoadingMore) {
-			loadMore();
-		}
-	}, [inView, hasMore, isLoading, isLoadingMore, loadMore]);
-
-	// This effect runs once on mount to fetch initial articles
-	useEffect(() => {
-		if (articles.length === 0) {
-			loadMore();
-		}
+		loadArticles();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	if (isLoading && articles.length === 0) {
+	if (isLoading) {
 		return (
 			<div className="flex-grow flex items-center justify-center">
 				<InitialLoader />
@@ -67,36 +52,23 @@ const Page = () => {
 						initial="hidden"
 						animate="visible"
 						className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8">
-						{articles?.map((article) => (
-							<ArticleCard
-								id={article.id}
-								key={article.id}
-								title={article.title}
-								source={article.sourceName}
-								imageUrl={article.urlToImage}
-								category={article.category}
-								author={article.author ?? undefined}
-								publishedAt={article.publishedAt}
-							/>
-						))}
+						{articles.length > 0 ? (
+							articles.map((article) => (
+								<ArticleCard
+									id={article.id}
+									key={article.id}
+									title={article.title}
+									source={article.sourceName}
+									imageUrl={article.urlToImage}
+									category={article.category}
+									author={article.author ?? undefined}
+									publishedAt={article.publishedAt}
+								/>
+							))
+						) : (
+							<EmptyState />
+						)}
 					</motion.div>
-
-					{/* Intersection Observer Trigger */}
-					<div
-						ref={ref}
-						className="h-10"
-					/>
-
-					{/* Loading Skeletons for subsequent pages */}
-					{isLoadingMore && (
-						<div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8 mt-8">
-							{Array.from({ length: 4 }).map((_, i) => (
-								<ArticleCardSkeleton key={i} />
-							))}
-						</div>
-					)}
-
-					{!hasMore && articles.length > 0 && <p className="text-center text-gray-500 mt-8">You&apos;ve reached the end.</p>}
 				</main>
 			</div>
 		</div>

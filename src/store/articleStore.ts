@@ -20,76 +20,68 @@ export interface GeneratedContent {
 }
 
 interface ArticleState {
+	allArticles: Article[];
 	articles: Article[];
 	currentArticle: Article | null;
 	isLoading: boolean;
-	isLoadingMore: boolean;
 	error: Error | null;
-	page: number;
-	hasMore: boolean;
 	category: string;
 	searchQuery: string;
 	fetchArticles: () => Promise<void>;
 	fetchArticleById: (id: string) => Promise<void>;
 	setCategory: (category: string) => void;
 	setSearchQuery: (query: string) => void;
-	clearArticles: () => void;
 }
 
-const ARTICLE_LIMIT = 20;
+const applyFilters = (articles: Article[], category: string, searchQuery: string): Article[] => {
+	let filteredArticles = articles;
+
+	if (category !== 'all') {
+		filteredArticles = filteredArticles.filter((article) => article.category === category);
+	}
+
+	if (searchQuery) {
+		filteredArticles = filteredArticles.filter((article) => article.title.toLowerCase().includes(searchQuery.toLowerCase()));
+	}
+
+	return filteredArticles;
+};
 
 export const useArticleStore = create<ArticleState>((set, get) => ({
+	allArticles: [],
 	articles: [],
 	currentArticle: null,
 	isLoading: false,
-	isLoadingMore: false,
 	error: null,
-	page: 1,
-	hasMore: true,
 	category: 'all',
 	searchQuery: '',
 
 	setCategory: (category: string) => {
-		set({ category, articles: [], page: 1, hasMore: true });
-		get().fetchArticles();
+		const { allArticles, searchQuery } = get();
+		const filtered = applyFilters(allArticles, category, searchQuery);
+		set({ category, articles: filtered });
 	},
 
 	setSearchQuery: (query: string) => {
-		set({ searchQuery: query, articles: [], page: 1, hasMore: true });
-		get().fetchArticles();
-	},
-
-	clearArticles: () => {
-		set({ articles: [], page: 1, hasMore: true });
+		const { allArticles, category } = get();
+		const filtered = applyFilters(allArticles, category, query);
+		set({ searchQuery: query, articles: filtered });
 	},
 
 	fetchArticles: async () => {
-		const { page, category, searchQuery, hasMore, isLoadingMore } = get();
-		if (!hasMore || isLoadingMore) return;
+		if (get().allArticles.length > 0) {
+			// Data is already cached
+			return;
+		}
 
-		if (page === 1) set({ isLoading: true });
-		else set({ isLoadingMore: true });
-
-		set({ error: null });
+		set({ isLoading: true, error: null });
 
 		try {
-			const { data } = await axios.get('/api/news', {
-				params: {
-					category,
-					q: searchQuery,
-					page,
-					limit: ARTICLE_LIMIT,
-				},
-			});
-			set((state) => ({
-				articles: page === 1 ? data : [...state.articles, ...data],
-				page: state.page + 1,
-				hasMore: data.length === ARTICLE_LIMIT,
-			}));
+			const { data } = await axios.get('/api/news');
+			const filtered = applyFilters(data, get().category, get().searchQuery);
+			set({ allArticles: data, articles: filtered, isLoading: false });
 		} catch (error) {
-			set({ error: error as Error });
-		} finally {
-			set({ isLoading: false, isLoadingMore: false });
+			set({ error: error as Error, isLoading: false });
 		}
 	},
 

@@ -5,7 +5,7 @@
 	"version": "1.0.0",
 	"license": "SEE LICENSE IN LICENSE",
 	"author": "Shovit Dutta <shovitdutta1@gmail.com>",
-	"description": "Kontext is a GenAI-powered news blog to stay updated with the latest news, transformed into engaging blog posts using GenAI.",
+	"description": "A news blog that transforms the latest news into engaging, easy-to-read blog posts using AI.",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/ShovitDutta/kontext.git"
@@ -43,10 +43,10 @@
 	},
 	"dependencies": {
 		"@auth/drizzle-adapter": "1.10.0",
-		"@google/generative-ai": "^0.24.1",
-		"@langchain/core": "^0.3.65",
-		"@langchain/google-genai": "^0.2.16",
-		"@langchain/langgraph": "^0.3.10",
+		"@google/generative-ai": "0.24.1",
+		"@langchain/core": "0.3.66",
+		"@langchain/google-genai": "0.2.16",
+		"@langchain/langgraph": "0.3.11",
 		"@tailwindcss/postcss": "^4.1.11",
 		"axios": "1.11.0",
 		"date-fns": "^4.1.0",
@@ -55,7 +55,7 @@
 		"drizzle-orm": "0.44.3",
 		"drizzle-seed": "0.3.1",
 		"framer-motion": "12.23.9",
-		"langchain": "^0.3.30",
+		"langchain": "0.3.30",
 		"next": "^15.4.2",
 		"next-auth": "^5.0.0-beta.28",
 		"pg": "8.16.3",
