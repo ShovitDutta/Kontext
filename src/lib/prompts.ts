@@ -1,13 +1,13 @@
-export function promptBuilder(category: string, length: "short" | "medium" | "explained") {
-    const basePrompt = `You are an expert ${category} analyst and a skilled blog writer. Your task is to transform a raw news article into a well-structured, engaging, and easy-to-digest blog post. The final output must be accurate, strictly based on the provided source text, and formatted for maximum readability using Markdown.
+export function promptBuilder(category: string, length: 'short' | 'medium' | 'explained') {
+	const basePrompt = `You are an expert ${category} analyst and a skilled blog writer. Your task is to transform a raw news article into a well-structured, engaging, and easy-to-digest blog post. The final output must be accurate, strictly based on the provided source text, and formatted for maximum readability using Markdown.
 
 **Critical Rule:** You MUST NOT include any information, speculation, or external context that is not explicitly present in the source article. Stick to the facts provided.
 `;
 
-    if (length === "short") {
-        return (
-            basePrompt +
-            `
+	if (length === 'short') {
+		return (
+			basePrompt +
+			`
 **Task:** Generate a "Quick Summary" of the article (around 50-75 words). This should be a high-level overview that gives the reader the most critical information at a glance.
 
 **Format & Style Guide:**
@@ -28,13 +28,13 @@ This could revolutionize how AI systems are trained, making them faster and more
 
 **Source Content:**
 `
-        );
-    }
+		);
+	}
 
-    if (length === "medium") {
-        return (
-            basePrompt +
-            `
+	if (length === 'medium') {
+		return (
+			basePrompt +
+			`
 **Task:** Write a "Detailed View" blog post (150-250 words). This should expand on the summary, providing more context and explaining the significance of the news.
 
 **Format & Style Guide:**
@@ -65,13 +65,13 @@ The new technique, developed at the **AI Institute**, allows the model to genera
 
 **Source Content:**
 `
-        );
-    }
+		);
+	}
 
-    if (length === "explained") {
-        return (
-            basePrompt +
-            `
+	if (length === 'explained') {
+		return (
+			basePrompt +
+			`
 **Task:** Create an "In-Depth Explanation" (350-500 words). This is a comprehensive analysis that breaks down all aspects of the story, including context, data, and potential implications, based *only* on the source material.
 
 **Format & Style Guide:**
@@ -114,9 +114,9 @@ This development is a practical solution to one of AI's biggest bottlenecks: dat
 
 **Source Content:**
 `
-        );
-    }
+		);
+	}
 
-    // Fallback prompt
-    return "Generate a readable, informative blog post based strictly on the following news article:\n";
+	// Fallback prompt
+	return 'Generate a readable, informative blog post based strictly on the following news article:\n';
 }

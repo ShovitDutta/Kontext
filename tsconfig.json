@@ -1,21 +1,21 @@
 {
-    "compilerOptions": {
-        "strict": true,
-        "noEmit": true,
-        "allowJs": true,
-        "target": "ES6",
-        "jsx": "preserve",
-        "module": "esnext",
-        "incremental": true,
-        "skipLibCheck": true,
-        "esModuleInterop": true,
-        "isolatedModules": true,
-        "resolveJsonModule": true,
-        "moduleResolution": "bundler",
-        "plugins": [{ "name": "next" }],
-        "paths": { "@/*": ["./src/*"] },
-        "lib": ["dom", "dom.iterable", "esnext"]
-    },
-    "exclude": ["node_modules"],
-    "include": ["next-env.d.ts", "src/**/*.ts", "src/**/*.tsx", ".next/types/**/*.ts", "postcss.config.mjs", "prettier.config.js"]
+	"compilerOptions": {
+		"strict": true,
+		"noEmit": true,
+		"allowJs": true,
+		"target": "ES6",
+		"jsx": "preserve",
+		"module": "esnext",
+		"incremental": true,
+		"skipLibCheck": true,
+		"esModuleInterop": true,
+		"isolatedModules": true,
+		"resolveJsonModule": true,
+		"moduleResolution": "bundler",
+		"plugins": [{ "name": "next" }],
+		"paths": { "@/*": ["./src/*"] },
+		"lib": ["dom", "dom.iterable", "esnext"]
+	},
+	"exclude": ["node_modules"],
+	"include": ["next-env.d.ts", "src/**/*.ts", "src/**/*.tsx", ".next/types/**/*.ts", "postcss.config.mjs", "prettier.config.js"]
 }
