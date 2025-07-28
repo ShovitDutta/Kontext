@@ -19,8 +19,8 @@ const Sidebar: React.FC<SidebarProps> = ({ selectedCategory, onSelectCategory })
 			animate={{ opacity: 1, y: 0 }}
 			transition={{ duration: 0.5 }}
 			className="space-y-4">
-			<h1 className="text-2xl font-bold">Tools & Craft</h1>
-			<p className="text-neutral-400">News, interviews, and thoughts from the people and teams who work at Notion.</p>
+			<h1 className="text-2xl font-bold">News & Insights</h1>
+			<p className="text-neutral-400">Transforming the latest news into engaging, easy-to-read blog posts using AI.</p>
 
 			{/* Mobile View: Dropdown */}
 			<div className="lg:hidden">

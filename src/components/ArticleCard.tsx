@@ -40,10 +40,9 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ id, title, imageUrl, category
 			transition={{ type: 'spring', stiffness: 300, damping: 15 }}>
 			<Link
 				href={`/article/${id}`}
-				className="relative block group bg-neutral-900 p-4 rounded-lg border border-neutral-800 h-full flex flex-col">
-				<div className="space-y-3 flex-grow">
-					{imageUrl && (
-						<div className="overflow-hidden rounded-lg">
+				className="relative block group bg-neutral-800 rounded-lg border border-neutral-800 h-full flex flex-col">
+				{imageUrl && (
+						<div className="overflow-hidden rounded-t-lg">
 							<Image
 								src={imageUrl}
 								alt={title}
@@ -53,10 +52,11 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ id, title, imageUrl, category
 							/>
 						</div>
 					)}
-					<p className="text-sm text-blue-400">{categoryName}</p>
+				<div className="space-y-3 flex-grow pt-4 px-4">
+					<p className="text-sm text-red-400">{categoryName}</p>
 					<h3 className="text-base sm:text-lg font-semibold text-white group-hover:text-neutral-300 flex-grow">{title}</h3>
 				</div>
-				<div className="flex items-center justify-between text-xs sm:text-sm text-neutral-500 mt-4">
+				<div className="flex items-center justify-between text-xs sm:text-sm text-neutral-500 mt-4 pb-4 px-4">
 					<div className="flex items-center space-x-2">
 						{author && <span>{author}</span>}
 						{author && source && <span>·</span>}
@@ -64,7 +64,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ id, title, imageUrl, category
 					</div>
 					<time dateTime={publishedAt}>{format(new Date(publishedAt), 'MMM d, yyyy')}</time>
 				</div>
-				<div className="absolute bottom-4 right-4 bg-neutral-700 text-white text-xs px-2 py-1 rounded-full">by Kontext</div>
+				<div className="absolute top-4 right-4 bg-neutral-700 text-white text-xs px-2 py-1 rounded-full">by Kontext</div>
 			</Link>
 		</motion.div>
 	);

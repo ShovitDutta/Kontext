@@ -1,11 +1,12 @@
 'use client';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { useArticles } from '@/hooks/useArticles';
 import ArticleCard from '@/components/ArticleCard';
 import Sidebar from '@/components/Sidebar';
 import InitialLoader from '@/components/InitialLoader';
 import EmptyState from '@/components/EmptyState';
+import { TbTriangleFilled } from "react-icons/tb";
 
 const containerVariants = {
 	hidden: { opacity: 0 },
@@ -19,9 +20,25 @@ const containerVariants = {
 
 const Page = () => {
 	const { articles, isLoading, error, category, setCategory, loadArticles } = useArticles();
+	const [showScrollToTopButton, setShowScrollToTopButton] = useState(false);
+
+	const handleScroll = useCallback(() => {
+		if (window.scrollY > 200) {
+			setShowScrollToTopButton(true);
+		} else {
+			setShowScrollToTopButton(false);
+		}
+	}, []);
+
+	const scrollToTop = useCallback(() => {
+		window.scrollTo({ top: 0, behavior: 'smooth' });
+	}, []);
 
 	useEffect(() => {
 		loadArticles();
+		window.addEventListener('scroll', handleScroll);
+		handleScroll(); // Call once on mount to set initial state
+		return () => window.removeEventListener('scroll', handleScroll);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -36,12 +53,13 @@ const Page = () => {
 	if (error) return <div>Error fetching articles: {error.message}</div>;
 
 	return (
-		<div className="container mx-auto px-4 flex flex-col flex-grow">
+		<div className="container mx-auto px-4 flex flex-col flex-grow my-8">
 			<div className="flex flex-col lg:flex-row lg:space-x-8 flex-grow">
 				<aside className="w-full lg:w-64 lg:flex-shrink-0">
 					<div className="lg:sticky top-28">
 						<Sidebar
 							selectedCategory={category}
+
 							onSelectCategory={setCategory}
 						/>
 					</div>
@@ -71,6 +89,17 @@ const Page = () => {
 					</motion.div>
 				</main>
 			</div>
+			{showScrollToTopButton && (
+				<motion.button
+					onClick={scrollToTop}
+					initial={{ opacity: 0, y: 50, scaleX: 0.5 }}
+					animate={{ opacity: 1, y: 0, scaleX: 1 }}
+					exit={{ opacity: 0, y: 50, scaleX: 0.5 }}
+					transition={{ type: 'spring', damping: 20, stiffness: 100 }}
+					className="fixed bottom-8 left-1/2 -translate-x-1/2 bg-neutral-950/70 text-white px-4 py-2 rounded-full shadow-lg hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-neutral-500 focus:ring-offset-2 focus:ring-offset-neutral-900 z-50 border-2 border-white flex items-center space-x-2 backdrop-blur-md">
+					<TbTriangleFilled size={24} className="animate-pulse" /><span>Go to Top</span>
+				</motion.button>
+			)}
 		</div>
 	);
 };

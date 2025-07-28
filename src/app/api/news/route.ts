@@ -9,7 +9,17 @@ export async function GET() {
 			orderBy: [desc(articles.publishedAt)],
 		});
 
-		return new Response(JSON.stringify(fetchedArticles), { status: 200, headers: { 'Content-Type': 'application/json' } });
+		const uniqueArticles = [];
+		const seenIds = new Set();
+
+		for (const article of fetchedArticles) {
+			if (!seenIds.has(article.id)) {
+				uniqueArticles.push(article);
+				seenIds.add(article.id);
+			}
+		}
+
+		return new Response(JSON.stringify(uniqueArticles), { status: 200, headers: { 'Content-Type': 'application/json' } });
 	} catch (error) {
 		console.error('Error in GET /api/news:', error);
 		return new Response(JSON.stringify({ error: 'Failed to fetch news' }), { status: 500 });
