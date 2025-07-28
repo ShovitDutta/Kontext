@@ -12,32 +12,27 @@ const Footer = () => {
 						<div className="flex space-x-4">
 							<a
 								href="#"
-								className="text-neutral-400 hover:text-white"
-							>
+								className="text-neutral-400 hover:text-white">
 								<FaInstagram />
 							</a>
 							<a
 								href="#"
-								className="text-neutral-400 hover:text-white"
-							>
+								className="text-neutral-400 hover:text-white">
 								<FaTwitter />
 							</a>
 							<a
 								href="#"
-								className="text-neutral-400 hover:text-white"
-							>
+								className="text-neutral-400 hover:text-white">
 								<FaFacebook />
 							</a>
 							<a
 								href="#"
-								className="text-neutral-400 hover:text-white"
-							>
+								className="text-neutral-400 hover:text-white">
 								<FaYoutube />
 							</a>
 							<a
 								href="#"
-								className="text-neutral-400 hover:text-white"
-							>
+								className="text-neutral-400 hover:text-white">
 								<FaGithub />
 							</a>
 						</div>
@@ -49,32 +44,28 @@ const Footer = () => {
 							<li>
 								<Link
 									href="/about"
-									className="hover:text-white"
-								>
+									className="hover:text-white">
 									About us
 								</Link>
 							</li>
 							<li>
 								<Link
 									href="/careers"
-									className="hover:text-white"
-								>
+									className="hover:text-white">
 									Careers
 								</Link>
 							</li>
 							<li>
 								<Link
 									href="/press"
-									className="hover:text-white"
-								>
+									className="hover:text-white">
 									Press
 								</Link>
 							</li>
 							<li>
 								<Link
 									href="/blog"
-									className="hover:text-white"
-								>
+									className="hover:text-white">
 									Blog
 								</Link>
 							</li>
@@ -87,24 +78,21 @@ const Footer = () => {
 							<li>
 								<Link
 									href="#"
-									className="hover:text-white"
-								>
+									className="hover:text-white">
 									iOS & Android
 								</Link>
 							</li>
 							<li>
 								<Link
 									href="#"
-									className="hover:text-white"
-								>
+									className="hover:text-white">
 									Mac & Windows
 								</Link>
 							</li>
 							<li>
 								<Link
 									href="#"
-									className="hover:text-white"
-								>
+									className="hover:text-white">
 									Web Clipper
 								</Link>
 							</li>
@@ -117,32 +105,28 @@ const Footer = () => {
 							<li>
 								<Link
 									href="/help"
-									className="hover:text-white"
-								>
+									className="hover:text-white">
 									Help center
 								</Link>
 							</li>
 							<li>
 								<Link
 									href="/api"
-									className="hover:text-white"
-								>
+									className="hover:text-white">
 									API
 								</Link>
 							</li>
 							<li>
 								<Link
 									href="/community"
-									className="hover:text-white"
-								>
+									className="hover:text-white">
 									Community
 								</Link>
 							</li>
 							<li>
 								<Link
 									href="/templates"
-									className="hover:text-white"
-								>
+									className="hover:text-white">
 									Templates
 								</Link>
 							</li>
@@ -155,24 +139,21 @@ const Footer = () => {
 							<li>
 								<Link
 									href="/enterprise"
-									className="hover:text-white"
-								>
+									className="hover:text-white">
 									Enterprise
 								</Link>
 							</li>
 							<li>
 								<Link
 									href="/startups"
-									className="hover:text-white"
-								>
+									className="hover:text-white">
 									Startups
 								</Link>
 							</li>
 							<li>
 								<Link
 									href="/affiliates"
-									className="hover:text-white"
-								>
+									className="hover:text-white">
 									Affiliates
 								</Link>
 							</li>
@@ -184,20 +165,17 @@ const Footer = () => {
 					<div className="flex space-x-4 mt-4 md:mt-0">
 						<Link
 							href="/privacy"
-							className="hover:text-white"
-						>
+							className="hover:text-white">
 							Privacy
 						</Link>
 						<Link
 							href="/terms"
-							className="hover:text-white"
-						>
+							className="hover:text-white">
 							Terms
 						</Link>
 						<Link
 							href="/sitemap"
-							className="hover:text-white"
-						>
+							className="hover:text-white">
 							Sitemap
 						</Link>
 					</div>

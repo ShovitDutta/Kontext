@@ -13,16 +13,14 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 		<html
 			lang="en"
 			style={{ colorScheme: 'dark' }}
-			className={`${poppins.variable} dark`}
-		>
+			className={`${poppins.variable} dark`}>
 			<body className="antialiased font-sans bg-neutral-900 text-white flex flex-col min-h-screen">
 				<Header />
 				<motion.main
 					initial={{ opacity: 0, y: 20 }}
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 0.5 }}
-					className="flex-grow"
-				>
+					className="flex-grow">
 					<div className="relative flex flex-col h-full">{children}</div>
 				</motion.main>
 				<Footer />

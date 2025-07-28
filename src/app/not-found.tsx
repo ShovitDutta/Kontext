@@ -8,8 +8,7 @@ export default function NotFound() {
 			<motion.div
 				initial={{ opacity: 0, y: -20 }}
 				animate={{ opacity: 1, y: 0 }}
-				transition={{ duration: 0.5 }}
-			>
+				transition={{ duration: 0.5 }}>
 				<h1 className="text-5xl sm:text-6xl font-bold text-blue-500">404</h1> <h2 className="mt-4 text-2xl sm:text-3xl font-bold text-white">Page Not Found</h2> <p className="mt-2 text-base sm:text-lg text-gray-400">The page you&apos;re looking for doesn&apos;t exist or has been moved.</p>
 				<div className="mt-8">
 					<Link href="/">

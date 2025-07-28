@@ -13,8 +13,7 @@ export default function Error({ error, reset }: { error: Error & { digest?: stri
 				initial={{ opacity: 0, y: -20 }}
 				animate={{ opacity: 1, y: 0 }}
 				transition={{ duration: 0.5 }}
-				className="bg-gray-800/40 border border-red-500/50 rounded-xl p-8 max-w-lg"
-			>
+				className="bg-gray-800/40 border border-red-500/50 rounded-xl p-8 max-w-lg">
 				<div className="flex justify-center mb-4">
 					<FaExclamationTriangle className="h-12 w-12 text-red-500" />
 				</div>
@@ -22,8 +21,7 @@ export default function Error({ error, reset }: { error: Error & { digest?: stri
 				<div className="mt-8 flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
 					<button
 						onClick={reset}
-						className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 sm:py-3 sm:px-6 rounded-full text-base sm:text-lg transition-colors"
-					>
+						className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 sm:py-3 sm:px-6 rounded-full text-base sm:text-lg transition-colors">
 						Try again
 					</button>
 					<Link href="/">

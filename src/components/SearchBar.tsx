@@ -21,8 +21,7 @@ const SearchBar = () => {
 			animate={{ opacity: 1, y: 0 }}
 			transition={{ duration: 0.5 }}
 			onSubmit={handleSearch}
-			className="relative w-full max-w-md mx-auto"
-		>
+			className="relative w-full max-w-md mx-auto">
 			<input
 				type="text"
 				placeholder="Search for articles..."

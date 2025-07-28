@@ -1,6 +1,6 @@
 {
 	"singleAttributePerLine": true,
-	"bracketSameLine": false,
+	"bracketSameLine": true,
 	"jsxSingleQuote": false,
 	"bracketSpacing": true,
 	"singleQuote": true,

@@ -22,8 +22,7 @@ const GeneratedContentViewer: React.FC<GeneratedContentViewerProps> = ({ generat
 					<button
 						key={length}
 						onClick={() => setSelectedLength(length)}
-						className={`relative z-10 px-2 py-1 text-xs sm:px-4 sm:py-2 sm:text-sm font-medium transition-colors duration-300 ${selectedLength === length ? 'text-white' : 'text-neutral-400 hover:text-white'}`}
-					>
+						className={`relative z-10 px-2 py-1 text-xs sm:px-4 sm:py-2 sm:text-sm font-medium transition-colors duration-300 ${selectedLength === length ? 'text-white' : 'text-neutral-400 hover:text-white'}`}>
 						{selectedLength === length && (
 							<motion.div
 								layoutId="selected-tab-background"
@@ -42,8 +41,7 @@ const GeneratedContentViewer: React.FC<GeneratedContentViewerProps> = ({ generat
 					animate={{ opacity: 1, y: 0 }}
 					exit={{ opacity: 0, y: -20 }}
 					transition={{ duration: 0.3 }}
-					className="mt-4 p-4 sm:p-6 bg-neutral-800 rounded-lg border border-neutral-700"
-				>
+					className="mt-4 p-4 sm:p-6 bg-neutral-800 rounded-lg border border-neutral-700">
 					{selectedContent ? (
 						<div className="prose prose-sm sm:prose-base max-w-none">
 							<ReactMarkdown>{selectedContent.content}</ReactMarkdown>

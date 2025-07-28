@@ -35,12 +35,10 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ id, title, imageUrl, category
 			initial="hidden"
 			animate="visible"
 			whileHover={{ scale: 1.03, y: -5 }}
-			transition={{ type: 'spring', stiffness: 300, damping: 15 }}
-		>
+			transition={{ type: 'spring', stiffness: 300, damping: 15 }}>
 			<Link
 				href={`/article/${id}`}
-				className="relative block group bg-neutral-900 p-4 rounded-lg border border-neutral-800 h-full flex flex-col"
-			>
+				className="relative block group bg-neutral-900 p-4 rounded-lg border border-neutral-800 h-full flex flex-col">
 				<div className="space-y-3 flex-grow">
 					{imageUrl && (
 						<div className="overflow-hidden rounded-lg">
