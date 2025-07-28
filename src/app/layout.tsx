@@ -20,8 +20,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 					initial={{ opacity: 0, y: 20 }}
 					animate={{ opacity: 1, y: 0 }}
 					transition={{ duration: 0.5 }}
-					className="flex-grow">
-					<div className="relative flex flex-col h-full">{children}</div>
+					className="flex-grow flex flex-col">
+					{children}
 				</motion.main>
 				<Footer />
 			</body>

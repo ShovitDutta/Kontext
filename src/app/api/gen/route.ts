@@ -3,8 +3,8 @@ import { db } from '@/lib/db';
 import { auth } from '@/../auth';
 import { eq } from 'drizzle-orm';
 import { generateContent } from '@/lib/generate';
-import { NextRequest, NextResponse } from 'next/server';
 import { generatedContents } from '@/lib/db/schema';
+import { NextRequest, NextResponse } from 'next/server';
 const generateRequestSchema = z.object({ articleId: z.string() });
 export async function POST(req: NextRequest) {
 	const session = await auth();

@@ -41,13 +41,17 @@ const Page = () => {
 	}, []);
 
 	if (isLoading && articles.length === 0) {
-		return <InitialLoader />;
+		return (
+			<div className="flex-grow flex items-center justify-center">
+				<InitialLoader />
+			</div>
+		);
 	}
 
 	if (error) return <div>Error fetching articles: {error.message}</div>;
 
 	return (
-		<div className="container mx-auto px-4">
+		<div className="container mx-auto px-4 flex flex-col flex-grow">
 			<div className="flex flex-col lg:flex-row lg:space-x-8 flex-grow">
 				<aside className="w-full lg:w-64 lg:flex-shrink-0">
 					<div className="lg:sticky top-28">
