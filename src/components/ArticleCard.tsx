@@ -3,6 +3,7 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
+import { format } from 'date-fns';
 import { newsCategories } from '@/lib/newscat';
 
 interface ArticleCardProps {
@@ -13,6 +14,7 @@ interface ArticleCardProps {
 	author?: string;
 	source?: string;
 	description?: string;
+	publishedAt: string;
 }
 
 const cardVariants = {
@@ -26,7 +28,7 @@ const cardVariants = {
 	},
 };
 
-const ArticleCard: React.FC<ArticleCardProps> = ({ id, title, imageUrl, category, author, source }) => {
+const ArticleCard: React.FC<ArticleCardProps> = ({ id, title, imageUrl, category, author, source, publishedAt }) => {
 	const categoryName = newsCategories.find((c) => c.id === category)?.name || 'General';
 
 	return (
@@ -54,10 +56,13 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ id, title, imageUrl, category
 					<p className="text-sm text-blue-400">{categoryName}</p>
 					<h3 className="text-base sm:text-lg font-semibold text-white group-hover:text-neutral-300 flex-grow">{title}</h3>
 				</div>
-				<div className="flex items-center space-x-2 text-xs sm:text-sm text-neutral-500 mt-4">
-					{author && <span>{author}</span>}
-					{author && source && <span>·</span>}
-					{source && <span>{source}</span>}
+				<div className="flex items-center justify-between text-xs sm:text-sm text-neutral-500 mt-4">
+					<div className="flex items-center space-x-2">
+						{author && <span>{author}</span>}
+						{author && source && <span>·</span>}
+						{source && <span>{source}</span>}
+					</div>
+					<time dateTime={publishedAt}>{format(new Date(publishedAt), 'MMM d, yyyy')}</time>
 				</div>
 				<div className="absolute bottom-4 right-4 bg-neutral-700 text-white text-xs px-2 py-1 rounded-full">by Kontext</div>
 			</Link>

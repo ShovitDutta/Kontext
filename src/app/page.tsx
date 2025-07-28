@@ -76,6 +76,7 @@ const Page = () => {
 								imageUrl={article.urlToImage}
 								category={article.category}
 								author={article.author ?? undefined}
+								publishedAt={article.publishedAt}
 							/>
 						))}
 					</motion.div>
