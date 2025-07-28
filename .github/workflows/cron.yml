@@ -10,8 +10,8 @@ jobs:
             - name: Trigger /api/cron at midnight
               if: github.event.schedule == '0 0 * * *'
               run: |
-                  curl --fail -X GET -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" "YOUR_PRODUCTION_URL/api/cron"
+                  curl --fail -X GET -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" "https://kontext-inky.vercel.app/api/cron/blog"
             - name: Trigger /api/cron/news at 8, 14, and 20 UTC
               if: github.event.schedule == '0 8,14,20 * * *'
               run: |
-                  curl --fail -X GET -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" "YOUR_PRODUCTION_URL/api/cron/news"
+                  curl --fail -X GET -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" "https://kontext-inky.vercel.app/api/cron/news"
