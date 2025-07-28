@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import axios from 'axios';
 const CRON_SECRET = process.env.CRON_SECRET;
-const API_BASE_URL = 'https://kontext-inky.vercel.app/api';
+const API_BASE_URL = process.env.API_BASE_URL + '/api';
 if (!CRON_SECRET) {
 	console.error('CRON_SECRET is not defined. Please create a .env.local file and add it.');
 	process.exit(1);
