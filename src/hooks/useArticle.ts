@@ -1,14 +1,17 @@
 'use client';
 import { useArticleStore } from '@/store/articleStore';
 import { useEffect } from 'react';
+import { useShallow } from 'zustand/react/shallow';
 
 export const useArticle = (id: string) => {
-	const { currentArticle, fetchArticleById, isLoading, error } = useArticleStore((state) => ({
-		currentArticle: state.currentArticle,
-		fetchArticleById: state.fetchArticleById,
-		isLoading: state.isLoading,
-		error: state.error,
-	}));
+	const { currentArticle, isLoading, error } = useArticleStore(
+		useShallow((state) => ({
+			currentArticle: state.currentArticle,
+			isLoading: state.isLoading,
+			error: state.error,
+		})),
+	);
+	const { fetchArticleById } = useArticleStore.getState();
 
 	useEffect(() => {
 		if (id) {

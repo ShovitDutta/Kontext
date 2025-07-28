@@ -71,7 +71,7 @@ const Page = () => {
 								source={article.sourceName}
 								imageUrl={article.urlToImage}
 								category={article.category}
-								author={article.author}
+								author={article.author ?? undefined}
 							/>
 						))}
 					</motion.div>

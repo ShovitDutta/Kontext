@@ -3,10 +3,11 @@ import { articles } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
 import { NextResponse } from 'next/server';
 
-export const GET = async (req: Request, { params }: { params: { id: string } }) => {
+export const GET = async (req: Request, { params }: { params: Promise<{ id: string }> }) => {
 	try {
+		const { id } = await params;
 		const article = await db.query.articles.findFirst({
-			where: eq(articles.id, params.id),
+			where: eq(articles.id, id),
 			with: {
 				generatedContents: true,
 			},
