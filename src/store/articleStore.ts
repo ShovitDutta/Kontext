@@ -101,14 +101,7 @@ export const useArticleStore = create<ArticleState>((set, get) => ({
 	},
 
 	fetchArticleById: async (id: string) => {
-		// Check if the article is already in the list
-		const existingArticle = get().articles.find((article) => article.id === id);
-		if (existingArticle) {
-			set({ currentArticle: existingArticle, isLoading: false, error: null });
-			return;
-		}
-
-		// If not, fetch it from the API
+		// Always fetch the article from the API to ensure we have the generated contents
 		set({ isLoading: true, error: null });
 		try {
 			const { data } = await axios.get(`/api/news/${id}`);

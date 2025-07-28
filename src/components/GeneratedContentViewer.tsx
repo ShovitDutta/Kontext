@@ -43,7 +43,7 @@ const GeneratedContentViewer: React.FC<GeneratedContentViewerProps> = ({ generat
 					transition={{ duration: 0.3 }}
 					className="mt-4 p-4 sm:p-6 bg-neutral-800 rounded-lg border border-neutral-700">
 					{selectedContent ? (
-						<div className="prose prose-sm sm:prose-base max-w-none">
+						<div className="prose prose-invert prose-sm sm:prose-base max-w-none">
 							<ReactMarkdown>{selectedContent.content}</ReactMarkdown>
 						</div>
 					) : (
