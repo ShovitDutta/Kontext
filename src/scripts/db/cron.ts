@@ -25,8 +25,8 @@ async function main() {
 		else console.error(`Invalid endpoint: ${endpoint}. Please use 'cron/blog' or 'cron/news'.`);
 	} else {
 		console.log('No endpoint specified, running all cron jobs.');
-		await runCron('cron/blog');
 		await runCron('cron/news');
+		await runCron('cron/blog');
 	}
 }
 main();

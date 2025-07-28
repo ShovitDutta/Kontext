@@ -21,6 +21,7 @@
 		"dev:turbo": "next dev --port 3000 --turbopack",
 		"clean": "npx rimraf .next .cache node_modules",
 		"build": "npx rimraf .next && npm run lint && next build",
+		"db:load": "tsx src/scripts/db/cron.ts",
 		"db:preview": "tsx src/scripts/db/preview.ts",
 		"db": "npm run db:push && npm run db:generate",
 		"db:push": "drizzle-kit push --force --config=drizzle.config.ts",

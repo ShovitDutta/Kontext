@@ -1,10 +1,10 @@
 tool:
-  nodejs:
-    installations:
-      - name: "node"
-        properties:
-          - installSource:
-              installers:
-                - nodeJS:
-                    id: "20.x"
-                    npmPackages: ""
+    nodejs:
+        installations:
+            - name: 'node'
+              properties:
+                  - installSource:
+                        installers:
+                            - nodeJS:
+                                  id: '20.x'
+                                  npmPackages: ''
