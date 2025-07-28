@@ -1,6 +1,5 @@
 import { relations } from 'drizzle-orm';
-import { pgTable, text, timestamp, pgEnum, integer, primaryKey } from 'drizzle-orm/pg-core';
-export const contentLengthEnum = pgEnum('content_length', ['SHORT', 'MEDIUM', 'EXPLAINED']);
+import { pgTable, text, timestamp, integer, primaryKey } from 'drizzle-orm/pg-core';
 export const articles = pgTable('articles', {
 	author: text('author'),
 	url: text('url').unique(),
@@ -16,7 +15,6 @@ export const articles = pgTable('articles', {
 export const generatedContents = pgTable('generated_contents', {
 	id: text('id').primaryKey(),
 	content: text('content').notNull(),
-	length: contentLengthEnum('length').notNull(),
 	createdAt: timestamp('createdAt').defaultNow().notNull(),
 	articleId: text('articleId')
 		.notNull()

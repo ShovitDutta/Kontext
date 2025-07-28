@@ -1,8 +1,8 @@
 import { db } from '@/lib/db';
-import { eq, and } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 import { promptBuilder } from '@/lib/prompts';
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import { contentLengthEnum, generatedContents, articles } from '@/lib/db/schema';
+import { generatedContents, articles } from '@/lib/db/schema';
 const geminiApiKeys = [process.env.GEMINI_API_KEY_A, process.env.GEMINI_API_KEY_B, process.env.GEMINI_API_KEY_C].filter((key): key is string => !!key);
 if (geminiApiKeys.length === 0) throw new Error('No Gemini API keys found in environment variables (GEMINI_API_KEY_A, B, C)');
 let currentGeminiKeyIndex = 0;
@@ -34,8 +34,8 @@ async function getArticleText(url: string): Promise<string> {
 	}
 	return '';
 }
-export async function generateContent(articleId: string, length: (typeof contentLengthEnum.enumValues)[number]) {
-	const existingContent = await db.query.generatedContents.findFirst({ where: and(eq(generatedContents.articleId, articleId), eq(generatedContents.length, length)) });
+export async function generateContent(articleId: string) {
+	const existingContent = await db.query.generatedContents.findFirst({ where: eq(generatedContents.articleId, articleId) });
 	if (existingContent) return;
 	const article = await db.query.articles.findFirst({ where: eq(articles.id, articleId) });
 	if (!article || !article.url) return;
@@ -44,7 +44,7 @@ export async function generateContent(articleId: string, length: (typeof content
 	const apiKey = getApiKey();
 	const genAI = new GoogleGenerativeAI(apiKey);
 	const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash-preview-05-20' });
-	const prompt = promptBuilder(article.category, length.toLowerCase() as 'short' | 'medium' | 'explained') + articleHtml;
+	const prompt = promptBuilder(article.category) + articleHtml;
 	let fullContent = '';
 	let retries = 0;
 	const maxRetries = 5;
@@ -55,18 +55,18 @@ export async function generateContent(articleId: string, length: (typeof content
 			fullContent = result.response.text();
 			break;
 		} catch (error) {
-			console.error(`Error generating content for article ${articleId}, length ${length}. Retrying in ${delay / 1000}s...`, error);
+			console.error(`Error generating content for article ${articleId}. Retrying in ${delay / 1000}s...`, error);
 			retries++;
 			if (retries < maxRetries) {
 				await new Promise((resolve) => setTimeout(resolve, delay));
 				delay *= 2;
 			} else {
-				console.error(`Max retries reached for article ${articleId}, length ${length}. Skipping.`);
+				console.error(`Max retries reached for article ${articleId}. Skipping.`);
 				return;
 			}
 		}
 	}
 	if (fullContent) {
-		await db.insert(generatedContents).values({ id: crypto.randomUUID(), content: fullContent, length: length, articleId: articleId });
+		await db.insert(generatedContents).values({ id: crypto.randomUUID(), content: fullContent, articleId: articleId });
 	}
 }

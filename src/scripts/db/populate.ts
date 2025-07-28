@@ -14,8 +14,8 @@ const newsApiArticleSchema = z.object({
 	author: z.string().nullable(),
 	title: z.string(),
 	description: z.string().nullable(),
-	url: z.string().url(),
-	urlToImage: z.string().url().nullable(),
+	url: z.url(),
+	urlToImage: z.url().nullable(),
 	publishedAt: z.string(),
 	content: z.string().nullable(),
 });
@@ -81,11 +81,8 @@ async function main() {
 		console.log(`Found ${allDbArticles.length} articles to process.`);
 		for (const article of allDbArticles) {
 			console.log(`Processing article: ${article.title}`);
-			const lengths: ('SHORT' | 'MEDIUM' | 'EXPLAINED')[] = ['SHORT', 'MEDIUM', 'EXPLAINED'];
-			for (const length of lengths) {
-				await generateContent(article.id, length);
-				console.log(`  - Generated content for length: ${length}`);
-			}
+			await generateContent(article.id);
+			console.log(`  - Generated content for medium length`);
 			await new Promise((resolve) => setTimeout(resolve, 5000));
 		}
 	} catch (error) {
