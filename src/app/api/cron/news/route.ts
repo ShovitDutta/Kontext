@@ -4,6 +4,7 @@ import { NextRequest } from 'next/server';
 import { articles } from '@/lib/db/schema';
 import { InferInsertModel } from 'drizzle-orm';
 import { newsCategories } from '@/lib/newscat';
+import { getArticleText } from '@/lib/articleUtils';
 import { supportedCountries } from '@/lib/countries';
 
 type TArticle = InferInsertModel<typeof articles>;
@@ -22,7 +23,7 @@ const newsApiArticleSchema = z.object({
 	title: z.string(),
 	publishedAt: z.string(),
 	content: z.string().nullable(),
-	urlToImage: z.url().nullable(),
+	urlToImage: z.string().nullable(),
 	author: z.string({}).nullable(),
 	description: z.string().nullable(),
 	source: z.object({ id: z.string().nullable(), name: z.string() }),
@@ -30,7 +31,7 @@ const newsApiArticleSchema = z.object({
 type NewsApiArticle = z.infer<typeof newsApiArticleSchema>;
 const newsApiResponseSchema = z.object({ status: z.string(), totalResults: z.number(), articles: z.array(newsApiArticleSchema) });
 
-async function fetchNews(category: string, country: string): Promise<{ articles: NewsApiArticle[]; country: string }> {
+async function fetchNews(category: string, country: string, retries = 3, delay = 1000): Promise<{ articles: NewsApiArticle[]; country: string }> {
 	const apiKey = getApiKey();
 	console.log(`Using News API key #${currentNewsKeyIndex === 0 ? newsApiKeys.length : currentNewsKeyIndex}`);
 	const url = `${NEWS_API_URL}?category=${category}&country=${country}&apiKey=${apiKey}`;
@@ -45,8 +46,14 @@ async function fetchNews(category: string, country: string): Promise<{ articles:
 		}
 		return { articles: parsed.data.articles || [], country };
 	} catch (error) {
-		console.error(`Error fetching news for category ${category} in ${country}:`, error);
-		return { articles: [], country };
+		if (retries > 0) {
+			console.log(`Retrying request for category ${category} in ${country}. Retries left: ${retries - 1}`);
+			await new Promise((resolve) => setTimeout(resolve, delay));
+			return fetchNews(category, country, retries - 1, delay * 2);
+		} else {
+			console.error(`Error fetching news for category ${category} in ${country}:`, error);
+			return { articles: [], country };
+		}
 	}
 }
 
@@ -58,6 +65,43 @@ async function storeArticles(articlesToStore: Omit<TArticle, 'id'>[]) {
 	} catch (error) {
 		console.error('Error storing articles:', error);
 	}
+}
+
+async function promisePool<T>(promiseFns: (() => Promise<T>)[], concurrency: number): Promise<T[]> {
+	const results: T[] = [];
+	const queue = [...promiseFns];
+	const workers = new Array(concurrency).fill(null).map(() =>
+		(async () => {
+			while (queue.length > 0) {
+				const promiseFn = queue.shift();
+				if (promiseFn) {
+					const result = await promiseFn();
+					results.push(result);
+				}
+			}
+		})(),
+	);
+	await Promise.all(workers);
+	return results;
+}
+
+async function validateArticle(article: NewsApiArticle & { country: string }): Promise<(NewsApiArticle & { country: string }) | null> {
+	const { title, description, content, urlToImage, url } = article;
+	const hasTitle = title && title.trim() !== '';
+	const hasDescription = description && description.trim() !== '';
+	const hasContent = content && content.trim() !== '';
+	const hasImage = urlToImage && urlToImage.trim() !== '';
+
+	if (!hasTitle || !hasImage || (!hasDescription && !hasContent)) {
+		return null;
+	}
+
+	const articleText = await getArticleText(url);
+	if (!articleText) {
+		return null;
+	}
+
+	return article;
 }
 
 export async function GET(req: NextRequest) {
@@ -73,21 +117,27 @@ export async function GET(req: NextRequest) {
 			.from(articles)
 			.then((res) => res.map((r) => r.url));
 
-		const promises = [];
+		const fetchPromises = [];
 		for (const country of allCountries) {
 			for (const category of allCategories) {
-				promises.push(fetchNews(category, country));
+				fetchPromises.push(() => fetchNews(category, country));
 			}
 		}
 
-		const results = await Promise.all(promises);
-		const allArticles = results.flatMap((result) => result.articles.map((article) => ({ ...article, country: result.country })));
+		const fetchResults = await promisePool(fetchPromises, 5);
+		const allArticles = fetchResults.flatMap((result) => result.articles.map((article) => ({ ...article, country: result.country })));
 
 		console.log(`Fetched a total of ${allArticles.length} articles.`);
 		const newArticles = allArticles.filter((article) => !existingUrls.includes(article.url));
-		console.log(`Found ${newArticles.length} new articles to store.`);
+		console.log(`Found ${newArticles.length} new articles to validate.`);
 
-		const articlesToStore = newArticles.map((article) => ({
+		const validationPromises = newArticles.map((article) => () => validateArticle(article));
+		const validationResults = await promisePool(validationPromises, 5);
+		const highQualityArticles = validationResults.filter((result): result is NewsApiArticle & { country: string } => result !== null);
+
+		console.log(`Found ${highQualityArticles.length} high-quality new articles to store.`);
+
+		const articlesToStore = highQualityArticles.map((article) => ({
 			url: article.url,
 			title: article.title,
 			author: article.author,

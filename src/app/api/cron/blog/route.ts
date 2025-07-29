@@ -20,7 +20,13 @@ export async function GET(req: NextRequest) {
 			console.log(`Generating content for article: ${article.title}`);
 			await generateContent(article.id);
 			console.log(`Finished generating content for article: ${article.title}`);
-			await new Promise((resolve) => setTimeout(resolve, 15000));
+
+			const waitSeconds = 10;
+			console.log(`Waiting for ${waitSeconds} seconds before processing the next article...`);
+			for (let i = waitSeconds; i > 0; i--) {
+				console.log(`...${i}`);
+				await new Promise((resolve) => setTimeout(resolve, 1000));
+			}
 		}
 		console.log('Blog generation cron job finished successfully.');
 		return new Response(JSON.stringify({ success: true }), { status: 200 });

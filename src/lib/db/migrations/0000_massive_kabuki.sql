@@ -19,7 +19,6 @@ CREATE TABLE "articles" (
 	"id" text PRIMARY KEY NOT NULL,
 	"title" text,
 	"country" text DEFAULT 'in' NOT NULL,
-	"urlToImage" text,
 	"description" text,
 	"category" text NOT NULL,
 	"sourceName" text NOT NULL,

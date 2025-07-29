@@ -1,6 +1,7 @@
 import { db } from '@/lib/db';
 import { eq } from 'drizzle-orm';
 import { promptBuilder } from '@/lib/prompts';
+import { getArticleText } from '@/lib/articleUtils';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { generatedContents, articles } from '@/lib/db/schema';
 const geminiApiKeys = [process.env.GEMINI_API_KEY_A, process.env.GEMINI_API_KEY_B, process.env.GEMINI_API_KEY_C, process.env.GEMINI_API_KEY_D, process.env.GEMINI_API_KEY_E, process.env.GEMINI_API_KEY_F, process.env.GEMINI_API_KEY_G, process.env.GEMINI_API_KEY_H].filter((key): key is string => !!key);
@@ -11,29 +12,6 @@ const getApiKey = () => {
 	currentGeminiKeyIndex = (currentGeminiKeyIndex + 1) % geminiApiKeys.length;
 	return apiKey;
 };
-async function getArticleText(url: string): Promise<string> {
-	let retries = 0;
-	let delay = 1000;
-	const maxRetries = 3;
-	while (retries < maxRetries) {
-		try {
-			const response = await fetch(url);
-			if (!response.ok) throw new Error(`Failed to fetch article: ${response.statusText} (Status: ${response.status})`);
-			return await response.text();
-		} catch (error) {
-			console.error(`Error fetching URL content for ${url} (Attempt ${retries + 1}/${maxRetries}):`, error);
-			retries++;
-			if (retries < maxRetries) {
-				await new Promise((resolve) => setTimeout(resolve, delay));
-				delay *= 2;
-			} else {
-				console.error(`Max retries reached for URL: ${url}. Skipping.`);
-				return '';
-			}
-		}
-	}
-	return '';
-}
 export async function generateContent(articleId: string) {
 	const existingContent = await db.query.generatedContents.findFirst({ where: eq(generatedContents.articleId, articleId) });
 	if (existingContent) return;

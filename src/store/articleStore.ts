@@ -38,7 +38,7 @@ interface ArticleState {
 
 const applyFilters = (articles: Article[], category: string, searchQuery: string, country: string): Article[] => {
 	let filteredArticles = articles;
-	if (country) filteredArticles = filteredArticles.filter((article) => article.country === country);
+	if (country && country !== 'none') filteredArticles = filteredArticles.filter((article) => article.country === country);
 	if (category !== 'all') filteredArticles = filteredArticles.filter((article) => article.category === category);
 	if (searchQuery) filteredArticles = filteredArticles.filter((article) => article.title.toLowerCase().includes(searchQuery.toLowerCase()));
 	return filteredArticles;
@@ -52,7 +52,7 @@ export const useArticleStore = create<ArticleState>((set, get) => ({
 	error: null,
 	category: 'all',
 	searchQuery: '',
-	country: 'in',
+	country: 'none',
 	setCategory: (category: string) => {
 		const { allArticles, searchQuery, country } = get();
 		const filtered = applyFilters(allArticles, category, searchQuery, country);

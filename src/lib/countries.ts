@@ -1,4 +1,5 @@
 export const supportedCountries = [
+	{ name: 'None', code: 'none' },
 	{ name: 'Argentina', code: 'ar' },
 	{ name: 'Australia', code: 'au' },
 	{ name: 'Austria', code: 'at' },
@@ -20,3 +21,4 @@ export const supportedCountries = [
 	{ name: 'United Kingdom', code: 'gb' },
 	{ name: 'United States', code: 'us' },
 ];
+
