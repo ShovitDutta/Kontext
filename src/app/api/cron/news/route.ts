@@ -5,7 +5,21 @@ import { articles } from '@/lib/db/schema';
 import { InferInsertModel } from 'drizzle-orm';
 import { newsCategories } from '@/lib/newscat';
 type TArticle = InferInsertModel<typeof articles>;
-const apiKey = process.env.NEWS_API_KEY;
+const newsApiKeys = [
+	process.env.NEWS_API_KEY_A,
+	process.env.NEWS_API_KEY_B,
+	process.env.NEWS_API_KEY_C,
+	process.env.NEWS_API_KEY_D
+].filter((key): key is string => !!key);
+if (newsApiKeys.length === 0) throw new Error('No News API keys found in environment variables (NEWS_API_KEY_A, B, C, D)');
+
+let currentNewsKeyIndex = 0;
+const getApiKey = () => {
+	const apiKey = newsApiKeys[currentNewsKeyIndex];
+	currentNewsKeyIndex = (currentNewsKeyIndex + 1) % newsApiKeys.length;
+	return apiKey;
+};
+
 const NEWS_API_URL = 'https://newsapi.org/v2/top-headlines';
 const newsApiArticleSchema = z.object({
 	url: z.url(),
@@ -20,6 +34,8 @@ const newsApiArticleSchema = z.object({
 type NewsApiArticle = z.infer<typeof newsApiArticleSchema>;
 const newsApiResponseSchema = z.object({ status: z.string(), totalResults: z.number(), articles: z.array(newsApiArticleSchema) });
 async function fetchNews(category: string): Promise<NewsApiArticle[]> {
+	const apiKey = getApiKey();
+	console.log(`Using News API key #${currentNewsKeyIndex === 0 ? newsApiKeys.length : currentNewsKeyIndex}`);
 	const url = `${NEWS_API_URL}?category=${category}&language=en&apiKey=${apiKey}`;
 	try {
 		const response = await fetch(url);
@@ -46,9 +62,7 @@ async function storeArticles(articlesToStore: Omit<TArticle, 'id'>[]) {
 	}
 }
 export async function GET(req: NextRequest) {
-	if (req.headers.get('Authorization') !== `Bearer ${process.env.CRON_SECRET}`) {
-		return new Response('Unauthorized', { status: 401 });
-	}
+	if (req.headers.get('Authorization') !== `Bearer ${process.env.CRON_SECRET}`) return new Response('Unauthorized', { status: 401 });
 	try {
 		console.log('Starting news cron job...');
 		const allCategories = newsCategories.filter((c) => c.id !== 'all').map((c) => c.id);
