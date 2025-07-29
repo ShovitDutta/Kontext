@@ -1,0 +1,17 @@
+name: Scheduled Cron Jobs
+on:
+    schedule:
+        - cron: '0 0 * * *'
+        - cron: '0 8,14,20 * * *'
+jobs:
+    trigger_cron_endpoints:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Trigger /api/cron at midnight
+              if: github.event.schedule == '0 0 * * *'
+              run: |
+                  curl --fail -X GET -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" "https://kontext-inky.vercel.app/api/cron/blog"
+            - name: Trigger /api/cron/news at 8, 14, and 20 UTC
+              if: github.event.schedule == '0 8,14,20 * * *'
+              run: |
+                  curl --fail -X GET -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" "https://kontext-inky.vercel.app/api/cron/news"
