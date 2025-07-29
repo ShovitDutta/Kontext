@@ -61,11 +61,17 @@ export async function GET(req: NextRequest) {
 		console.log('Starting news cron job...');
 		const allCategories = newsCategories.filter((c) => c.id !== 'all').map((c) => c.id);
 		console.log(`Fetching news for categories: ${allCategories.join(', ')}`);
+		const existingUrls = await db
+			.select({ url: articles.url })
+			.from(articles)
+			.then((res) => res.map((r) => r.url));
 		const promises = allCategories.map(fetchNews);
 		const results = await Promise.all(promises);
 		const allArticles = results.flat();
 		console.log(`Fetched a total of ${allArticles.length} articles.`);
-		const articlesToStore = allArticles.map((article: NewsApiArticle) => ({
+		const newArticles = allArticles.filter((article) => !existingUrls.includes(article.url));
+		console.log(`Found ${newArticles.length} new articles to store.`);
+		const articlesToStore = newArticles.map((article: NewsApiArticle) => ({
 			url: article.url,
 			title: article.title,
 			author: article.author,
