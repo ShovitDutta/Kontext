@@ -3,16 +3,7 @@ import { eq } from 'drizzle-orm';
 import { promptBuilder } from '@/lib/prompts';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { generatedContents, articles } from '@/lib/db/schema';
-const geminiApiKeys = [
-	process.env.GEMINI_API_KEY_A,
-	process.env.GEMINI_API_KEY_B,
-	process.env.GEMINI_API_KEY_C,
-	process.env.GEMINI_API_KEY_D,
-	process.env.GEMINI_API_KEY_E,
-	process.env.GEMINI_API_KEY_F,
-	process.env.GEMINI_API_KEY_G,
-	process.env.GEMINI_API_KEY_H
-].filter((key): key is string => !!key);
+const geminiApiKeys = [process.env.GEMINI_API_KEY_A, process.env.GEMINI_API_KEY_B, process.env.GEMINI_API_KEY_C, process.env.GEMINI_API_KEY_D, process.env.GEMINI_API_KEY_E, process.env.GEMINI_API_KEY_F, process.env.GEMINI_API_KEY_G, process.env.GEMINI_API_KEY_H].filter((key): key is string => !!key);
 if (geminiApiKeys.length === 0) throw new Error('No Gemini API keys found in environment variables (GEMINI_API_KEY_A, B, C, D, E, F, G, H)');
 let currentGeminiKeyIndex = 0;
 const getApiKey = () => {
