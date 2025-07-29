@@ -1,28 +1,22 @@
 'use client';
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { newsCategories } from '@/lib/newscat';
 import { FiChevronDown } from 'react-icons/fi';
-
+import { motion, AnimatePresence } from 'framer-motion';
 interface SidebarProps {
 	selectedCategory: string;
 	onSelectCategory: (category: string) => void;
 }
-
 const Sidebar: React.FC<SidebarProps> = ({ selectedCategory, onSelectCategory }) => {
 	const [isCategoryOpen, setIsCategoryOpen] = useState(false);
 	const selectedCategoryName = newsCategories.find((c) => c.id === selectedCategory)?.name || 'Everything';
-
 	return (
 		<motion.div
 			initial={{ opacity: 0, y: -20 }}
 			animate={{ opacity: 1, y: 0 }}
 			transition={{ duration: 0.5 }}
 			className="space-y-4">
-			<h1 className="text-2xl font-bold">News & Insights</h1>
-			<p className="text-neutral-400">Transforming the latest news into engaging, easy-to-read blog posts using AI.</p>
-
-			{/* Mobile View: Dropdown */}
+			<h1 className="text-2xl font-bold">News & Insights</h1> <p className="text-neutral-400">Transforming the latest news into engaging, easy-to-read blog posts using AI.</p>
 			<div className="lg:hidden">
 				<div className="relative w-full">
 					<button
@@ -60,8 +54,6 @@ const Sidebar: React.FC<SidebarProps> = ({ selectedCategory, onSelectCategory })
 					</AnimatePresence>
 				</div>
 			</div>
-
-			{/* Desktop View: Nav */}
 			<div className="hidden lg:block">
 				<nav className="space-y-2">
 					{newsCategories.map((category) => (
@@ -79,5 +71,4 @@ const Sidebar: React.FC<SidebarProps> = ({ selectedCategory, onSelectCategory })
 		</motion.div>
 	);
 };
-
 export default Sidebar;

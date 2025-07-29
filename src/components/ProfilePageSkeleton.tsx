@@ -1,6 +1,5 @@
 import React from 'react';
 import Skeleton from './Skeleton';
-
 const ProfilePageSkeleton = () => {
 	return (
 		<div className="container mx-auto p-4">
@@ -12,5 +11,4 @@ const ProfilePageSkeleton = () => {
 		</div>
 	);
 };
-
 export default ProfilePageSkeleton;

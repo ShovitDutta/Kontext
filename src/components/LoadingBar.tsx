@@ -1,7 +1,6 @@
 'use client';
 import React from 'react';
 import { motion } from 'framer-motion';
-
 const LoadingBar = () => {
 	return (
 		<div className="w-full h-1 bg-neutral-800 rounded-full overflow-hidden relative">
@@ -20,5 +19,4 @@ const LoadingBar = () => {
 		</div>
 	);
 };
-
 export default LoadingBar;

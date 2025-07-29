@@ -1,47 +1,29 @@
 'use client';
-import React, { useEffect, useState, useCallback } from 'react';
 import { motion } from 'framer-motion';
-import { useArticles } from '@/hooks/useArticles';
-import ArticleCard from '@/components/ArticleCard';
 import Sidebar from '@/components/Sidebar';
-import InitialLoader from '@/components/InitialLoader';
 import EmptyState from '@/components/EmptyState';
+import { useArticles } from '@/hooks/useArticles';
 import { TbTriangleFilled } from 'react-icons/tb';
-
-const containerVariants = {
-	hidden: { opacity: 0 },
-	visible: {
-		opacity: 1,
-		transition: {
-			staggerChildren: 0.1,
-		},
-	},
-};
-
+import ArticleCard from '@/components/ArticleCard';
+import InitialLoader from '@/components/InitialLoader';
+import React, { useEffect, useState, useCallback } from 'react';
+const containerVariants = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.1 } } };
 const Page = () => {
 	const { articles, isLoading, error, category, setCategory, loadArticles } = useArticles();
 	const [showScrollToTopButton, setShowScrollToTopButton] = useState(false);
-
 	const handleScroll = useCallback(() => {
-		if (window.scrollY > 200) {
-			setShowScrollToTopButton(true);
-		} else {
-			setShowScrollToTopButton(false);
-		}
+		if (window.scrollY > 200) setShowScrollToTopButton(true);
+		else setShowScrollToTopButton(false);
 	}, []);
-
 	const scrollToTop = useCallback(() => {
 		window.scrollTo({ top: 0, behavior: 'smooth' });
 	}, []);
-
 	useEffect(() => {
 		loadArticles();
 		window.addEventListener('scroll', handleScroll);
-		handleScroll(); // Call once on mount to set initial state
+		handleScroll();
 		return () => window.removeEventListener('scroll', handleScroll);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
-
 	if (isLoading) {
 		return (
 			<div className="flex-grow flex items-center justify-center">
@@ -49,9 +31,7 @@ const Page = () => {
 			</div>
 		);
 	}
-
 	if (error) return <div>Error fetching articles: {error.message}</div>;
-
 	return (
 		<div className="container mx-auto px-4 flex flex-col flex-grow my-8">
 			<div className="flex flex-col lg:flex-row lg:space-x-8 flex-grow">
@@ -106,5 +86,4 @@ const Page = () => {
 		</div>
 	);
 };
-
 export default Page;

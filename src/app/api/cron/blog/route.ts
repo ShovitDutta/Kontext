@@ -1,8 +1,8 @@
 import { db } from '@/lib/db';
+import { eq, isNull } from 'drizzle-orm';
 import { NextRequest } from 'next/server';
 import { generateContent } from '@/lib/generate';
 import { articles, generatedContents } from '@/lib/db/schema';
-import { eq, isNull } from 'drizzle-orm';
 export async function GET(req: NextRequest) {
 	if (req.headers.get('Authorization') !== `Bearer ${process.env.CRON_SECRET}`) return new Response('Unauthorized', { status: 401 });
 	try {

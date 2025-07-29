@@ -1,20 +1,15 @@
 'use client';
-import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
-import { FiSearch } from 'react-icons/fi';
 import { motion } from 'framer-motion';
-
+import { FiSearch } from 'react-icons/fi';
+import { useRouter } from 'next/navigation';
 const SearchBar = () => {
 	const [searchQuery, setSearchQuery] = useState('');
 	const router = useRouter();
-
 	const handleSearch = (e: React.FormEvent) => {
 		e.preventDefault();
-		if (searchQuery.trim()) {
-			router.push(`/search?q=${searchQuery}`);
-		}
+		if (searchQuery.trim()) router.push(`/search?q=${searchQuery}`);
 	};
-
 	return (
 		<motion.form
 			initial={{ opacity: 0, y: -20 }}
@@ -33,5 +28,4 @@ const SearchBar = () => {
 		</motion.form>
 	);
 };
-
 export default SearchBar;

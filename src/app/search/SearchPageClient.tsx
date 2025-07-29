@@ -6,7 +6,6 @@ import { useArticles } from '@/hooks/useArticles';
 import { useSearchParams } from 'next/navigation';
 import ArticleCard from '@/components/ArticleCard';
 import ArticleCardSkeleton from '@/components/ArticleCardSkeleton';
-
 const SearchPageClient = () => {
 	const { status } = useSession({
 		required: true,
@@ -17,13 +16,10 @@ const SearchPageClient = () => {
 	const searchParams = useSearchParams();
 	const query = searchParams.get('q') || '';
 	const { articles, isLoading, error, setSearchQuery } = useArticles();
-
 	useEffect(() => {
 		setSearchQuery(query);
 	}, [query, setSearchQuery]);
-
 	if (error) return <div>Error: {error.message}</div>;
-
 	return (
 		<div className="container mx-auto p-4">
 			<h1 className="text-2xl sm:text-3xl font-bold mb-4">Search Results for &quot;{query}&quot;</h1>
@@ -46,5 +42,4 @@ const SearchPageClient = () => {
 		</div>
 	);
 };
-
 export default SearchPageClient;

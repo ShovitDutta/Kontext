@@ -1,8 +1,6 @@
 'use client';
-
-import { motion } from 'framer-motion';
 import type React from 'react';
-
+import { motion } from 'framer-motion';
 export default function MainContent({ children }: { children: React.ReactNode }) {
 	return (
 		<motion.main

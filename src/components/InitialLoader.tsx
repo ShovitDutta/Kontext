@@ -1,6 +1,5 @@
 import React from 'react';
 import LoadingBar from './LoadingBar';
-
 const InitialLoader = () => {
 	return (
 		<div className="flex flex-col items-center justify-center space-y-4">
@@ -11,5 +10,4 @@ const InitialLoader = () => {
 		</div>
 	);
 };
-
 export default InitialLoader;

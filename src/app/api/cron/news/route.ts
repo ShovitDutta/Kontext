@@ -5,14 +5,8 @@ import { articles } from '@/lib/db/schema';
 import { InferInsertModel } from 'drizzle-orm';
 import { newsCategories } from '@/lib/newscat';
 type TArticle = InferInsertModel<typeof articles>;
-const newsApiKeys = [
-	process.env.NEWS_API_KEY_A,
-	process.env.NEWS_API_KEY_B,
-	process.env.NEWS_API_KEY_C,
-	process.env.NEWS_API_KEY_D
-].filter((key): key is string => !!key);
+const newsApiKeys = [process.env.NEWS_API_KEY_A, process.env.NEWS_API_KEY_B, process.env.NEWS_API_KEY_C, process.env.NEWS_API_KEY_D].filter((key): key is string => !!key);
 if (newsApiKeys.length === 0) throw new Error('No News API keys found in environment variables (NEWS_API_KEY_A, B, C, D)');
-
 let currentNewsKeyIndex = 0;
 const getApiKey = () => {
 	const apiKey = newsApiKeys[currentNewsKeyIndex];

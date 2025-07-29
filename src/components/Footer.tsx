@@ -1,7 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
 import { FaGithub, FaTwitter, FaInstagram, FaFacebook, FaYoutube } from 'react-icons/fa';
-
 const Footer = () => {
 	return (
 		<footer className=" text-white py-12">
@@ -37,7 +36,6 @@ const Footer = () => {
 							</a>
 						</div>
 					</div>
-
 					<div>
 						<h3 className="font-semibold mb-4">Company</h3>
 						<ul className="space-y-2 text-neutral-400">
@@ -71,7 +69,6 @@ const Footer = () => {
 							</li>
 						</ul>
 					</div>
-
 					<div>
 						<h3 className="font-semibold mb-4">Download</h3>
 						<ul className="space-y-2 text-neutral-400">
@@ -98,7 +95,6 @@ const Footer = () => {
 							</li>
 						</ul>
 					</div>
-
 					<div>
 						<h3 className="font-semibold mb-4">Resources</h3>
 						<ul className="space-y-2 text-neutral-400">
@@ -132,7 +128,6 @@ const Footer = () => {
 							</li>
 						</ul>
 					</div>
-
 					<div>
 						<h3 className="font-semibold mb-4">Explore more</h3>
 						<ul className="space-y-2 text-neutral-400">
@@ -184,5 +179,4 @@ const Footer = () => {
 		</footer>
 	);
 };
-
 export default Footer;

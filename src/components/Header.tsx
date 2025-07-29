@@ -2,7 +2,6 @@
 import React from 'react';
 import Link from 'next/link';
 import SearchBar from './SearchBar';
-
 const Header = () => {
 	return (
 		<header className="sticky top-0 z-50 bg-neutral-900/50 backdrop-blur-lg">
@@ -21,5 +20,4 @@ const Header = () => {
 		</header>
 	);
 };
-
 export default Header;

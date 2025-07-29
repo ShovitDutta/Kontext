@@ -1,7 +1,6 @@
 'use client';
 import React from 'react';
 import { FiWifiOff } from 'react-icons/fi';
-
 const OfflinePage = () => {
 	return (
 		<div className="flex flex-col items-center justify-center min-h-screen text-center">
@@ -14,5 +13,4 @@ const OfflinePage = () => {
 		</div>
 	);
 };
-
 export default OfflinePage;

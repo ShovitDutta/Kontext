@@ -6,7 +6,6 @@ import { useSession } from 'next-auth/react';
 import { useArticles } from '@/hooks/useArticles';
 import ArticleCard from '@/components/ArticleCard';
 import ArticleCardSkeleton from '@/components/ArticleCardSkeleton';
-
 const CategoryPageClient = () => {
 	const { status } = useSession({
 		required: true,
@@ -17,11 +16,9 @@ const CategoryPageClient = () => {
 	const params = useParams();
 	const category = params.name as string;
 	const { articles, isLoading, error, setCategory } = useArticles();
-
 	useEffect(() => {
 		setCategory(category);
 	}, [category, setCategory]);
-
 	if (error) return <div>Error: {error.message}</div>;
 	return (
 		<div className="container mx-auto p-4">

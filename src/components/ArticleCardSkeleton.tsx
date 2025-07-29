@@ -1,6 +1,5 @@
 import React from 'react';
 import Skeleton from './Skeleton';
-
 const ArticleCardSkeleton = () => {
 	return (
 		<div className="bg-neutral-900 rounded-lg overflow-hidden shadow-lg p-4 border border-transparent">
@@ -16,5 +15,4 @@ const ArticleCardSkeleton = () => {
 		</div>
 	);
 };
-
 export default ArticleCardSkeleton;

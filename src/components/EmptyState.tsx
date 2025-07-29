@@ -1,8 +1,7 @@
 'use client';
 import React from 'react';
-import { FiInbox } from 'react-icons/fi';
 import { motion } from 'framer-motion';
-
+import { FiInbox } from 'react-icons/fi';
 const EmptyState = () => {
 	return (
 		<motion.div
@@ -18,5 +17,4 @@ const EmptyState = () => {
 		</motion.div>
 	);
 };
-
 export default EmptyState;
