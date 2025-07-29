@@ -4,6 +4,8 @@ import { NextRequest } from 'next/server';
 import { articles } from '@/lib/db/schema';
 import { InferInsertModel } from 'drizzle-orm';
 import { newsCategories } from '@/lib/newscat';
+import { supportedCountries } from '@/lib/countries';
+
 type TArticle = InferInsertModel<typeof articles>;
 const newsApiKeys = [process.env.NEWS_API_KEY_A, process.env.NEWS_API_KEY_B, process.env.NEWS_API_KEY_C, process.env.NEWS_API_KEY_D].filter((key): key is string => !!key);
 if (newsApiKeys.length === 0) throw new Error('No News API keys found in environment variables (NEWS_API_KEY_A, B, C, D)');
@@ -27,25 +29,27 @@ const newsApiArticleSchema = z.object({
 });
 type NewsApiArticle = z.infer<typeof newsApiArticleSchema>;
 const newsApiResponseSchema = z.object({ status: z.string(), totalResults: z.number(), articles: z.array(newsApiArticleSchema) });
-async function fetchNews(category: string): Promise<NewsApiArticle[]> {
+
+async function fetchNews(category: string, country: string): Promise<{ articles: NewsApiArticle[]; country: string }> {
 	const apiKey = getApiKey();
 	console.log(`Using News API key #${currentNewsKeyIndex === 0 ? newsApiKeys.length : currentNewsKeyIndex}`);
-	const url = `${NEWS_API_URL}?category=${category}&language=en&apiKey=${apiKey}`;
+	const url = `${NEWS_API_URL}?category=${category}&country=${country}&apiKey=${apiKey}`;
 	try {
 		const response = await fetch(url);
 		if (!response.ok) throw new Error(`Failed to fetch news: ${response.statusText}`);
 		const data = await response.json();
 		const parsed = newsApiResponseSchema.safeParse(data);
 		if (!parsed.success) {
-			console.error(`Error parsing news API response for category ${category}:`, parsed.error);
-			return [];
+			console.error(`Error parsing news API response for category ${category} in ${country}:`, parsed.error);
+			return { articles: [], country };
 		}
-		return parsed.data.articles || [];
+		return { articles: parsed.data.articles || [], country };
 	} catch (error) {
-		console.error(`Error fetching news for category ${category}:`, error);
-		return [];
+		console.error(`Error fetching news for category ${category} in ${country}:`, error);
+		return { articles: [], country };
 	}
 }
+
 async function storeArticles(articlesToStore: Omit<TArticle, 'id'>[]) {
 	if (articlesToStore.length === 0) return;
 	const newArticles = articlesToStore.map((article) => ({ ...article, id: crypto.randomUUID() }));
@@ -55,23 +59,35 @@ async function storeArticles(articlesToStore: Omit<TArticle, 'id'>[]) {
 		console.error('Error storing articles:', error);
 	}
 }
+
 export async function GET(req: NextRequest) {
 	if (req.headers.get('Authorization') !== `Bearer ${process.env.CRON_SECRET}`) return new Response('Unauthorized', { status: 401 });
 	try {
 		console.log('Starting news cron job...');
 		const allCategories = newsCategories.filter((c) => c.id !== 'all').map((c) => c.id);
-		console.log(`Fetching news for categories: ${allCategories.join(', ')}`);
+		const allCountries = supportedCountries.map((c) => c.code);
+		console.log(`Fetching news for ${allCountries.length} countries and ${allCategories.length} categories.`);
+
 		const existingUrls = await db
 			.select({ url: articles.url })
 			.from(articles)
 			.then((res) => res.map((r) => r.url));
-		const promises = allCategories.map(fetchNews);
+
+		const promises = [];
+		for (const country of allCountries) {
+			for (const category of allCategories) {
+				promises.push(fetchNews(category, country));
+			}
+		}
+
 		const results = await Promise.all(promises);
-		const allArticles = results.flat();
+		const allArticles = results.flatMap((result) => result.articles.map((article) => ({ ...article, country: result.country })));
+
 		console.log(`Fetched a total of ${allArticles.length} articles.`);
 		const newArticles = allArticles.filter((article) => !existingUrls.includes(article.url));
 		console.log(`Found ${newArticles.length} new articles to store.`);
-		const articlesToStore = newArticles.map((article: NewsApiArticle) => ({
+
+		const articlesToStore = newArticles.map((article) => ({
 			url: article.url,
 			title: article.title,
 			author: article.author,
@@ -81,7 +97,9 @@ export async function GET(req: NextRequest) {
 			publishedAt: article.publishedAt ? new Date(article.publishedAt) : new Date(),
 			sourceName: article.source?.name,
 			description: article.description,
+			country: article.country,
 		}));
+
 		await storeArticles(articlesToStore);
 		console.log('News cron job finished successfully.');
 		return new Response(JSON.stringify({ success: true }), { status: 200 });

@@ -5,6 +5,7 @@ export const articles = pgTable('articles', {
 	url: text('url').unique(),
 	id: text('id').primaryKey(),
 	title: text('title').unique(),
+	country: text('country').default('in').notNull(),
 	urlToImage: text('urlToImage'),
 	description: text('description'),
 	category: text('category').notNull(),

@@ -23,7 +23,7 @@ const Page = () => {
 		window.addEventListener('scroll', handleScroll);
 		handleScroll();
 		return () => window.removeEventListener('scroll', handleScroll);
-	}, []);
+	}, [loadArticles, handleScroll]);
 	if (isLoading) {
 		return (
 			<div className="flex-grow flex items-center justify-center">

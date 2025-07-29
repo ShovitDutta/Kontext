@@ -2,6 +2,8 @@
 import React from 'react';
 import Link from 'next/link';
 import SearchBar from './SearchBar';
+import CountrySelector from './CountrySelector';
+
 const Header = () => {
 	return (
 		<header className="sticky top-0 z-50 bg-neutral-900/50 backdrop-blur-lg">
@@ -15,6 +17,9 @@ const Header = () => {
 				</div>
 				<div className="w-full">
 					<SearchBar />
+				</div>
+				<div>
+					<CountrySelector />
 				</div>
 			</div>
 		</header>
