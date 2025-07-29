@@ -1,18 +1,26 @@
 import React from 'react';
 import Skeleton from './Skeleton';
+
 const ArticlePageSkeleton = () => {
 	return (
-		<div className="container mx-auto p-4">
-			<Skeleton className="h-10 w-3/4 mb-4" />
-			<Skeleton className="h-6 w-1/2 mb-4" />
-			<Skeleton className="w-full h-64 sm:h-80 md:h-96 rounded-lg mb-4" />
-			<div className="prose prose-invert max-w-none">
-				<Skeleton className="h-8 w-1/4 mb-2" />
-				<Skeleton className="h-4 w-full mb-2" />
-				<Skeleton className="h-4 w-full mb-2" />
-				<Skeleton className="h-4 w-5/6 mb-2" />
+		<div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+			<div className="bg-neutral-900 rounded-lg shadow-xl overflow-hidden p-6 md:p-8">
+				<Skeleton className="h-10 w-3/4 mb-4" />
+				<div className="flex items-center space-x-4 text-sm text-neutral-400 mb-6">
+					<Skeleton className="h-4 w-24" />
+					<Skeleton className="h-4 w-24" />
+					<Skeleton className="h-4 w-32" />
+				</div>
+				<div className="space-y-4">
+					<Skeleton className="h-4 w-full" />
+					<Skeleton className="h-4 w-full" />
+					<Skeleton className="h-4 w-5/6" />
+					<Skeleton className="h-4 w-full" />
+					<Skeleton className="h-4 w-3/4" />
+				</div>
 			</div>
 		</div>
 	);
 };
+
 export default ArticlePageSkeleton;

@@ -1,14 +1,12 @@
 'use client';
 import React from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { format } from 'date-fns';
 import { newsCategories } from '@/lib/newscat';
 interface ArticleCardProps {
 	id: string;
 	title: string;
-	imageUrl: string | null;
 	category: string;
 	author?: string;
 	source?: string;
@@ -16,7 +14,7 @@ interface ArticleCardProps {
 	publishedAt: string;
 }
 const cardVariants = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.4 } } };
-const ArticleCard: React.FC<ArticleCardProps> = ({ id, title, imageUrl, category, author, source, publishedAt }) => {
+const ArticleCard: React.FC<ArticleCardProps> = ({ id, title, category, author, source, publishedAt }) => {
 	const categoryName = newsCategories.find((c) => c.id === category)?.name || 'General';
 	return (
 		<motion.div
@@ -28,17 +26,6 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ id, title, imageUrl, category
 			<Link
 				href={`/article/${id}`}
 				className="relative group bg-neutral-800 rounded-lg border border-neutral-800 h-full flex flex-col">
-				{imageUrl && (
-					<div className="overflow-hidden rounded-t-lg">
-						<Image
-							src={imageUrl}
-							alt={title}
-							width={500}
-							height={300}
-							className="w-full h-48 sm:h-56 md:h-64 object-cover group-hover:scale-105 transition-transform duration-300"
-						/>
-					</div>
-				)}
 				<div className="space-y-3 flex-grow pt-4 px-4">
 					<p className="text-sm text-red-400">{categoryName}</p> <h3 className="text-base sm:text-lg font-semibold text-white group-hover:text-neutral-300 flex-grow">{title}</h3>
 				</div>

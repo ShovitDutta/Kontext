@@ -19,11 +19,10 @@ const getApiKey = () => {
 
 const NEWS_API_URL = 'https://newsapi.org/v2/top-headlines';
 const newsApiArticleSchema = z.object({
-	url: z.url(),
+	url: z.string(),
 	title: z.string(),
 	publishedAt: z.string(),
 	content: z.string().nullable(),
-	urlToImage: z.string().nullable(),
 	author: z.string({}).nullable(),
 	description: z.string().nullable(),
 	source: z.object({ id: z.string().nullable(), name: z.string() }),
@@ -86,13 +85,12 @@ async function promisePool<T>(promiseFns: (() => Promise<T>)[], concurrency: num
 }
 
 async function validateArticle(article: NewsApiArticle & { country: string }): Promise<(NewsApiArticle & { country: string }) | null> {
-	const { title, description, content, urlToImage, url } = article;
+	const { title, description, content, url } = article;
 	const hasTitle = title && title.trim() !== '';
 	const hasDescription = description && description.trim() !== '';
 	const hasContent = content && content.trim() !== '';
-	const hasImage = urlToImage && urlToImage.trim() !== '';
 
-	if (!hasTitle || !hasImage || (!hasDescription && !hasContent)) {
+	if (!hasTitle || (!hasDescription && !hasContent)) {
 		return null;
 	}
 
@@ -141,7 +139,6 @@ export async function GET(req: NextRequest) {
 			url: article.url,
 			title: article.title,
 			author: article.author,
-			image: article.urlToImage,
 			content: article.content,
 			category: allCategories.find((c) => article.url.includes(c)) || 'general',
 			publishedAt: article.publishedAt ? new Date(article.publishedAt) : new Date(),

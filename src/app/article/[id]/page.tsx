@@ -1,6 +1,5 @@
 'use client';
 import React from 'react';
-import Image from 'next/image';
 import { toast } from 'sonner';
 import { useParams } from 'next/navigation';
 import { calculateReadTime } from '@/lib/utils';
@@ -62,16 +61,6 @@ const ArticlePage = () => {
 						<FaShareAlt className="mr-2" /> Share
 					</button>
 				</div>
-				{article.urlToImage && (
-					<Image
-						src={article.urlToImage}
-						alt={article.title}
-						width={800}
-						height={400}
-						className="w-full h-64 sm:h-80 md:h-96 object-cover rounded-lg"
-						priority
-					/>
-				)}
 			</div>
 			<GeneratedContentViewer generatedContents={article.generatedContents} />
 			<div className="relative mt-4">
