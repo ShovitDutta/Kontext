@@ -1,1 +1,0 @@
-{ "ignorePatterns": ["src/lib/db/migrations/"], "extends": ["next/core-web-vitals", "next/typescript"] }
