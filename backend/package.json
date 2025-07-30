@@ -16,8 +16,8 @@
 		"typescript": "^5.8.3"
 	},
 	"dependencies": {
-		"ollama": "0.5.16",
 		"ora": "8.2.0",
-		"rss-parser": "3.13.0"
+		"rss-parser": "3.13.0",
+		"@google/generative-ai": "^0.18.0"
 	}
 }
