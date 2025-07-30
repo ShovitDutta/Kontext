@@ -52,16 +52,16 @@ const generateBlogPost = async (article: Article, category: string): Promise<str
 	let keyAttempt = 0;
 	while (keyAttempt < maxKeyAttempts) {
 		const apiKey = getApiKey();
-		console.log(`Using Gemini API key #${currentGeminiKeyIndex === 0 ? geminiApiKeys.length : currentGeminiKeyIndex}`);
 		const genAI = new GoogleGenerativeAI(apiKey);
 		const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash-preview-05-20' });
 		try {
 			const result = await model.generateContent(prompt);
 			fullContent = result.response.text();
-			console.log(`Successfully generated content for article "${article.title}" with key #${currentGeminiKeyIndex === 0 ? geminiApiKeys.length : currentGeminiKeyIndex}.`);
+			console.log(fullContent);
+			console.log(`🔥Successfully generated content for article "${article.title}" with key #${currentGeminiKeyIndex === 0 ? geminiApiKeys.length : currentGeminiKeyIndex}.`);
 			return fullContent;
 		} catch (error) {
-			console.error(`Error generating content for article "${article.title}" with key #${currentGeminiKeyIndex === 0 ? geminiApiKeys.length : currentGeminiKeyIndex}:`, error);
+			console.error(`❌Error generating content for article "${article.title}" with key #${currentGeminiKeyIndex === 0 ? geminiApiKeys.length : currentGeminiKeyIndex}:`, error);
 			keyAttempt++;
 		}
 	}
@@ -94,7 +94,6 @@ const generateBlogPost = async (article: Article, category: string): Promise<str
 							articlesSkipped++;
 							continue;
 						}
-
 						const delaySpinner = ora('Waiting for 10 seconds to avoid rate limits...').start();
 						for (let j = 10; j > 0; j--) {
 							delaySpinner.text = `Waiting for ${j} seconds to avoid rate limits...`;
@@ -109,9 +108,7 @@ const generateBlogPost = async (article: Article, category: string): Promise<str
 							groupedNews[country][date][category][i].blog = blogContent;
 							fs.writeFileSync('output.json', JSON.stringify(groupedNews, null, 2), 'utf-8');
 							articlesProcessed++;
-						} else {
-							console.log(`❌ Generation failed. Skipping.`);
-						}
+						} else console.log(`❌ Generation failed. Skipping.`);
 					}
 				}
 			}
