@@ -1,5 +1,6 @@
 import fs from 'fs';
 import ora from 'ora';
+import 'dotenv/config';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 interface Article {
 	link: string;
@@ -53,7 +54,7 @@ const generateBlogPost = async (article: Article, category: string): Promise<str
 		const apiKey = getApiKey();
 		console.log(`Using Gemini API key #${currentGeminiKeyIndex === 0 ? geminiApiKeys.length : currentGeminiKeyIndex}`);
 		const genAI = new GoogleGenerativeAI(apiKey);
-		const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash-preview-05-20' });
+		const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash-preview-05-20' });
 		try {
 			const result = await model.generateContent(prompt);
 			fullContent = result.response.text();
@@ -93,6 +94,14 @@ const generateBlogPost = async (article: Article, category: string): Promise<str
 							articlesSkipped++;
 							continue;
 						}
+
+						const delaySpinner = ora('Waiting for 10 seconds to avoid rate limits...').start();
+						for (let j = 10; j > 0; j--) {
+							delaySpinner.text = `Waiting for ${j} seconds to avoid rate limits...`;
+							await new Promise((resolve) => setTimeout(resolve, 1000));
+						}
+						delaySpinner.succeed('✅ Delay complete. Starting generation.');
+
 						console.log(`\n================================================================================`);
 						console.log(`📄 Processing [${country}/${date}/${category}]: "${article.title}"`);
 						const blogContent = await generateBlogPost(article, category);

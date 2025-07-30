@@ -1,5 +1,6 @@
 import fs from 'fs';
 import ora from 'ora';
+import 'dotenv/config';
 import Parser from 'rss-parser';
 const parser = new Parser();
 const categoryTopics: Record<string, string> = { World: 'WORLD', National: 'NATION', Business: 'BUSINESS', Technology: 'TECHNOLOGY', Entertainment: 'ENTERTAINMENT', Science: 'SCIENCE', Sports: 'SPORTS', Health: 'HEALTH' };
