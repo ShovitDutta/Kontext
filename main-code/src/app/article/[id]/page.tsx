@@ -7,15 +7,20 @@ import { useArticle } from '@/hooks/useArticle';
 import { FaShareAlt, FaCopy } from 'react-icons/fa';
 import ArticlePageSkeleton from '@/components/ArticlePageSkeleton';
 import GeneratedContentViewer from '@/components/GeneratedContentViewer';
+import Image from 'next/image';
+
 const ArticlePage = () => {
 	const params = useParams();
 	const id = params.id as string;
 	const { article, isLoading, error } = useArticle(id);
+
 	if (isLoading) return <ArticlePageSkeleton />;
 	if (error) return <div>Error: {error.message}</div>;
 	if (!article) return <div>Article not found</div>;
+
 	const content = article.generatedContents?.[0]?.content || '';
 	const { readTime } = calculateReadTime(content);
+
 	const handleShare = async () => {
 		if (navigator.share) {
 			try {
@@ -33,6 +38,7 @@ const ArticlePage = () => {
 			toast.success('Article link copied to clipboard!');
 		}
 	};
+
 	const handleCopy = async () => {
 		try {
 			await navigator.clipboard.writeText(content);
@@ -42,8 +48,20 @@ const ArticlePage = () => {
 			toast.error('Failed to copy article content.');
 		}
 	};
+
 	return (
 		<div className="container mx-auto px-4 sm:px-6 lg:px-8 my-8">
+			{article.imageUrl && (
+				<div className="relative w-full h-96 mb-8">
+					<Image
+						src={article.imageUrl}
+						alt={article.title}
+						layout="fill"
+						objectFit="cover"
+						className="rounded-lg"
+					/>
+				</div>
+			)}
 			<div className="bg-neutral-800 rounded-lg p-6 border border-neutral-700 mb-8 relative">
 				<h1 className="text-3xl sm:text-4xl font-bold mb-4">{article.title}</h1>
 				<div className="flex items-center space-x-2 text-sm text-neutral-500 mb-4">
@@ -73,4 +91,5 @@ const ArticlePage = () => {
 		</div>
 	);
 };
+
 export default ArticlePage;

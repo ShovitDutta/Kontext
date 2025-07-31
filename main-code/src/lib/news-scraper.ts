@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid';
 import { db } from '@/lib/db';
 import { load } from 'cheerio';
 import { countries } from './countries';
@@ -23,7 +24,9 @@ const topicCategoryMap = {
 };
 async function scrapeCategory(browser: Browser, countryCode: string, params: { hl: string; gl: string; ceid: string }, topicId: string, category: string): Promise<[string, string, ScrapedArticle[]]> {
 	const url = new URL(`https://news.google.com/topics/${topicId}`);
-	url.search = new URLSearchParams(params).toString();
+	const searchParams = new URLSearchParams(params);
+	searchParams.set('hl', 'en');
+	url.search = searchParams.toString();
 	const page = await browser.newPage();
 	await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36');
 	try {
@@ -88,11 +91,8 @@ export async function scrapeAndStore() {
 	const browser = await puppeteer.launch({ headless: process.env.NODE_ENV !== 'development' });
 	try {
 		for (const [countryCode, params] of Object.entries(countries)) {
-			const results: [string, ScrapedArticle[] | null][] = [];
-			for (const [topicId, category] of Object.entries(topicCategoryMap)) {
-				const result = await processCategoryWrapper(browser, countryCode, params, topicId, category);
-				results.push(result);
-			}
+			const promises = Object.entries(topicCategoryMap).map(([topicId, category]) => processCategoryWrapper(browser, countryCode, params, topicId, category));
+			const results = await Promise.all(promises);
 			const countryDataByDate: { [date: string]: { [category: string]: ScrapedArticle[] } } = {};
 			for (const [category, articles] of results) {
 				if (articles) {
@@ -109,9 +109,19 @@ export async function scrapeAndStore() {
 				// eslint-disable-next-line @typescript-eslint/no-unused-vars
 				for (const [date, categories] of Object.entries(countryDataByDate)) {
 					for (const [category, articlesList] of Object.entries(categories)) {
-						for (const article of articlesList) {
-							const categoryId = topicCategoryMapping[category.toUpperCase()];
-							if (categoryId) await db.insert(articles).values({ id: article.link, title: article.title, sourceName: article.source, publishedAt: new Date(article.datetime), country: countryCode, category: categoryId });
+						const categoryId = topicCategoryMapping[category.toUpperCase()];
+						if (categoryId) {
+							const values = articlesList.map((article) => ({
+								id: uuidv4(),
+								url: article.link,
+								title: article.title,
+								sourceName: article.source,
+								imageUrl: article.image_link,
+								publishedAt: new Date(article.datetime),
+								country: countryCode,
+								category: categoryId,
+							}));
+							if (values.length > 0) await db.insert(articles).values(values).onConflictDoNothing();
 						}
 					}
 				}
@@ -123,4 +133,3 @@ export async function scrapeAndStore() {
 	}
 	console.log('\nData scraped successfully and saved to database!');
 }
-scrapeAndStore();

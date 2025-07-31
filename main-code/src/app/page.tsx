@@ -59,6 +59,7 @@ const Page = () => {
 									category={article.category}
 									author={article.author ?? undefined}
 									publishedAt={article.publishedAt}
+									imageUrl={article.imageUrl}
 								/>
 							))
 						) : (

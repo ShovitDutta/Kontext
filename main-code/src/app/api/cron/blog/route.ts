@@ -16,18 +16,12 @@ export async function GET(req: NextRequest) {
 			.leftJoin(generatedContents, eq(articles.id, generatedContents.articleId))
 			.where(isNull(generatedContents.id));
 		console.log(`Found ${articlesToGenerate.length} articles to generate content for.`);
-		for (const article of articlesToGenerate) {
+		const generationPromises = articlesToGenerate.map(async (article) => {
 			console.log(`Generating content for article: ${article.title}`);
 			await generateContent(article.id);
 			console.log(`Finished generating content for article: ${article.title}`);
-
-			const waitSeconds = 10;
-			console.log(`Waiting for ${waitSeconds} seconds before processing the next article...`);
-			for (let i = waitSeconds; i > 0; i--) {
-				console.log(`...${i}`);
-				await new Promise((resolve) => setTimeout(resolve, 1000));
-			}
-		}
+		});
+		await Promise.all(generationPromises);
 		console.log('Blog generation cron job finished successfully.');
 		return new Response(JSON.stringify({ success: true }), { status: 200 });
 	} catch (error) {

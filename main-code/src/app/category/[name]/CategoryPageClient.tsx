@@ -35,6 +35,7 @@ const CategoryPageClient = () => {
 								description={article.description}
 								category={article.category}
 								publishedAt={article.publishedAt}
+								imageUrl={article.imageUrl}
 							/>
 						))}
 			</div>

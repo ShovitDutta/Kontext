@@ -1,12 +1,13 @@
 import { relations } from 'drizzle-orm';
 import { pgTable, text, timestamp, integer, primaryKey } from 'drizzle-orm/pg-core';
 export const articles = pgTable('articles', {
-	author: text('author'),
-	url: text('url').unique(),
 	id: text('id').primaryKey(),
+	url: text('url').unique(),
 	title: text('title').unique(),
+	author: text('author'),
 	country: text('country').default('in').notNull(),
 	description: text('description'),
+	imageUrl: text('imageUrl'),
 	category: text('category').notNull(),
 	sourceName: text('sourceName').notNull(),
 	publishedAt: timestamp('publishedAt').notNull(),

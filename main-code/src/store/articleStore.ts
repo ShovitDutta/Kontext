@@ -10,6 +10,7 @@ export interface Article {
 	publishedAt: string;
 	generatedContents: GeneratedContent[];
 	country: string;
+	imageUrl?: string;
 }
 export interface GeneratedContent {
 	id: string;

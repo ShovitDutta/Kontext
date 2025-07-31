@@ -4,6 +4,8 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { format } from 'date-fns';
 import { newsCategories } from '@/lib/newscat';
+import Image from 'next/image';
+
 interface ArticleCardProps {
 	id: string;
 	title: string;
@@ -12,10 +14,17 @@ interface ArticleCardProps {
 	source?: string;
 	description?: string;
 	publishedAt: string;
+	imageUrl?: string;
 }
-const cardVariants = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.4 } } };
-const ArticleCard: React.FC<ArticleCardProps> = ({ id, title, category, author, source, publishedAt }) => {
+
+const cardVariants = {
+	hidden: { opacity: 0, y: 20 },
+	visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
+};
+
+const ArticleCard: React.FC<ArticleCardProps> = ({ id, title, category, author, source, publishedAt, imageUrl }) => {
 	const categoryName = newsCategories.find((c) => c.id === category)?.name || 'General';
+
 	return (
 		<motion.div
 			variants={cardVariants}
@@ -26,18 +35,37 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ id, title, category, author, 
 			<Link
 				href={`/article/${id}`}
 				className="relative group bg-neutral-800 rounded-lg border border-neutral-800 h-full flex flex-col">
+				{imageUrl && (
+					<div className="relative w-full h-40">
+						<Image
+							src={imageUrl}
+							alt={title}
+							layout="fill"
+							objectFit="cover"
+							className="rounded-t-lg"
+						/>
+					</div>
+				)}
 				<div className="space-y-3 flex-grow pt-4 px-4">
-					<p className="text-sm text-red-400">{categoryName}</p> <h3 className="text-base sm:text-lg font-semibold text-white group-hover:text-neutral-300 flex-grow">{title}</h3>
+					<p className="text-sm text-red-400">{categoryName}</p>
+					<h3 className="text-base sm:text-lg font-semibold text-white group-hover:text-neutral-300 flex-grow">
+						{title}
+					</h3>
 				</div>
 				<div className="flex items-center justify-between text-xs sm:text-sm text-neutral-500 mt-4 pb-4 px-4">
 					<div className="flex items-center space-x-2">
-						{author && <span>{author}</span>} {author && source && <span>·</span>} {source && <span>{source}</span>}
+						{author && <span>{author}</span>}
+						{author && source && <span>·</span>}
+						{source && <span>{source}</span>}
 					</div>
 					<time dateTime={publishedAt}>{format(new Date(publishedAt), 'MMM d, yyyy')}</time>
 				</div>
-				<div className="absolute top-4 right-4 bg-neutral-700 text-white text-xs px-2 py-1 rounded-full">by Kontext</div>
+				<div className="absolute top-4 right-4 bg-neutral-700 text-white text-xs px-2 py-1 rounded-full">
+					by Kontext
+				</div>
 			</Link>
 		</motion.div>
 	);
 };
+
 export default ArticleCard;

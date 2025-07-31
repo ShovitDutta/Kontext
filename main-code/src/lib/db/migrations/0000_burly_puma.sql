@@ -14,12 +14,13 @@ CREATE TABLE "account" (
 );
 --> statement-breakpoint
 CREATE TABLE "articles" (
-	"author" text,
-	"url" text,
 	"id" text PRIMARY KEY NOT NULL,
+	"url" text,
 	"title" text,
+	"author" text,
 	"country" text DEFAULT 'in' NOT NULL,
 	"description" text,
+	"imageUrl" text,
 	"category" text NOT NULL,
 	"sourceName" text NOT NULL,
 	"publishedAt" timestamp NOT NULL,
