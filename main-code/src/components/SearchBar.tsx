@@ -22,7 +22,7 @@ const SearchBar = () => {
 				placeholder="Search for articles..."
 				value={searchQuery}
 				onChange={(e) => setSearchQuery(e.target.value)}
-				className="bg-neutral-800 text-white w-full p-3 rounded-full pl-12 focus:ring-2 focus:ring-blue-500 focus:outline-none transition-shadow shadow-md"
+				className="bg-neutral-800 text-white w-full p-3 rounded-full pl-12 focus:ring-2 focus:ring-blue-500 focus:outline-none transition-shadow shadow-lg focus:shadow-xl"
 			/>
 			<FiSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-neutral-400" />
 		</motion.form>

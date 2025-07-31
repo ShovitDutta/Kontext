@@ -6,7 +6,7 @@ import CountrySelector from './CountrySelector';
 
 const Header = () => {
 	return (
-		<header className="sticky top-0 z-50 bg-neutral-900/50 backdrop-blur-lg shadow-lg">
+		<header className="sticky top-0 z-50 bg-neutral-900/50 backdrop-blur-lg shadow-xl">
 			<div className="container mx-auto px-4 flex items-center justify-between p-4 space-x-4">
 				<div className="flex-shrink-0">
 					<Link

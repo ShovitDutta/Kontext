@@ -37,7 +37,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ id, title, category, country,
 			transition={{ type: 'spring', stiffness: 300, damping: 15 }}>
 			<Link
 				href={`/article/${id}`}
-				className="relative group bg-neutral-800 rounded-lg border border-neutral-800 h-full flex flex-col shadow-lg">
+				className="relative group bg-neutral-800 rounded-lg border border-neutral-800 h-full flex flex-col shadow-xl transition-shadow duration-300 hover:shadow-2xl">
 				{imageUrl && (
 					<div className="relative w-full h-40">
 						<Image
