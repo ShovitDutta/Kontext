@@ -1,0 +1,35 @@
+export const supportedCountries = [
+	{ name: 'None', code: 'none' },
+	{ name: 'India', code: 'in' },
+	{ name: 'United Kingdom', code: 'uk' },
+	{ name: 'United States', code: 'us' },
+	{ name: 'Australia', code: 'au' },
+	{ name: 'Canada', code: 'ca' },
+	{ name: 'Germany', code: 'de' },
+	{ name: 'France', code: 'fr' },
+	{ name: 'Japan', code: 'jp' },
+	{ name: 'Brazil', code: 'br' },
+];
+export const countryCodeMapping: Record<string, string> = {
+	in: 'IN',
+	uk: 'UK',
+	us: 'US',
+	au: 'AU',
+	ca: 'CA',
+	de: 'DE',
+	fr: 'FR',
+	jp: 'JP',
+	br: 'BR',
+	none: 'IN',
+};
+export const googleNewsCountryMapping: Record<string, string> = {
+	IN: 'in',
+	UK: 'uk',
+	US: 'us',
+	AU: 'au',
+	CA: 'ca',
+	DE: 'de',
+	FR: 'fr',
+	JP: 'jp',
+	BR: 'br',
+};
