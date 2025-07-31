@@ -53,9 +53,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ id, title, category, country,
 					<p className="text-sm text-red-400">
 						{categoryName} {countryName && `· ${countryName}`}
 					</p>
-					<h3 className="text-base sm:text-lg font-semibold text-white group-hover:text-neutral-300 flex-grow">
-						{title}
-					</h3>
+					<h3 className="text-base sm:text-lg font-semibold text-white group-hover:text-neutral-300 flex-grow">{title}</h3>
 				</div>
 				<div className="flex items-center justify-between text-xs sm:text-sm text-neutral-500 mt-4 pb-4 px-4">
 					<div className="flex items-center space-x-2">
@@ -65,9 +63,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ id, title, category, country,
 					</div>
 					<time dateTime={publishedAt}>{format(new Date(publishedAt), 'MMM d, yyyy')}</time>
 				</div>
-				<div className="absolute top-4 right-4 bg-neutral-700 text-white text-xs px-2 py-1 rounded-full">
-					by Kontext
-				</div>
+				<div className="absolute top-4 right-4 bg-neutral-700 text-white text-xs px-2 py-1 rounded-full">by Kontext</div>
 			</Link>
 		</motion.div>
 	);
