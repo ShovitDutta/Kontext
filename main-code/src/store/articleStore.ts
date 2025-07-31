@@ -81,7 +81,7 @@ export const useArticleStore = create<ArticleState>((set, get) => ({
 		set({ isLoading: true, error: null });
 		try {
 			const { data } = await axios.get('/api/news');
-			console.log('📦 API Response:', { dataLength: data?.length, firstFewArticles: data?.slice(0, 3)?.map((a: any) => ({ title: a.title?.substring(0, 50), country: a.country, category: a.category })) });
+			console.log('📦 API Response:', { dataLength: data?.length, firstFewArticles: data?.slice(0, 3)?.map((a: Article) => ({ title: a.title?.substring(0, 50), country: a.country, category: a.category })) });
 			const currentState = get();
 			console.log('🎛️ Current filter state:', { category: currentState.category, searchQuery: currentState.searchQuery, country: currentState.country });
 			const filtered = applyFilters(data, currentState.category, currentState.searchQuery, currentState.country);
