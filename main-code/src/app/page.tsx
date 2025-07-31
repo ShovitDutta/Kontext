@@ -57,6 +57,7 @@ const Page = () => {
 									title={article.title}
 									source={article.sourceName}
 									category={article.category}
+									country={article.country}
 									author={article.author ?? undefined}
 									publishedAt={article.publishedAt}
 									imageUrl={article.imageUrl}

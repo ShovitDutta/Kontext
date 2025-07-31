@@ -15,13 +15,13 @@ const Sidebar: React.FC<SidebarProps> = ({ selectedCategory, onSelectCategory })
 			initial={{ opacity: 0, y: -20 }}
 			animate={{ opacity: 1, y: 0 }}
 			transition={{ duration: 0.5 }}
-			className="space-y-4">
+			className="space-y-4 p-4 rounded-lg shadow-lg">
 			<h1 className="text-2xl font-bold">News & Insights</h1> <p className="text-neutral-400">Transforming the latest news into engaging, easy-to-read blog posts using AI.</p>
 			<div className="lg:hidden">
 				<div className="relative w-full">
 					<button
 						onClick={() => setIsCategoryOpen(!isCategoryOpen)}
-						className="w-full flex items-center justify-between px-4 py-2 text-left bg-neutral-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-neutral-600">
+						className="w-full flex items-center justify-between px-4 py-2 text-left bg-neutral-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-neutral-600 shadow-md">
 						<span>{selectedCategoryName}</span>
 						<FiChevronDown
 							size={20}
@@ -36,7 +36,7 @@ const Sidebar: React.FC<SidebarProps> = ({ selectedCategory, onSelectCategory })
 								exit={{ opacity: 0, height: 0 }}
 								className="mt-2 origin-top absolute w-full z-10"
 								style={{ overflow: 'hidden' }}>
-								<div className="bg-neutral-800 rounded-lg p-2">
+								<div className="bg-neutral-800 rounded-lg p-2 shadow-xl">
 									{newsCategories.map((category) => (
 										<button
 											key={category.id}

@@ -58,11 +58,11 @@ const ArticlePage = () => {
 						alt={article.title}
 						layout="fill"
 						objectFit="cover"
-						className="rounded-lg"
+						className="rounded-lg shadow-2xl"
 					/>
 				</div>
 			)}
-			<div className="bg-neutral-800 rounded-lg p-6 border border-neutral-700 mb-8 relative">
+			<div className="bg-neutral-800 rounded-lg p-6 border border-neutral-700 mb-8 relative shadow-lg">
 				<h1 className="text-3xl sm:text-4xl font-bold mb-4">{article.title}</h1>
 				<div className="flex items-center space-x-2 text-sm text-neutral-500 mb-4">
 					{article.author && <span>{article.author}</span>}
@@ -75,7 +75,7 @@ const ArticlePage = () => {
 				<div className="flex space-x-4 mb-6">
 					<button
 						onClick={handleShare}
-						className="flex items-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200">
+						className="flex items-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200 shadow-md">
 						<FaShareAlt className="mr-2" /> Share
 					</button>
 				</div>
@@ -84,7 +84,7 @@ const ArticlePage = () => {
 			<div className="relative mt-4">
 				<button
 					onClick={handleCopy}
-					className="absolute top-0 right-0 flex items-center px-4 py-2 bg-neutral-700 text-white rounded-lg hover:bg-neutral-600 transition-colors duration-200">
+					className="absolute top-0 right-0 flex items-center px-4 py-2 bg-neutral-700 text-white rounded-lg hover:bg-neutral-600 transition-colors duration-200 shadow-md">
 					<FaCopy className="mr-2" /> Copy Blog
 				</button>
 			</div>

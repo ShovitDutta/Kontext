@@ -5,11 +5,13 @@ import { motion } from 'framer-motion';
 import { format } from 'date-fns';
 import { newsCategories } from '@/lib/newscat';
 import Image from 'next/image';
+import { supportedCountries } from '@/lib/countries';
 
 interface ArticleCardProps {
 	id: string;
 	title: string;
 	category: string;
+	country: string;
 	author?: string;
 	source?: string;
 	description?: string;
@@ -22,8 +24,9 @@ const cardVariants = {
 	visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
 };
 
-const ArticleCard: React.FC<ArticleCardProps> = ({ id, title, category, author, source, publishedAt, imageUrl }) => {
+const ArticleCard: React.FC<ArticleCardProps> = ({ id, title, category, country, author, source, publishedAt, imageUrl }) => {
 	const categoryName = newsCategories.find((c) => c.id === category)?.name || 'General';
+	const countryName = supportedCountries.find((c) => c.code === country)?.name || country;
 
 	return (
 		<motion.div
@@ -34,7 +37,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ id, title, category, author, 
 			transition={{ type: 'spring', stiffness: 300, damping: 15 }}>
 			<Link
 				href={`/article/${id}`}
-				className="relative group bg-neutral-800 rounded-lg border border-neutral-800 h-full flex flex-col">
+				className="relative group bg-neutral-800 rounded-lg border border-neutral-800 h-full flex flex-col shadow-lg">
 				{imageUrl && (
 					<div className="relative w-full h-40">
 						<Image
@@ -47,7 +50,9 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ id, title, category, author, 
 					</div>
 				)}
 				<div className="space-y-3 flex-grow pt-4 px-4">
-					<p className="text-sm text-red-400">{categoryName}</p>
+					<p className="text-sm text-red-400">
+						{categoryName} {countryName && `· ${countryName}`}
+					</p>
 					<h3 className="text-base sm:text-lg font-semibold text-white group-hover:text-neutral-300 flex-grow">
 						{title}
 					</h3>

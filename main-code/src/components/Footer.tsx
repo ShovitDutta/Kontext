@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { FaGithub, FaTwitter, FaInstagram, FaFacebook, FaYoutube } from 'react-icons/fa';
 const Footer = () => {
 	return (
-		<footer className=" text-white py-12">
+		<footer className=" text-white py-12 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]">
 			<div className="container mx-auto px-4">
 				<div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8">
 					<div className="col-span-2 md:col-span-4 lg:col-span-2">

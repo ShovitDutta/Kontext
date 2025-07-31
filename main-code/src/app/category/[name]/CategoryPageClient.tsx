@@ -22,7 +22,7 @@ const CategoryPageClient = () => {
 	if (error) return <div>Error: {error.message}</div>;
 	return (
 		<div className="container mx-auto p-4">
-			<h1 className="text-2xl sm:text-3xl font-bold mb-4 capitalize">{category}</h1>
+			<h1 className="text-2xl sm:text-3xl font-bold mb-4 capitalize shadow-lg">{category}</h1>
 			<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
 				{isLoading || status === 'loading'
 					? Array.from({ length: 6 }).map((_, i) => <ArticleCardSkeleton key={i} />)
@@ -34,6 +34,7 @@ const CategoryPageClient = () => {
 								source={article.sourceName}
 								description={article.description}
 								category={article.category}
+								country={article.country}
 								publishedAt={article.publishedAt}
 								imageUrl={article.imageUrl}
 							/>

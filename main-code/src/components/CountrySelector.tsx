@@ -13,7 +13,7 @@ export default function CountrySelector() {
 		<div className="relative w-full">
 			<button
 				onClick={() => setIsOpen(!isOpen)}
-				className="w-full flex items-center justify-between px-4 py-2 text-left bg-neutral-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-neutral-600">
+				className="w-full flex items-center justify-between px-4 py-2 text-left bg-neutral-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-neutral-600 shadow-md">
 				<span>{selectedCountryName}</span>
 				<FiChevronDown
 					size={20}
@@ -28,7 +28,7 @@ export default function CountrySelector() {
 						exit={{ opacity: 0, height: 0 }}
 						className="mt-2 origin-top absolute w-full z-10"
 						style={{ overflow: 'hidden' }}>
-						<div className="bg-neutral-800 rounded-lg p-2 max-h-60 overflow-y-auto">
+						<div className="bg-neutral-800 rounded-lg p-2 max-h-60 overflow-y-auto shadow-xl">
 							{supportedCountries.map((c) => (
 								<button
 									key={c.code}
