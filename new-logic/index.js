@@ -28,6 +28,7 @@ async function scrapeCategory(browser, countryCode, params, topicId, category) {
 	const url = new URL(`https://news.google.com/topics/${topicId}`);
 	url.search = new URLSearchParams(params).toString();
 	const page = await browser.newPage();
+	await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36');
 	try {
 		await page.goto(url.toString(), { timeout: 15000 });
 		await page.waitForSelector('a.JtKRv', { timeout: 10000 });
@@ -104,15 +105,28 @@ async function main() {
 		for (const [countryCode, params] of Object.entries(countries)) {
 			countriesDone += 1;
 			spinner.text = `Scraping ${countryCode} (${countriesDone}/${totalCountries})...`;
-			const tasks = Object.entries(topicCategoryMap).map(([topicId, category]) => {
-				return processCategoryWrapper(browser, countryCode, params, topicId, category, spinner);
-			});
-			const results = await Promise.all(tasks);
-			const countryCategoryData = {};
-			for (const [category, articles] of results) if (articles) countryCategoryData[category] = articles;
-			if (Object.keys(countryCategoryData).length) newsData[countryCode] = countryCategoryData;
-			await fs.writeFile('news.json', JSON.stringify(newsData, null, 2));
-			spinner.succeed(`Data for ${countryCode} saved to news.json`);
+			const results = [];
+			for (const [topicId, category] of Object.entries(topicCategoryMap)) {
+				const result = await processCategoryWrapper(browser, countryCode, params, topicId, category, spinner);
+				results.push(result);
+			}
+			const countryDataByDate = {};
+			for (const [category, articles] of results) {
+				if (articles) {
+					for (const article of articles) {
+						const dateKey = article.datetime.slice(0, 10);
+						if (!dateKey.match(/^\d{4}-\d{2}-\d{2}$/)) continue;
+						if (!countryDataByDate[dateKey]) countryDataByDate[dateKey] = {};
+						if (!countryDataByDate[dateKey][category]) countryDataByDate[dateKey][category] = [];
+						countryDataByDate[dateKey][category].push(article);
+					}
+				}
+			}
+			if (Object.keys(countryDataByDate).length) {
+				newsData[countryCode] = countryDataByDate;
+				await fs.writeFile('news.json', JSON.stringify(newsData, null, 2));
+				spinner.succeed(`Data for ${countryCode} saved to news.json`);
+			}
 		}
 	} finally {
 		await browser.close();
