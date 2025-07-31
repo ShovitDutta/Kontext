@@ -85,7 +85,7 @@ async function processCategoryWrapper(browser: Browser, countryCode: string, par
 	}
 }
 export async function scrapeAndStore() {
-	const browser = await puppeteer.launch({ headless: false });
+	const browser = await puppeteer.launch({ headless: process.env.NODE_ENV !== 'development' });
 	try {
 		for (const [countryCode, params] of Object.entries(countries)) {
 			const results: [string, ScrapedArticle[] | null][] = [];
