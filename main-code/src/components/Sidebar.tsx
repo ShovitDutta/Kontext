@@ -60,7 +60,7 @@ const Sidebar: React.FC<SidebarProps> = ({ selectedCategory, onSelectCategory })
 						<motion.button
 							key={category.id}
 							onClick={() => onSelectCategory(category.id)}
-							whileHover={{ scale: 1.05 }}
+							whileHover={{ scale: 1.05, x: 5 }}
 							whileTap={{ scale: 0.95 }}
 							className={`block w-full text-left px-4 py-2 rounded-lg transition-colors duration-200 ${selectedCategory === category.id ? 'bg-neutral-700 text-white' : 'text-neutral-400 hover:bg-neutral-800 hover:text-white'}`}>
 							{category.name}
