@@ -1,7 +1,7 @@
 import fs from 'fs';
 import ora from 'ora';
 import path from 'path';
-import pLimit from 'p-limit';
+
 import { load } from 'cheerio';
 import { chromium, Page } from 'playwright';
 export const countries = {
@@ -22,7 +22,7 @@ interface ScrapedArticle {
 	published_time: string;
 }
 const topicCategoryMap = {
-	CAAqJQgKIh9DQkFTRVFvSUwyMHZNR3QwTlRFU0JXVnVMVWRDS0FBUAE: 'Health',
+	CAAqJQgKIh9DQkFTRVFvSUwyMHZNR3QwTlRFU0JXVnVMVWRDS0FBUAE: 		'Health',
 	CAAqKggKIiRDQkFTRlFvSUwyMHZNRFp1ZEdvU0JXVnVMVWRDR2dKSlRpZ0FQAQ: 'Sports',
 	CAAqKggKIiRDQkFTRlFvSUwyMHZNRFp0Y1RjU0JXVnVMVWRDR2dKSlRpZ0FQAQ: 'Science',
 	CAAqKggKIiRDQkFTRlFvSUwyMHZNRGx6TVdZU0JXVnVMVWRDR2dKSlRpZ0FQAQ: 'Business',
@@ -103,52 +103,46 @@ async function retryWithBackoff<T>(fn: () => Promise<T>, retries = 3, delay = 80
 	}
 }
 export async function scrapeAndStore() {
-	const browser = await chromium.launch({ headless: false, args: ['--start-fullscreen'] });
-	const context = await browser.newContext({ userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36', viewport: null });
 	const spinner = ora('Scraping news articles...').start();
+	const allResults: Record<string, Record<string, Record<string, ScrapedArticle[]>>> = {};
+
 	try {
-		const concurrencyLimit = 5;
-		const limit = pLimit(concurrencyLimit);
-		const allResults: Record<string, Record<string, Record<string, ScrapedArticle[]>>> = {};
-		const tasks = [];
 		for (const [countryCode, params] of Object.entries(countries)) {
 			for (const [topicId, category] of Object.entries(topicCategoryMap)) {
-				tasks.push(
-					limit(async () => {
-						const page = await context.newPage();
-						try {
-							spinner.text = `Scraping ${countryCode}/${category}`;
-							const result = await retryWithBackoff(() => processCategory(page, countryCode, params, topicId, category), 3);
-							await randomDelay();
-							return result;
-						} finally {
-							await page.close();
+				spinner.text = `Scraping ${countryCode}/${category}`;
+				const browser = await chromium.launch({ headless: false, args: ['--start-fullscreen'] });
+				const context = await browser.newContext({ userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36', viewport: null });
+				const page = await context.newPage();
+				try {
+					const result = await retryWithBackoff(() => processCategory(page, countryCode, params, topicId, category), 3);
+					await randomDelay();
+
+					if (result) {
+						const { country, category: resultCategory, articles } = result;
+						for (const article of articles) {
+							const dateKey = article.datetime.slice(0, 10);
+							if (!dateKey.match(/^\d{4}-\d{2}-\d{2}$/)) continue;
+							if (!allResults[country]) allResults[country] = {};
+							if (!allResults[country][dateKey]) allResults[country][dateKey] = {};
+							if (!allResults[country][dateKey][resultCategory]) allResults[country][dateKey][resultCategory] = [];
+							allResults[country][dateKey][resultCategory].push(article);
 						}
-					}),
-				);
+					}
+				} finally {
+					await page.close();
+					await context.close();
+					await browser.close();
+				}
 			}
 		}
-		const results = await Promise.all(tasks);
-		for (const result of results) {
-			if (!result) continue;
-			const { country, category, articles } = result;
-			for (const article of articles) {
-				const dateKey = article.datetime.slice(0, 10);
-				if (!dateKey.match(/^\d{4}-\d{2}-\d{2}$/)) continue;
-				if (!allResults[country]) allResults[country] = {};
-				if (!allResults[country][dateKey]) allResults[country][dateKey] = {};
-				if (!allResults[country][dateKey][category]) allResults[country][dateKey][category] = [];
-				allResults[country][dateKey][category].push(article);
-			}
-		}
+
 		const outputDir = path.join(process.cwd(), 'output');
 		if (!fs.existsSync(outputDir)) {
 			fs.mkdirSync(outputDir, { recursive: true });
 		}
 		fs.writeFileSync(path.join(outputDir, 'scraped-news.json'), JSON.stringify(allResults, null, 2));
+
 	} finally {
 		spinner.succeed('✅ Scraping complete!');
-		await context.close();
-		await browser.close();
 	}
 }
