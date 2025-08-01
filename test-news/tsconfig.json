@@ -1,0 +1,15 @@
+{
+	"compilerOptions": {
+    "strict": true,
+		"jsx": "preserve",
+		"target": "ES2022",
+		"outDir": "./dist",
+		"module": "NodeNext",
+		"skipLibCheck": true,
+		"esModuleInterop": true,
+		"moduleResolution": "NodeNext",
+		"forceConsistentCasingInFileNames": true
+	},
+	"include": ["*.ts"],
+	"exclude": ["node_modules"]
+}
