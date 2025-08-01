@@ -131,7 +131,6 @@ export async function scrapeAndStore() {
 				try {
 					const result = await retryWithBackoff(() => processCategory(page, countryCode, params, topicId, category), 3);
 					await randomDelay();
-
 					if (result) {
 						const { country, category: resultCategory, articles } = result;
 						for (const article of articles) {
