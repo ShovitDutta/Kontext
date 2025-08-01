@@ -71,9 +71,15 @@ export async function generateContent(articleId: string, provider: 'gemini' | 'o
 		}
 	} else if (provider === 'ollama') {
 		try {
-			const response = await ollama.chat({ model: 'gemma3:4b-it-q4_K_M', messages: [{ role: 'user', content: prompt }] });
-			fullContent = response.message.content;
-			console.log(`Successfully generated content for article ${articleId} with Ollama.`);
+			const response = await ollama.chat({ model: 'gemma3:4b-it-q4_K_M', messages: [{ role: 'user', content: prompt }], stream: true });
+			let content = '';
+			for await (const chunk of response) {
+				process.stdout.write(chunk.message.content);
+				content += chunk.message.content;
+			}
+			fullContent = content;
+			process.stdout.write('\n');
+			console.log(`\nSuccessfully generated content for article ${articleId} with Ollama.`);
 		} catch (error) {
 			console.error(`Error generating content for article ${articleId} with Ollama:`, error);
 		}
