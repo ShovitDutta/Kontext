@@ -9,10 +9,10 @@ export default function NotFound() {
 				initial={{ opacity: 0, y: -20 }}
 				animate={{ opacity: 1, y: 0 }}
 				transition={{ duration: 0.5 }}>
-				<h1 className="text-5xl sm:text-6xl font-bold text-blue-500">404</h1> <h2 className="mt-4 text-2xl sm:text-3xl font-bold text-white">Page Not Found</h2> <p className="mt-2 text-base sm:text-lg text-gray-400">The page you&apos;re looking for doesn&apos;t exist or has been moved.</p>
+				<h1 className="text-5xl sm:text-6xl font-bold text-red-500">404</h1> <h2 className="mt-4 text-2xl sm:text-3xl font-bold text-white">Page Not Found</h2> <p className="mt-2 text-base sm:text-lg text-gray-400">The page you&apos;re looking for doesn&apos;t exist or has been moved.</p>
 				<div className="mt-8">
 					<Link href="/">
-						<button className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full text-base sm:text-lg transition-transform transform hover:scale-105 inline-flex items-center space-x-2">
+						<button className="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-full text-base sm:text-lg transition-transform transform hover:scale-105 inline-flex items-center space-x-2">
 							<span>Go Home</span> <FaArrowRight className="h-5 w-5" />
 						</button>
 					</Link>

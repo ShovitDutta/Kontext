@@ -33,11 +33,11 @@ async function scrapeCategory(browser: Browser, countryCode: string, params: { h
 		await page.goto(url.toString(), { timeout: 15000 });
 		await page.waitForSelector('a.JtKRv', { timeout: 10000 });
 		let previousHeight = -1;
-		let currentHeight = await page.evaluate('document.body.scrollHeight');
+		let currentHeight = await page.evaluate(() => document.body.scrollHeight);
 		while (previousHeight !== currentHeight) {
 			previousHeight = currentHeight;
 			await page.evaluate(async () => {
-				await new Promise<void>(resolve => {
+				await new Promise<void>((resolve) => {
 					let totalHeight = 0;
 					const distance = 100;
 					const timer = setInterval(() => {
@@ -51,8 +51,8 @@ async function scrapeCategory(browser: Browser, countryCode: string, params: { h
 					}, 50);
 				});
 			});
-			await new Promise(resolve => setTimeout(resolve, 2000));
-			currentHeight = await page.evaluate('document.body.scrollHeight');
+			await new Promise((resolve) => setTimeout(resolve, 2000));
+			currentHeight = await page.evaluate(() => document.body.scrollHeight);
 		}
 		const content = await page.content();
 		const $ = load(content);

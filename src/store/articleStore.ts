@@ -3,14 +3,14 @@ import { create } from 'zustand';
 export interface Article {
 	id: string;
 	title: string;
-	description: string;
-	sourceName: string;
-	category: string;
-	author: string | null;
-	publishedAt: string;
-	generatedContents: GeneratedContent[];
 	country: string;
+	category: string;
 	imageUrl?: string;
+	sourceName: string;
+	publishedAt: string;
+	description: string;
+	author: string | null;
+	generatedContents: GeneratedContent[];
 }
 export interface GeneratedContent {
 	id: string;
@@ -18,19 +18,19 @@ export interface GeneratedContent {
 	articleId: string;
 }
 interface ArticleState {
-	allArticles: Article[];
-	articles: Article[];
-	currentArticle: Article | null;
-	isLoading: boolean;
-	error: Error | null;
-	category: string;
-	searchQuery: string;
 	country: string;
+	category: string;
+	isLoading: boolean;
+	articles: Article[];
+	error: Error | null;
+	searchQuery: string;
+	allArticles: Article[];
+	currentArticle: Article | null;
 	fetchArticles: () => Promise<void>;
-	fetchArticleById: (id: string) => Promise<void>;
-	setCategory: (category: string) => void;
-	setSearchQuery: (query: string) => void;
 	setCountry: (country: string) => void;
+	setSearchQuery: (query: string) => void;
+	setCategory: (category: string) => void;
+	fetchArticleById: (id: string) => Promise<void>;
 }
 const applyFilters = (articles: Article[], category: string, searchQuery: string, country: string): Article[] => {
 	console.log('🔍 applyFilters called with:', { articlesCount: articles?.length, category, searchQuery, country, sampleCountries: articles?.slice(0, 5)?.map((a) => a.country) });

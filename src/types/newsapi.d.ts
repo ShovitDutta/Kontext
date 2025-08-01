@@ -1,17 +1,17 @@
 export interface GoogleNewsRSSItem {
-	title: string;
 	link: string;
+	title: string;
 	pubDate: string | null;
 	isoDate?: string | null;
-	contentSnippet?: string | null;
 	snippet?: string | null;
+	contentSnippet?: string | null;
 	source?: { title?: string } | string;
 }
 export interface GoogleNewsRSSFeed {
-	items: GoogleNewsRSSItem[];
+	link?: string;
 	title?: string;
 	description?: string;
-	link?: string;
+	items: GoogleNewsRSSItem[];
 }
 export interface GoogleNewsArticle {
 	title: string;

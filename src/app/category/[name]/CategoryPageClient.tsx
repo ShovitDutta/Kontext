@@ -1,4 +1,5 @@
 'use client';
+import { motion } from 'framer-motion';
 import React, { useEffect } from 'react';
 import { redirect } from 'next/navigation';
 import { useParams } from 'next/navigation';
@@ -6,18 +7,7 @@ import { useSession } from 'next-auth/react';
 import { useArticles } from '@/hooks/useArticles';
 import ArticleCard from '@/components/ArticleCard';
 import ArticleCardSkeleton from '@/components/ArticleCardSkeleton';
-import { motion } from 'framer-motion';
-
-const containerVariants = {
-	hidden: { opacity: 0 },
-	visible: {
-		opacity: 1,
-		transition: {
-			staggerChildren: 0.1,
-		},
-	},
-};
-
+const containerVariants = { hidden: { opacity: 0 }, visible: { opacity: 1, transition: { staggerChildren: 0.1 } } };
 const CategoryPageClient = () => {
 	const { status } = useSession({
 		required: true,

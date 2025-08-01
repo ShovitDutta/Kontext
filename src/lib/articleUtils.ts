@@ -1,7 +1,7 @@
 export async function getArticleText(url: string): Promise<string> {
 	let retries = 0;
-	let delay = 1000;
-	const maxRetries = 3;
+	let delay = 5000;
+	const maxRetries = 5;
 	while (retries < maxRetries) {
 		try {
 			const response = await fetch(url);

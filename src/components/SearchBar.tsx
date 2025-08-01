@@ -1,6 +1,6 @@
 'use client';
-import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import React, { useState } from 'react';
 import { FiSearch } from 'react-icons/fi';
 import { useRouter } from 'next/navigation';
 const SearchBar = () => {

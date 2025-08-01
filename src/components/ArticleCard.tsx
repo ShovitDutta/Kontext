@@ -1,12 +1,11 @@
 'use client';
 import React from 'react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
-import { format } from 'date-fns';
-import { newsCategories } from '@/lib/newscat';
 import Image from 'next/image';
+import { format } from 'date-fns';
+import { motion } from 'framer-motion';
+import { newsCategories } from '@/lib/newscat';
 import { supportedCountries } from '@/lib/countries';
-
 interface ArticleCardProps {
 	id: string;
 	title: string;
@@ -18,21 +17,15 @@ interface ArticleCardProps {
 	publishedAt: string;
 	imageUrl?: string;
 }
-
-const cardVariants = {
-	hidden: { opacity: 0, y: 20 },
-	visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
-};
-
+const cardVariants = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.4 } } };
 const ArticleCard: React.FC<ArticleCardProps> = ({ id, title, category, country, author, source, publishedAt, imageUrl }) => {
 	const categoryName = newsCategories.find((c) => c.id === category)?.name || 'General';
 	const countryName = supportedCountries.find((c) => c.code === country)?.name || country;
-
 	return (
 		<motion.div
-			variants={cardVariants}
 			initial="hidden"
 			animate="visible"
+			variants={cardVariants}
 			whileHover={{ scale: 1.03, y: -5 }}
 			transition={{ type: 'spring', stiffness: 300, damping: 15 }}>
 			<Link
@@ -41,9 +34,9 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ id, title, category, country,
 				{imageUrl && (
 					<div className="relative w-full h-40">
 						<Image
-							src={imageUrl}
 							alt={title}
 							layout="fill"
+							src={imageUrl}
 							objectFit="cover"
 							className="rounded-t-lg"
 						/>
@@ -57,9 +50,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ id, title, category, country,
 				</div>
 				<div className="flex items-center justify-between text-xs sm:text-sm text-neutral-500 mt-4 pb-4 px-4">
 					<div className="flex items-center space-x-2">
-						{author && <span>{author}</span>}
-						{author && source && <span>·</span>}
-						{source && <span>{source}</span>}
+						{author && <span>{author}</span>} {author && source && <span>·</span>} {source && <span>{source}</span>}
 					</div>
 					<time dateTime={publishedAt}>{format(new Date(publishedAt), 'MMM d, yyyy')}</time>
 				</div>
@@ -68,5 +59,4 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ id, title, category, country,
 		</motion.div>
 	);
 };
-
 export default ArticleCard;
