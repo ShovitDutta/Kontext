@@ -25,7 +25,7 @@ async function main() {
 				await resetTables(sql, ['articles', 'newsSources']);
 				break;
 			case 'blog':
-				await resetTables(sql, ['generatedContents']);
+				await resetTables(sql, ['generated_contents']);
 				break;
 			case undefined:
 				await resetAll(sql);

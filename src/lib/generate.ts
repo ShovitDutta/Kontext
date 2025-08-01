@@ -40,8 +40,7 @@ function promptBuilder(category: string) {
 		'*   New AI model enables "one-shot learning."\n' +
 		'*   Drastically reduces the need for large training datasets.\n' +
 		'*   Could accelerate AI adoption in new fields.\n\n' +
-		'---\n\n' +
-		'**Source Content:**\n'
+		'---\n\n'
 	);
 }
 export async function generateContent(articleId: string, provider: 'gemini' | 'ollama' = 'gemini') {
@@ -52,7 +51,7 @@ export async function generateContent(articleId: string, provider: 'gemini' | 'o
 	const articleHtml = await getArticleText(article.url);
 	if (!articleHtml) return;
 	let fullContent = '';
-	const prompt = promptBuilder(article.category) + articleHtml;
+	const instructions = promptBuilder(article.category);
 	if (provider === 'gemini') {
 		if (geminiApiKeys.length === 0) {
 			console.error('No Gemini API keys found, cannot generate content.');
@@ -63,6 +62,7 @@ export async function generateContent(articleId: string, provider: 'gemini' | 'o
 		const genAI = new GoogleGenerativeAI(apiKey);
 		const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash-preview-05-20' });
 		try {
+			const prompt = instructions + '**Source Content:**\n' + articleHtml;
 			const result = await model.generateContent(prompt);
 			fullContent = result.response.text();
 			console.log(`Successfully generated content for article ${articleId} with Gemini.`);
@@ -71,7 +71,14 @@ export async function generateContent(articleId: string, provider: 'gemini' | 'o
 		}
 	} else if (provider === 'ollama') {
 		try {
-			const response = await ollama.chat({ model: 'gemma3:4b-it-q4_K_M', messages: [{ role: 'user', content: prompt }], stream: true });
+			const response = await ollama.chat({
+				model: 'gemma3:4b-it-q4_K_M',
+				messages: [
+					{ role: 'system', content: instructions },
+					{ role: 'user', content: '**Source Content:**\n' + articleHtml }
+				],
+				stream: true
+			});
 			let content = '';
 			for await (const chunk of response) {
 				process.stdout.write(chunk.message.content);
