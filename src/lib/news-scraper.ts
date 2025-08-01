@@ -3,10 +3,28 @@ import pLimit from 'p-limit';
 import { db } from '@/lib/db';
 import { load } from 'cheerio';
 import { v4 as uuidv4 } from 'uuid';
-import { countries } from './countries';
 import { articles } from '@/lib/db/schema';
 import { chromium, Page } from 'playwright';
-import { topicCategoryMapping } from './newscat';
+export const countries = {
+	IN: { hl: 'en-IN', gl: 'IN', ceid: 'IN:en' },
+	US: { hl: 'en-US', gl: 'US', ceid: 'US:en' },
+	GB: { hl: 'en-GB', gl: 'GB', ceid: 'GB:en' },
+	CA: { hl: 'en-CA', gl: 'CA', ceid: 'CA:en' },
+	AU: { hl: 'en-AU', gl: 'AU', ceid: 'AU:en' },
+	DE: { hl: 'de-DE', gl: 'DE', ceid: 'DE:de' },
+	FR: { hl: 'fr-FR', gl: 'FR', ceid: 'FR:fr' },
+	JP: { hl: 'ja-JP', gl: 'JP', ceid: 'JP:ja' },
+	BR: { hl: 'pt-BR', gl: 'BR', ceid: 'BR:pt' },
+	CN: { hl: 'zh-CN', gl: 'CN', ceid: 'CN:zh' },
+};
+export const topicCategoryMapping: Record<string, string> = {
+	ENTERTAINMENT: 'entertainment',
+	TECHNOLOGY: 'technology',
+	BUSINESS: 'business',
+	SCIENCE: 'science',
+	SPORTS: 'sports',
+	HEALTH: 'health',
+};
 interface ScrapedArticle {
 	link: string;
 	title: string;
@@ -19,9 +37,9 @@ interface ScrapedArticle {
 const topicCategoryMap = {
 	CAAqJQgKIh9DQkFTRVFvSUwyMHZNR3QwTlRFU0JXVnVMVWRDS0FBUAE: 'Health',
 	CAAqKggKIiRDQkFTRlFvSUwyMHZNRFp1ZEdvU0JXVnVMVWRDR2dKSlRpZ0FQAQ: 'Sports',
-	CAAqKggKIiRDQkFTRlFvSUwyMHZNRGx6TVdZU0JXVnVMVWRDR2dKSlRpZ0FQAQ: 'Science',
-	CAAqKggKIiRDQkFTRlFvSUwyMHZNRGRqTVhZU0JXVnVMVWRDR2dKSlRpZ0FQAQ: 'Business',
-	CAAqKggKIiRDQkFTRlFvSUwyMHZNRGx1YlY4U0JXVnVMVWRDR2dKSlRpZ0FQAQ: 'Technology',
+	CAAqKggKIiRDQkFTRlFvSUwyMHZNRFp0Y1RjU0JXVnVMVWRDR2dKSlRpZ0FQAQ: 'Science',
+	CAAqKggKIiRDQkFTRlFvSUwyMHZNRGx6TVdZU0JXVnVMVWRDR2dKSlRpZ0FQAQ: 'Business',
+	CAAqKggKIiRDQkFTRlFvSUwyMHZNRGRqTVhZU0JXVnVMVWRDR2dKSlRpZ0FQAQ: 'Technology',
 	CAAqKggKIiRDQkFTRlFvSUwyMHZNREpxYW5RU0JXVnVMVWRDR2dKSlRpZ0FQAQ: 'Entertainment',
 };
 async function scrollUntilNoNewArticles(page: Page) {
@@ -47,7 +65,6 @@ async function scrollUntilNoNewArticles(page: Page) {
 async function scrapeCategory(page: Page, countryCode: string, params: { hl: string; gl: string; ceid: string }, topicId: string, category: string): Promise<ScrapedArticle[]> {
 	const url = new URL(`https://news.google.com/topics/${topicId}`);
 	const searchParams = new URLSearchParams(params);
-	searchParams.set('hl', 'en');
 	url.search = searchParams.toString();
 	await page.goto(url.toString(), { timeout: 90000, waitUntil: 'domcontentloaded' });
 	await page.evaluate(() => window.scrollTo(0, 0));

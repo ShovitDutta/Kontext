@@ -11,15 +11,3 @@ export const supportedCountries = [
 	{ name: 'Brazil', code: 'BR' },
 	{ name: 'China', code: 'CN' },
 ];
-export const countries = {
-	IN: { hl: 'en-IN', gl: 'IN', ceid: 'IN:en' },
-	US: { hl: 'en-US', gl: 'US', ceid: 'US:en' },
-	GB: { hl: 'en-GB', gl: 'GB', ceid: 'GB:en' },
-	CA: { hl: 'en-CA', gl: 'CA', ceid: 'CA:en' },
-	AU: { hl: 'en-AU', gl: 'AU', ceid: 'AU:en' },
-	DE: { hl: 'de-DE', gl: 'DE', ceid: 'DE:de' },
-	FR: { hl: 'fr-FR', gl: 'FR', ceid: 'FR:fr' },
-	JP: { hl: 'ja-JP', gl: 'JP', ceid: 'JP:ja' },
-	BR: { hl: 'pt-BR', gl: 'BR', ceid: 'BR:pt' },
-	CN: { hl: 'zh-CN', gl: 'CN', ceid: 'CN:zh' },
-};
