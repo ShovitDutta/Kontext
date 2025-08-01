@@ -1,10 +1,11 @@
+import ollama from 'ollama';
 import { db } from '@/lib/db';
 import { eq } from 'drizzle-orm';
 import { getArticleText } from '@/lib/articleUtils';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { generatedContents, articles } from '@/lib/db/schema';
 const geminiApiKeys = [process.env.GEMINI_API_KEY_A, process.env.GEMINI_API_KEY_B, process.env.GEMINI_API_KEY_C, process.env.GEMINI_API_KEY_D, process.env.GEMINI_API_KEY_E, process.env.GEMINI_API_KEY_F, process.env.GEMINI_API_KEY_G, process.env.GEMINI_API_KEY_H].filter((key): key is string => !!key);
-if (geminiApiKeys.length === 0) throw new Error('No Gemini API keys found in environment variables (GEMINI_API_KEY_A, B, C, D, E, F, G, H)');
+if (geminiApiKeys.length === 0) console.warn('No Gemini API keys found in environment variables (GEMINI_API_KEY_A, B, C, D, E, F, G, H)');
 let currentGeminiKeyIndex = 0;
 const getApiKey = () => {
 	const apiKey = geminiApiKeys[currentGeminiKeyIndex];
@@ -43,7 +44,7 @@ function promptBuilder(category: string) {
 		'**Source Content:**\n'
 	);
 }
-export async function generateContent(articleId: string) {
+export async function generateContent(articleId: string, provider: 'gemini' | 'ollama' = 'gemini') {
 	const existingContent = await db.query.generatedContents.findFirst({ where: eq(generatedContents.articleId, articleId) });
 	if (existingContent) return;
 	const article = await db.query.articles.findFirst({ where: eq(articles.id, articleId) });
@@ -51,17 +52,31 @@ export async function generateContent(articleId: string) {
 	const articleHtml = await getArticleText(article.url);
 	if (!articleHtml) return;
 	let fullContent = '';
-	const apiKey = getApiKey();
-	console.log(`Using Gemini API key #${currentGeminiKeyIndex === 0 ? geminiApiKeys.length : currentGeminiKeyIndex}`);
-	const genAI = new GoogleGenerativeAI(apiKey);
-	const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash-preview-05-20' });
 	const prompt = promptBuilder(article.category) + articleHtml;
-	try {
-		const result = await model.generateContent(prompt);
-		fullContent = result.response.text();
-		console.log(`Successfully generated content for article ${articleId} with key #${currentGeminiKeyIndex === 0 ? geminiApiKeys.length : currentGeminiKeyIndex}.`);
-	} catch (error) {
-		console.error(`Error generating content for article ${articleId} with key #${currentGeminiKeyIndex === 0 ? geminiApiKeys.length : currentGeminiKeyIndex}:`, error);
+	if (provider === 'gemini') {
+		if (geminiApiKeys.length === 0) {
+			console.error('No Gemini API keys found, cannot generate content.');
+			return;
+		}
+		const apiKey = getApiKey();
+		console.log(`Using Gemini API key #${currentGeminiKeyIndex === 0 ? geminiApiKeys.length : currentGeminiKeyIndex}`);
+		const genAI = new GoogleGenerativeAI(apiKey);
+		const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash-preview-05-20' });
+		try {
+			const result = await model.generateContent(prompt);
+			fullContent = result.response.text();
+			console.log(`Successfully generated content for article ${articleId} with Gemini.`);
+		} catch (error) {
+			console.error(`Error generating content for article ${articleId} with Gemini:`, error);
+		}
+	} else if (provider === 'ollama') {
+		try {
+			const response = await ollama.chat({ model: 'gemma3:4b-it-q4_K_M', messages: [{ role: 'user', content: prompt }] });
+			fullContent = response.message.content;
+			console.log(`Successfully generated content for article ${articleId} with Ollama.`);
+		} catch (error) {
+			console.error(`Error generating content for article ${articleId} with Ollama:`, error);
+		}
 	}
 	if (fullContent) await db.insert(generatedContents).values({ id: crypto.randomUUID(), content: fullContent, articleId: articleId });
 }

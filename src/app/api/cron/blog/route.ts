@@ -11,7 +11,7 @@ export async function GET(req: NextRequest) {
 		console.log(`Found ${articlesToGenerate.length} articles to generate content for.`);
 		for (const article of articlesToGenerate) {
 			console.log(`Generating content for article: ${article.title}`);
-			await generateContent(article.id);
+			await generateContent(article.id, 'ollama');
 			console.log(`Finished generating content for article: ${article.title}`);
 		}
 		console.log('Blog generation cron job finished successfully.');
