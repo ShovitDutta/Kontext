@@ -32,18 +32,27 @@ async function scrapeCategory(browser: Browser, countryCode: string, params: { h
 	try {
 		await page.goto(url.toString(), { timeout: 15000 });
 		await page.waitForSelector('a.JtKRv', { timeout: 10000 });
-		let previousCount = await page.evaluate(() => document.querySelectorAll('article').length);
-		while (true) {
-			await page.evaluate(() => window.scrollBy(0, 1000));
-			await new Promise((resolve) => setTimeout(resolve, 1500));
-			const currentCount = await page.evaluate(() => document.querySelectorAll('article').length);
-			if (currentCount === previousCount) {
-				await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-				await new Promise((resolve) => setTimeout(resolve, 1500));
-				const finalCount = await page.evaluate(() => document.querySelectorAll('article').length);
-				if (finalCount === currentCount) break;
-				previousCount = finalCount;
-			} else previousCount = currentCount;
+		let previousHeight = -1;
+		let currentHeight = await page.evaluate('document.body.scrollHeight');
+		while (previousHeight !== currentHeight) {
+			previousHeight = currentHeight;
+			await page.evaluate(async () => {
+				await new Promise<void>(resolve => {
+					let totalHeight = 0;
+					const distance = 100;
+					const timer = setInterval(() => {
+						const scrollHeight = document.body.scrollHeight;
+						window.scrollBy(0, distance);
+						totalHeight += distance;
+						if (totalHeight >= scrollHeight) {
+							clearInterval(timer);
+							resolve();
+						}
+					}, 50);
+				});
+			});
+			await new Promise(resolve => setTimeout(resolve, 2000));
+			currentHeight = await page.evaluate('document.body.scrollHeight');
 		}
 		const content = await page.content();
 		const $ = load(content);
@@ -91,10 +100,9 @@ export async function scrapeAndStore() {
 	const browser = await puppeteer.launch({ headless: process.env.NODE_ENV !== 'development' });
 	try {
 		for (const [countryCode, params] of Object.entries(countries)) {
-			const promises = Object.entries(topicCategoryMap).map(([topicId, category]) => processCategoryWrapper(browser, countryCode, params, topicId, category));
-			const results = await Promise.all(promises);
 			const countryDataByDate: { [date: string]: { [category: string]: ScrapedArticle[] } } = {};
-			for (const [category, articles] of results) {
+			for (const [topicId, category] of Object.entries(topicCategoryMap)) {
+				const [, articles] = await processCategoryWrapper(browser, countryCode, params, topicId, category);
 				if (articles) {
 					for (const article of articles) {
 						const dateKey = article.datetime.slice(0, 10);
