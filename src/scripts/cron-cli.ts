@@ -16,14 +16,21 @@ async function runNewsCron() {
 async function runBlogCron() {
 	try {
 		console.log('Starting blog generation cron job...');
-		const articlesToGenerate = await db.select({ id: articles.id, title: articles.title }).from(articles).leftJoin(generatedContents, eq(articles.id, generatedContents.articleId)).where(isNull(generatedContents.id));
+		const articlesToGenerate = await db
+			.select({ id: articles.id, title: articles.title })
+			.from(articles)
+			.leftJoin(generatedContents, eq(articles.id, generatedContents.articleId))
+			.where(isNull(generatedContents.id));
 		console.log(`Found ${articlesToGenerate.length} articles to generate content for.`);
-		const generationPromises = articlesToGenerate.map(async (article) => {
-			console.log(`Generating content for article: ${article.title}`);
-			await generateContent(article.id);
-			console.log(`Finished generating content for article: ${article.title}`);
-		});
-		await Promise.all(generationPromises);
+		for (const article of articlesToGenerate) {
+			try {
+				console.log(`Generating content for article: ${article.title}`);
+				await generateContent(article.id);
+				console.log(`Finished generating content for article: ${article.title}`);
+			} catch (error) {
+				console.error(`Failed to generate content for article: ${article.title}`, error);
+			}
+		}
 		console.log('Blog generation cron job finished successfully.');
 	} catch (error) {
 		console.error('Error in blog generation cron job:', error);
