@@ -60,7 +60,7 @@ export async function generateContent(articleId: string, provider: 'gemini' | 'o
 		const apiKey = getApiKey();
 		console.log(`Using Gemini API key #${currentGeminiKeyIndex === 0 ? geminiApiKeys.length : currentGeminiKeyIndex}`);
 		const genAI = new GoogleGenerativeAI(apiKey);
-		const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash-preview-05-20' });
+		const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash-lite-preview-06-17' });
 		try {
 			const prompt = instructions + '**Source Content:**\n' + articleHtml;
 			const result = await model.generateContent(prompt);
@@ -75,9 +75,9 @@ export async function generateContent(articleId: string, provider: 'gemini' | 'o
 				model: 'gemma3:4b-it-q4_K_M',
 				messages: [
 					{ role: 'system', content: instructions },
-					{ role: 'user', content: '**Source Content:**\n' + articleHtml }
+					{ role: 'user', content: '**Source Content:**\n' + articleHtml },
 				],
-				stream: true
+				stream: true,
 			});
 			let content = '';
 			for await (const chunk of response) {
