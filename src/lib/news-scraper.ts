@@ -1,5 +1,4 @@
 import ora from 'ora';
-import pLimit from 'p-limit';
 import { db } from '@/lib/db';
 import { load } from 'cheerio';
 import { v4 as uuidv4 } from 'uuid';
@@ -71,6 +70,7 @@ async function scrapeCategory(page: Page, countryCode: string, params: { hl: str
 		const href = titleElement.attr('href');
 		if (!titleElement.length || !href) return;
 		const title = titleElement.text();
+		console.log(title);
 		const link = `https://news.google.com${href.replace(/^\./, '')}`;
 		const source = $(article).find('div.vr1PYe').text() || null;
 		const dateElement = $(article).find('time.hvbAAd');
@@ -114,45 +114,43 @@ async function retryWithBackoff<T>(fn: () => Promise<T>, retries = 3, delay = 80
 	}
 }
 export async function scrapeAndStore() {
-	const browser = await chromium.launch({ headless: false, args: ['--start-fullscreen'] });
-	const context = await browser.newContext({ userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36', viewport: null });
 	const spinner = ora('Scraping news articles...').start();
+	const allResults: Record<string, Record<string, Record<string, ScrapedArticle[]>>> = {};
+
 	try {
-		const concurrencyLimit = 5;
-		const limit = pLimit(concurrencyLimit);
-		const allResults: Record<string, Record<string, Record<string, ScrapedArticle[]>>> = {};
-		const tasks = [];
 		for (const [countryCode, params] of Object.entries(countries)) {
 			for (const [topicId, category] of Object.entries(topicCategoryMap)) {
-				tasks.push(
-					limit(async () => {
-						const page = await context.newPage();
-						try {
-							spinner.text = `Scraping ${countryCode}/${category}`;
-							const result = await retryWithBackoff(() => processCategory(page, countryCode, params, topicId, category), 3);
-							await randomDelay();
-							return result;
-						} finally {
-							await page.close();
+				spinner.text = `Scraping ${countryCode}/${category}`;
+				const isDevelopment = process.env.NODE_ENV === 'development';
+				const browser = await chromium.launch({
+					headless: isDevelopment,
+					args: isDevelopment ? [] : ['--start-fullscreen'],
+				});
+				const context = await browser.newContext({ userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36', viewport: null });
+				const page = await context.newPage();
+				try {
+					const result = await retryWithBackoff(() => processCategory(page, countryCode, params, topicId, category), 3);
+					await randomDelay();
+
+					if (result) {
+						const { country, category: resultCategory, articles } = result;
+						for (const article of articles) {
+							const dateKey = article.datetime.slice(0, 10);
+							if (!dateKey.match(/^\d{4}-\d{2}-\d{2}$/)) continue;
+							if (!allResults[country]) allResults[country] = {};
+							if (!allResults[country][dateKey]) allResults[country][dateKey] = {};
+							if (!allResults[country][dateKey][resultCategory]) allResults[country][dateKey][resultCategory] = [];
+							allResults[country][dateKey][resultCategory].push(article);
 						}
-					}),
-				);
+					}
+				} finally {
+					await page.close();
+					await context.close();
+					await browser.close();
+				}
 			}
 		}
-		const results = await Promise.all(tasks);
-		for (const result of results) {
-			if (!result) continue;
-			const { country, category, articles } = result;
-			for (const article of articles) {
-				const dateKey = article.datetime.slice(0, 10);
-				if (!dateKey.match(/^\d{4}-\d{2}-\d{2}$/)) continue;
-				if (!allResults[country]) allResults[country] = {};
-				if (!allResults[country][dateKey]) allResults[country][dateKey] = {};
-				if (!allResults[country][dateKey][category]) allResults[country][dateKey][category] = [];
-				if (!allResults[country][dateKey][category]) allResults[country][dateKey][category] = [];
-				allResults[country][dateKey][category].push(article);
-			}
-		}
+
 		for (const [country, dates] of Object.entries(allResults)) {
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			for (const [date, categories] of Object.entries(dates)) {
@@ -167,7 +165,5 @@ export async function scrapeAndStore() {
 		}
 	} finally {
 		spinner.succeed('✅ Scraping complete!');
-		await context.close();
-		await browser.close();
 	}
 }
