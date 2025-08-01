@@ -10,5 +10,5 @@ const nextConfig: NextConfig = {
 		formats: ['image/webp'],
 	},
 };
-const withPWAConfig = withPWA({ dest: 'public', register: true, skipWaiting: true, disable: process.env.NODE_ENV === 'development' });
-export default process.env.TURBOPACK ? nextConfig : withPWAConfig(nextConfig as any);
+const withPWAConfig = withPWA({ dest: 'public', register: true, skipWaiting: true });
+export default withPWAConfig(nextConfig as any);

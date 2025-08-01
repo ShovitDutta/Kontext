@@ -1,9 +1,11 @@
+import ora from 'ora';
+import pLimit from 'p-limit';
 import { db } from '@/lib/db';
 import { load } from 'cheerio';
 import { v4 as uuidv4 } from 'uuid';
 import { countries } from './countries';
 import { articles } from '@/lib/db/schema';
-import { chromium, Browser } from 'playwright';
+import { chromium, Page } from 'playwright';
 import { topicCategoryMapping } from './newscat';
 interface ScrapedArticle {
 	link: string;
@@ -15,113 +17,147 @@ interface ScrapedArticle {
 	published_time: string;
 }
 const topicCategoryMap = {
+	CAAqJQgKIh9DQkFTRVFvSUwyMHZNR3QwTlRFU0JXVnVMVWRDS0FBUAE: 'Health',
 	CAAqKggKIiRDQkFTRlFvSUwyMHZNRFp1ZEdvU0JXVnVMVWRDR2dKSlRpZ0FQAQ: 'Sports',
-	CAAqKggKIiRDQkFTRlFvSUwyMHZNRFp0Y1RjU0JXVnVMVWRDR2dKSlRpZ0FQAQ: 'Health',
 	CAAqKggKIiRDQkFTRlFvSUwyMHZNRGx6TVdZU0JXVnVMVWRDR2dKSlRpZ0FQAQ: 'Science',
 	CAAqKggKIiRDQkFTRlFvSUwyMHZNRGRqTVhZU0JXVnVMVWRDR2dKSlRpZ0FQAQ: 'Business',
 	CAAqKggKIiRDQkFTRlFvSUwyMHZNRGx1YlY4U0JXVnVMVWRDR2dKSlRpZ0FQAQ: 'Technology',
 	CAAqKggKIiRDQkFTRlFvSUwyMHZNREpxYW5RU0JXVnVMVWRDR2dKSlRpZ0FQAQ: 'Entertainment',
 };
-async function scrapeCategory(browser: Browser, countryCode: string, params: { hl: string; gl: string; ceid: string }, topicId: string, category: string): Promise<[string, string, ScrapedArticle[]]> {
+async function scrollUntilNoNewArticles(page: Page) {
+	let previousCount = 0;
+	let currentCount = 0;
+	let scrollAttempts = 0;
+	const maxScrolls = 30;
+	while (scrollAttempts < maxScrolls) {
+		await page.evaluate(() => {
+			window.scrollBy({ top: window.innerHeight * 1.2, behavior: 'auto' });
+		});
+		await page.waitForTimeout(800);
+		currentCount = await page.evaluate(() => document.querySelectorAll('article').length);
+		if (currentCount > previousCount) {
+			previousCount = currentCount;
+			scrollAttempts = 0;
+		} else {
+			scrollAttempts++;
+		}
+	}
+}
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+async function scrapeCategory(page: Page, countryCode: string, params: { hl: string; gl: string; ceid: string }, topicId: string, category: string): Promise<ScrapedArticle[]> {
 	const url = new URL(`https://news.google.com/topics/${topicId}`);
 	const searchParams = new URLSearchParams(params);
 	searchParams.set('hl', 'en');
 	url.search = searchParams.toString();
-	const context = await browser.newContext({ userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36' });
-	const page = await context.newPage();
-	try {
-		await page.goto(url.toString(), { timeout: 15000, waitUntil: 'networkidle' });
-		let previousHeight = -1;
-		let currentHeight = await page.evaluate(() => document.body.scrollHeight);
-		while (previousHeight !== currentHeight) {
-			previousHeight = currentHeight;
-			await page.evaluate(() => window.scrollBy(0, document.body.scrollHeight));
-			await page.waitForTimeout(2000);
-			currentHeight = await page.evaluate(() => document.body.scrollHeight);
-		}
-		const content = await page.content();
-		const $ = load(content);
-		const articlesList: ScrapedArticle[] = [];
-		$('article').each((_, article) => {
-			const titleElement = $(article).find('a.JtKRv');
-			const href = titleElement.attr('href');
-			if (!titleElement.length || !href) return;
-			const title = titleElement.text();
-			const link = `https://news.google.com${href.replace(/^\./, '')}`;
-			const source = $(article).find('div.vr1PYe').text() || null;
-			const dateElement = $(article).find('time.hvbAAd');
-			const datetimeStr = dateElement.attr('datetime') || new Date().toISOString();
-			const imageElement = $(article).find('img.Quavad');
-			let imageLink = '';
-			if (imageElement.length) {
-				const rawSrc = imageElement.attr('src');
-				if (rawSrc) {
-					const match = rawSrc.match(/(.*?=)/);
-					imageLink = `https://news.google.com${match ? match[1] : rawSrc}`;
-				}
+	await page.goto(url.toString(), { timeout: 90000, waitUntil: 'domcontentloaded' });
+	await page.evaluate(() => window.scrollTo(0, 0));
+	await page.waitForSelector('a.JtKRv', { timeout: 15000 });
+	await scrollUntilNoNewArticles(page);
+	const content = await page.content();
+	const $ = load(content);
+	const articlesList: ScrapedArticle[] = [];
+	$('article').each((_, article) => {
+		const titleElement = $(article).find('a.JtKRv');
+		const href = titleElement.attr('href');
+		if (!titleElement.length || !href) return;
+		const title = titleElement.text();
+		const link = `https://news.google.com${href.replace(/^\./, '')}`;
+		const source = $(article).find('div.vr1PYe').text() || null;
+		const dateElement = $(article).find('time.hvbAAd');
+		const datetimeStr = dateElement.attr('datetime') || new Date().toISOString();
+		const imageElement = $(article).find('img.Quavad');
+		let imageLink = '';
+		if (imageElement.length) {
+			const rawSrc = imageElement.attr('src');
+			if (rawSrc) {
+				const match = rawSrc.match(/(.*?=)/);
+				imageLink = `https://news.google.com${match ? match[1] : rawSrc}`;
 			}
-			const faviconElement = $(article).find('img.qEdqNd');
-			const faviconLink = faviconElement.attr('src') || '';
-			if (title && link && source) articlesList.push({ link, title, source, datetime: datetimeStr, published_time: datetimeStr, image_link: imageLink, favicon_link: faviconLink });
-		});
-		return [countryCode, category, articlesList];
-	} finally {
-		await page.close();
-		await context.close();
-	}
-}
-async function processCategoryWrapper(browser: Browser, countryCode: string, params: { hl: string; gl: string; ceid: string }, topicId: string, category: string, retries = 3): Promise<[string, ScrapedArticle[] | null]> {
-	try {
-		const [, , articles] = await scrapeCategory(browser, countryCode, params, topicId, category);
-		console.log(`${countryCode}/${category}: ${articles.length} articles`);
-		return [category, articles];
-	} catch (e) {
-		if (retries > 0) {
-			console.warn(`${countryCode}/${category} failed, retrying... (${retries} left)`);
-			await new Promise((resolve) => setTimeout(resolve, 2000));
-			return processCategoryWrapper(browser, countryCode, params, topicId, category, retries - 1);
 		}
-		console.error(`${countryCode}/${category} failed after retries: ${(e as Error).message}`);
-		return [category, null];
+		const faviconElement = $(article).find('img.qEdqNd');
+		const faviconLink = faviconElement.attr('src') || '';
+		if (title && link && source) {
+			articlesList.push({ link, title, source, datetime: datetimeStr, published_time: datetimeStr, image_link: imageLink, favicon_link: faviconLink });
+		}
+	});
+	return articlesList;
+}
+async function processCategory(page: Page, countryCode: string, params: { hl: string; gl: string; ceid: string }, topicId: string, category: string): Promise<{ country: string; category: string; articles: ScrapedArticle[] } | null> {
+	try {
+		const articles = await scrapeCategory(page, countryCode, params, topicId, category);
+		return { country: countryCode, category, articles };
+	} catch (e) {
+		console.error(`${countryCode}/${category} failed: ${(e as Error).message}`);
+		return null;
 	}
 }
-function randomDelay(min = 1000, max = 5000) {
+function randomDelay(min = 1000, max = 3000) {
 	return new Promise((resolve) => setTimeout(resolve, Math.floor(Math.random() * (max - min) + min)));
 }
-export async function scrapeAndStore() {
-	const browser = await chromium.launch({ headless: false });
+async function retryWithBackoff<T>(fn: () => Promise<T>, retries = 3, delay = 800, factor = 2): Promise<T> {
 	try {
+		return await fn();
+	} catch (error) {
+		if (retries <= 0) throw error;
+		await new Promise((res) => setTimeout(res, delay));
+		return retryWithBackoff(fn, retries - 1, delay * factor, factor);
+	}
+}
+export async function scrapeAndStore() {
+	const browser = await chromium.launch({ headless: false, args: ['--start-fullscreen'] });
+	const context = await browser.newContext({ userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36', viewport: null });
+	const spinner = ora('Scraping news articles...').start();
+	try {
+		const concurrencyLimit = 5;
+		const limit = pLimit(concurrencyLimit);
+		const allResults: Record<string, Record<string, Record<string, ScrapedArticle[]>>> = {};
+		const tasks = [];
 		for (const [countryCode, params] of Object.entries(countries)) {
-			const countryDataByDate: { [date: string]: { [category: string]: ScrapedArticle[] } } = {};
-			const categoryPromises = Object.entries(topicCategoryMap).map(([topicId, category]) => processCategoryWrapper(browser, countryCode, params, topicId, category));
-			const categoryResults = await Promise.allSettled(categoryPromises);
-			for (const result of categoryResults) {
-				if (result.status === 'fulfilled' && result.value[1]) {
-					const [category, articles] = result.value;
-					for (const article of articles) {
-						const dateKey = article.datetime.slice(0, 10);
-						if (!dateKey.match(/^\d{4}-\d{2}-\d{2}$/)) continue;
-						if (!countryDataByDate[dateKey]) countryDataByDate[dateKey] = {};
-						if (!countryDataByDate[dateKey][category]) countryDataByDate[dateKey][category] = [];
-						countryDataByDate[dateKey][category].push(article);
-					}
-				}
+			for (const [topicId, category] of Object.entries(topicCategoryMap)) {
+				tasks.push(
+					limit(async () => {
+						const page = await context.newPage();
+						try {
+							spinner.text = `Scraping ${countryCode}/${category}`;
+							const result = await retryWithBackoff(() => processCategory(page, countryCode, params, topicId, category), 3);
+							await randomDelay();
+							return result;
+						} finally {
+							await page.close();
+						}
+					}),
+				);
 			}
+		}
+		const results = await Promise.all(tasks);
+		for (const result of results) {
+			if (!result) continue;
+			const { country, category, articles } = result;
+			for (const article of articles) {
+				const dateKey = article.datetime.slice(0, 10);
+				if (!dateKey.match(/^\d{4}-\d{2}-\d{2}$/)) continue;
+				if (!allResults[country]) allResults[country] = {};
+				if (!allResults[country][dateKey]) allResults[country][dateKey] = {};
+				if (!allResults[country][dateKey][category]) allResults[country][dateKey][category] = [];
+				if (!allResults[country][dateKey][category]) allResults[country][dateKey][category] = [];
+				allResults[country][dateKey][category].push(article);
+			}
+		}
+		for (const [country, dates] of Object.entries(allResults)) {
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
-			for (const [date, categories] of Object.entries(countryDataByDate)) {
+			for (const [date, categories] of Object.entries(dates)) {
 				for (const [category, articlesList] of Object.entries(categories)) {
 					const categoryId = topicCategoryMapping[category.toUpperCase()];
 					if (categoryId) {
-						const values = articlesList.map((article) => ({ id: uuidv4(), url: article.link, title: article.title, sourceName: article.source, imageUrl: article.image_link, publishedAt: new Date(article.datetime), country: countryCode, category: categoryId }));
+						const values = articlesList.map((article) => ({ id: uuidv4(), url: article.link, title: article.title, sourceName: article.source, imageUrl: article.image_link, publishedAt: new Date(article.datetime), country: country, category: categoryId }));
 						if (values.length > 0) await db.insert(articles).values(values).onConflictDoNothing();
 					}
 				}
 			}
-			console.log(`Data for ${countryCode} saved to database`);
-			await randomDelay();
 		}
 	} finally {
+		spinner.succeed('✅ Scraping complete!');
+		await context.close();
 		await browser.close();
 	}
-	console.log('\nData scraped successfully and saved to database!');
 }
