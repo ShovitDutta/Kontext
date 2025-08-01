@@ -11,11 +11,6 @@ export const countries = {
 	GB: { hl: 'en-GB', gl: 'GB', ceid: 'GB:en' },
 	CA: { hl: 'en-CA', gl: 'CA', ceid: 'CA:en' },
 	AU: { hl: 'en-AU', gl: 'AU', ceid: 'AU:en' },
-	DE: { hl: 'de-DE', gl: 'DE', ceid: 'DE:de' },
-	FR: { hl: 'fr-FR', gl: 'FR', ceid: 'FR:fr' },
-	JP: { hl: 'ja-JP', gl: 'JP', ceid: 'JP:ja' },
-	BR: { hl: 'pt-BR', gl: 'BR', ceid: 'BR:pt' },
-	CN: { hl: 'zh-CN', gl: 'CN', ceid: 'CN:zh' },
 };
 export const topicCategoryMapping: Record<string, string> = {
 	ENTERTAINMENT: 'entertainment',
@@ -48,9 +43,7 @@ async function scrollUntilNoNewArticles(page: Page) {
 	let scrollAttempts = 0;
 	const maxScrolls = 30;
 	while (scrollAttempts < maxScrolls) {
-		await page.evaluate(() => {
-			window.scrollBy({ top: window.innerHeight * 1.2, behavior: 'auto' });
-		});
+		await page.evaluate(() => window.scrollBy({ top: window.innerHeight * 1.2, behavior: 'auto' }));
 		await page.waitForTimeout(800);
 		currentCount = await page.evaluate(() => document.querySelectorAll('article').length);
 		if (currentCount > previousCount) {
