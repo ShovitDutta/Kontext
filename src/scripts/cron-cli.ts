@@ -16,11 +16,7 @@ async function runNewsCron() {
 async function runBlogCron(provider: 'gemini' | 'ollama' = 'gemini') {
 	try {
 		console.log('Starting blog generation cron job...');
-		const articlesToGenerate = await db
-			.select({ id: articles.id, title: articles.title })
-			.from(articles)
-			.leftJoin(generatedContents, eq(articles.id, generatedContents.articleId))
-			.where(isNull(generatedContents.id));
+		const articlesToGenerate = await db.select({ id: articles.id, title: articles.title }).from(articles).leftJoin(generatedContents, eq(articles.id, generatedContents.articleId)).where(isNull(generatedContents.id));
 
 		console.log(`Found ${articlesToGenerate.length} articles to generate content for.`);
 
